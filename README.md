@@ -311,8 +311,12 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 ## aRMOR and aRMOR interface
 
 - [x] download the package from the previous assignment version -- 20220703
-- [x] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries
-- [ ] package refactoring of *cluedo_armor_interface*
+- [x] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries -- 20220703
+- [x] package review of *cluedo_armor_interface* -- 20220703
+- [ ] review the configuration loading of the package
+	
+	It could give some problems: better to review the config files before going on with the project
+	
 - [ ] study the examples in the previous version of the assignment ...
 - [ ] ... put the documentation there, *here* ...
 - [ ] ... and test the package

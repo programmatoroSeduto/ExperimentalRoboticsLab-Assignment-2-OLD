@@ -8,13 +8,13 @@ project(robocluedo_armor_interface)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  armor_msgs
-  message_generation
-  robocluedo_msgs
   roscpp
   rospy
+  armor_msgs
+  robocluedo_msgs
   std_msgs
   std_srvs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -107,11 +107,12 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES robocluedo_armor_interface
-#  CATKIN_DEPENDS armor_msgs message_generation robocluedo_msgs roscpp rospy std_msgs std_srvs
+ INCLUDE_DIRS include
+ LIBRARIES robocluedo_armor_interface armor_tools
+ CATKIN_DEPENDS armor_msgs robocluedo_msgs roscpp rospy std_msgs std_srvs
 #  DEPENDS system_lib
 )
+
 
 ###########
 ## Build ##
@@ -120,7 +121,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -128,6 +129,12 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/robocluedo_armor_interface.cpp
 # )
+
+add_library( armor_tools src/armor_tools/armor_tools.cpp )
+target_link_libraries(armor_tools ${catkin_LIBRARIES} )
+
+add_library( armor_cluedo src/armor_tools/armor_cluedo.cpp )
+target_link_libraries(armor_cluedo ${catkin_LIBRARIES} armor_tools )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -138,6 +145,15 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/robocluedo_armor_interface_node.cpp)
+
+add_executable(cluedo_armor_interface src/cluedo_armor_interface.cpp)
+target_link_libraries(cluedo_armor_interface ${catkin_LIBRARIES} armor_tools armor_cluedo)
+
+add_executable(test_armor src/test_armor.cpp)
+target_link_libraries(test_armor ${catkin_LIBRARIES} armor_tools armor_cluedo)
+
+add_executable(test_armor_tools src/test_armor_tools.cpp)
+target_link_libraries(test_armor_tools ${catkin_LIBRARIES} armor_tools armor_cluedo)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -163,10 +179,10 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  scripts/test_cluedo_armor_interface.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
