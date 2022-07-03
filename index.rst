@@ -7,8 +7,21 @@ Welcome to robocluedo's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :titlesonly:
+   :caption: This Fucking Index
+   
+   the readme <README.md>
+
+Oh this
+=======
+
+.. toctree::
+	:titlesonly:
+	:caption: another index
+	
+	./_docs/rest-directives.md
+	cluedo armor interface node <./robocluedo_armor_interface/src/cluedo_armor_interface.rst>
+	
 
 
 

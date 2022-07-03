@@ -154,7 +154,7 @@ pip3 install myst-parser
 Here are some well-known problems that can occur trying to run the project. 
 
 
-## DOcker VM -- *setrlimit(RLIMIT_CORE): Operation not permitted*
+## Docker VM -- *setrlimit(RLIMIT_CORE): Operation not permitted*
 
 It could appear this "intimidating" message on the screen: `sudo: setrlimit(RLIMIT_CORE): Operation not permitted`. It occurs especially when you attempt to run this code inside a Docker container.
 
