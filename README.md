@@ -277,6 +277,73 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 
 
+# Project Roadmap
+
+## first steps -- repo setup
+
+- [x] workspace creation -- 20220307
+- [x] documentation system, first setup with Sphinx and Doxygen -- 20220307
+- [x] Sphinx Configuration -- 20220307
+	
+	:warning: very first configuration, not yet tested.
+	
+- [x] Doxygen Configuration 
+	
+	:warning: very first configuration, not yet tested.
+	
+- [ ] ... 
+
+## Project Documentation
+
+- [ ] template for message description (see RT1_assignment_2)
+- [ ] template for service description (see RT1_assignment_2)
+- [ ] ...
+
+## aRMOR and aRMOR interface
+
+- [x] download the package from the previous assignment version -- 20220307
+- [ ] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries
+- [ ] study the examples in the previous version of the assignment ...
+- [ ] ... put the documentation there, *here* ...
+- [ ] ... and test the package
+- [ ] write the final launch files
+
+## ROSplan, actions and mission control
+
+- [ ] ...
+
+## movement controller 
+
+**SImulation environment**:
+
+- [ ] ...
+
+**MoveIt controller**:
+
+- [ ] ...
+
+**Navigation system and path planning**:
+
+- [ ] ...
+
+## put things together
+
+- [ ] ...
+
+## testing
+
+- [ ] ...
+
+## deployment
+
+- [ ] ...
+
+
+
+
+
+
+
 # Authors and contacts
 
 A project by *Francesco Ganci*, S4143910
