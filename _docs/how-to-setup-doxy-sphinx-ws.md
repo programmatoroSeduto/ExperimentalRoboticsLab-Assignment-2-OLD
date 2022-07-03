@@ -39,6 +39,8 @@ pip3 install breathe
 
 # this is a nice theme which recalls ReadTheDocs (a little bit worse than the orininal one)
 pip3 install sphinx-rtd-theme
+# or also, in case of problems, 
+pip install sphinx-rtd-theme
 
 # this extension lets Sphinx to read the MD format
 pip3 install myst-parser
@@ -101,7 +103,7 @@ section `general configuration`: copy and paste this. Here are the most signific
 extensions = [
 	'sphinx.ext.autodoc',
 	'sphinx.ext.napoleon',
-	'sphinx.ext.autosummary'
+	'sphinx.ext.autosummary',
 	'sphinx.ext.doctest',
 	'sphinx.ext.viewcode',
 	'sphinx.ext.githubpages',
@@ -111,7 +113,7 @@ extensions = [
 	'sphinx.ext.mathjax',
 	'sphinx.ext.ifconfig',
 	'sphinx.ext.inheritance_diagram',
-	'sphinx.ext.duration',
+	# 'sphinx.ext.duration',
 	'myst_parser',
 	'breathe'
 ]

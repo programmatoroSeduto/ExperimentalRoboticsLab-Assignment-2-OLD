@@ -299,9 +299,9 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 **in-pack documents**:
 
-- [ ] template for message description (see RT1_assignment_2)
-- [ ] template for service description (see RT1_assignment_2)
-- [ ] ...
+- [ ] template for message description (see RT1_assignment_2) 
+- [ ] template for service description (see RT1_assignment_2) 
+- [ ] ... 
 
 **UML design and analysis**:
 
@@ -313,10 +313,7 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 - [x] download the package from the previous assignment version -- 20220703
 - [x] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries -- 20220703
 - [x] package review of *cluedo_armor_interface* -- 20220703
-- [ ] review the configuration loading of the package
-	
-	It could give some problems: better to review the config files before going on with the project
-	
+- [x] review the configuration loading of the package
 - [ ] study the examples in the previous version of the assignment ...
 - [ ] ... put the documentation there, *here* ...
 - [ ] ... and test the package
@@ -328,7 +325,7 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 ## movement controller 
 
-**SImulation environment**:
+**Simulation environment**:
 
 - [ ] ...
 

@@ -36,7 +36,7 @@ release = '1.0.0'
 extensions = [
 	'sphinx.ext.autodoc',
 	'sphinx.ext.napoleon',
-	'sphinx.ext.autosummary'
+	'sphinx.ext.autosummary',
 	'sphinx.ext.doctest',
 	'sphinx.ext.viewcode',
 	'sphinx.ext.githubpages',
@@ -96,7 +96,7 @@ todo_include_todos = True
 
 
 # generate the Doxygen XML documentation
-subprocess.call( 'doxygen Doxyfile', shell=True )
+subprocess.call( 'doxygen doxygen_config', shell=True )
 
 # path of the doxygen generated HTML
 breathe_projects = {

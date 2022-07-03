@@ -2,7 +2,7 @@
 <launch>
 	
 	<!-- include all the parameters for running the system -->
-	<include file="$(find robocluedo)/config/parameters.launch" />
+	<include file="$(find robocluedo_armor_interface)/config/parameters.launch" />
 	
 	<!-- load the ontology and the interface -->
 	<node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" required="true"/>
