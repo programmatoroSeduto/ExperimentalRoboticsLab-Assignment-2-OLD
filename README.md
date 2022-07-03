@@ -8,7 +8,7 @@
 > Previous version of this project:
 > - [programmatoroSeduto/EsperimentalROboticsLab-Assignment-1 on GitHub](https://github.com/programmatoroSeduto/ExperimentalRoboticsLab-Assignment-1)
 > 
-> A minimal starter kit:
+> Starter kit:
 > - [CarmineD8/erl2 on GitHub](https://github.com/CarmineD8/erl2/) 
 
 ## What is this?
@@ -50,6 +50,14 @@ Before installing the project, make sure your system satisfies these requirement
 
 ...
 
+## Project Configuration
+
+...
+
+## Modules Testing
+
+...
+
 ## How to run the project
 
 ... only fast way here; if you want to see more, see the detailed description in the docs
@@ -65,6 +73,8 @@ Before installing the project, make sure your system satisfies these requirement
 ...use the script ...
 
 # Troubleshooting 
+
+Here are some well-known problems that can occur trying to run the project. 
 
 ## Docker VM -- unable to visualize the screen
 
