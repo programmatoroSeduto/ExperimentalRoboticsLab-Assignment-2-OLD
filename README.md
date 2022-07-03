@@ -11,6 +11,8 @@
 > Starter kit:
 > - [CarmineD8/erl2 on GitHub](https://github.com/CarmineD8/erl2/) 
 
+![cluedo logo](_media/img/cluedologo.jpg)
+
 ## What is this?
 
 ...
