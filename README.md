@@ -283,13 +283,13 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 ## first steps -- repo setup
 
-- [x] workspace creation -- 20220307
-- [x] documentation system, first setup with Sphinx and Doxygen -- 20220307
-- [x] Sphinx Configuration -- 20220307
+- [x] workspace creation -- 20220703
+- [x] documentation system, first setup with Sphinx and Doxygen -- 20220703
+- [x] Sphinx Configuration -- 20220703
 	
 	:warning: very first configuration, not yet tested.
 	
-- [x] Doxygen Configuration 
+- [x] Doxygen Configuration -- 20220703
 	
 	:warning: very first configuration, not yet tested.
 	
@@ -297,14 +297,22 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 ## Project Documentation
 
+**in-pack documents**:
+
 - [ ] template for message description (see RT1_assignment_2)
 - [ ] template for service description (see RT1_assignment_2)
 - [ ] ...
 
+**UML design and analysis**:
+
+- [ ] create place where to put the UML diagrams
+- [ ] 
+
 ## aRMOR and aRMOR interface
 
-- [x] download the package from the previous assignment version -- 20220307
-- [ ] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries
+- [x] download the package from the previous assignment version -- 20220703
+- [x] create a standalone package for the node `cluedo_armor_interface.cpp` and its libraries
+- [ ] package refactoring of *cluedo_armor_interface*
 - [ ] study the examples in the previous version of the assignment ...
 - [ ] ... put the documentation there, *here* ...
 - [ ] ... and test the package
@@ -334,7 +342,8 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 
 ## testing
 
-- [ ] ...
+- [ ] create a testing package for the project
+- [ ] ... 
 
 ## deployment
 
