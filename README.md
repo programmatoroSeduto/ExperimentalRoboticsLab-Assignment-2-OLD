@@ -79,13 +79,14 @@ The project has been documented using two tools:
 - **Doxygen** easy to use, stable, quick to use, with a handy GUI, but quite unflexible and generating a too much old style HTML documentation (welcome back to 90s!)
 - **Sphinx** enables to produce a nice documentation, flexible and extendable with not so much effort, but really painful to use, not stable, it has not a GUI, and uses the horrible reStructured format. [Here](https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/) is an interesting article about Sphinx. 
 
+
 ## Documentation system setup
 
 Here's how to install the abovementioned tools for generating the documentation. 
 
 ### DEPT -- Doxygen
 
-Open a console and paste this command: (the command `-y` says to cautomatically confirm the installation)
+Open a console and paste this command: 
 
 ```bash
 # the engine
@@ -151,6 +152,16 @@ pip3 install myst-parser
 Here are some well-known problems that can occur trying to run the project. 
 
 
+## DOcker VM -- *setrlimit(RLIMIT_CORE): Operation not permitted*
+
+It could appear this "intimidating" message on the screen: `sudo: setrlimit(RLIMIT_CORE): Operation not permitted`. It occurs especially when you attempt to run this code inside a Docker container.
+
+*Who cares*. You can ignore this message, and keep going on, since the commands are effective anyway. See these posts:
+
+- [in container: sudo: setrlimit(RLIMIT_CORE): Operation not permitted on GitHub Issues](https://github.com/sudo-project/sudo/issues/42)
+- [sudo: setrlimit(RLIMIT_CORE): Operation not permitted on StackExchange](https://unix.stackexchange.com/questions/578949/sudo-setrlimitrlimit-core-operation-not-permitted)
+
+
 ## Docker VM -- unable to visualize the screen
 
 It is a very common issue of `xvnc11`: it gets stuck often at the first launch the machine. To solve the problem, open a bash in the system hosting the Docker container, and run the command
@@ -185,7 +196,7 @@ Remember to **restart the machine** before working on it.
 
 ## Docker VM - Update/Upgrade ROS
 
-Especially when you use the Docker image [carms84/noetic_ros2](https://hub.docker.com/r/carms84/noetic_ros2), the first time you launch the command `sudo apt-get update`, an error message is print; the output is similar to this one:
+Especially when you use the Docker image [carms84/noetic_ros2](https://hub.docker.com/r/carms84/exproblab), the first time you launch the command `sudo apt-get update`, an error message is print; the output is similar to this one:
 
 ```
 $$ sudo apt-get update
