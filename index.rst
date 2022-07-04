@@ -27,3 +27,22 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+test graphviz
+--------------
+
+.. graphviz::
+
+   digraph {
+      "From" -> "in the middle" -> "To";
+      "1 to" -> "to 2";
+   }
+
+test UML
+----------
+
+.. uml::
+
+   Alice -> Bob: Hi!
+   Alice <- Bob: How are you?

@@ -49,6 +49,8 @@ extensions = [
 	'sphinx.ext.duration',
 	'myst_parser',
 	'breathe'
+	# 'sphinx.ext.graphviz', 
+	# 'sphinxcontrib.plantuml'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

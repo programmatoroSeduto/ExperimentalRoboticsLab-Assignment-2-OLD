@@ -3,6 +3,10 @@
 
 :link: more about the reST syntax [here](https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/WritingReST/Index.html)
 
+:link: [a quick reference](https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/WritingReST/CheatSheet.html) about reST
+
+:link: a excellent reference about reST and sphinx [here](https://chiplicity.readthedocs.io/en/latest/Using_Sphinx/index.html)
+
 ## Include a file into another file
 
 :warning: NOt working for .md files! :warning:
@@ -79,4 +83,60 @@ same observations as before for what concerns the cpp files.
 ```rst
 .. doxygenfile:: your-cpp-file.cpp
     :project: your-project-name
+```
+
+## Images
+
+```
+.. image:: someimage.png
+   :class: with-border with-shadow
+   :alt: Textual alternative to the image
+```
+
+## tabs
+
+:link: see [tabs in reST](https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/WritingReST/CheatSheet.html#tabs)
+
+```rst
+.. tabs::
+
+   .. group-tab:: bash
+
+      .. code-block:: bash
+
+         touch example-project-directory/public/FIRST_INSTALL
+
+   .. group-tab:: powershell
+
+      .. code-block:: powershell
+
+         echo $null >> public/FIRST_INSTALL
+```
+
+## UML diagrams
+
+[here](https://chiplicity.readthedocs.io/en/latest/Using_Sphinx/UsingGraphicsAndDiagramsInSphinx.html)
+
+### Graphs with graphiz
+
+```py
+extensions = ['sphinx.ext.graphviz']
+```
+
+see the example on the Internet.
+
+### Graphs with plantUML
+
+see in particular [plantUML on gitHub](https://github.com/sphinx-contrib/plantuml) 
+
+install the extension:
+
+```bash
+pip install sphinxcontrib-plantuml
+```
+
+extension:
+
+```py
+extensions = ['sphinxcontrib.plantuml']
 ```

@@ -77,6 +77,28 @@ find_package(catkin REQUIRED COMPONENTS
 #   armor_msgs#   robocluedo_msgs#   std_msgs
 # )
 
+
+add_message_files(
+  FILES
+  # Hint.msg
+  Hypothesis.msg
+)
+
+add_service_files(
+  FILES
+  # CheckSolution.srv
+  # RandomRoom.srv
+  # GoTo.srv
+  AddHint.srv
+  FindConsistentHypotheses.srv
+  DiscardHypothesis.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################
