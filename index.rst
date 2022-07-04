@@ -1,32 +1,28 @@
-.. robocluedo documentation master file, created by
-   sphinx-quickstart on Sun Jul  3 11:59:00 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to robocluedo's documentation!
-======================================
+
+The RoboCluedo Project Documentaton
+====================================
 
 .. toctree::
    :titlesonly:
-   :caption: This Fucking Index
+   :caption: README and other docs
    
-   the readme <README.md>
+   project readme <README.md>
+   reStructured directives <./_docs/rest-directives.md>
 
-Oh this
-=======
+
+Packages documentation
+------------------------
 
 .. toctree::
 	:titlesonly:
-	:caption: another index
+	:caption: project packages
 	
-	./_docs/rest-directives.md
-	cluedo armor interface node <./robocluedo_armor_interface/src/cluedo_armor_interface.rst>
+	pkg cluedo_armor_interface <./robocluedo_armor_interface/index.rst>
 	
-
-
 
 Indices and tables
-==================
+-------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

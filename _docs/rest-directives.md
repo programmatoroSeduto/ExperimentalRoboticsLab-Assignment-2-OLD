@@ -1,6 +1,8 @@
 
 # ReStructured Directives -- practical documentation
 
+:link: more about the reST syntax [here](https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/WritingReST/Index.html)
+
 ## Include a file into another file
 
 :warning: NOt working for .md files! :warning:
