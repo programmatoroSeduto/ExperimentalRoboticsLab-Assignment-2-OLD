@@ -6,9 +6,11 @@ The RoboCluedo Project Documentaton
 .. toctree::
    :titlesonly:
    :caption: README and other docs
+   :glob:
    
    project readme <README.md>
    reStructured directives <./_docs/rest-directives.md>
+   _docs/*
 
 
 Packages documentation
@@ -43,6 +45,34 @@ test UML
 ----------
 
 .. uml::
+	
+	@startuml
 
-   Alice -> Bob: Hi!
-   Alice <- Bob: How are you?
+	title Packages - Component Diagram
+
+	package "Front End" {
+		component [Graphic User\nInterface] as GUI
+	}
+
+	cloud Internet {
+	}
+	 
+	node "Middle Tier" {
+		[Business Logic]
+		[Data Access] as DA  
+		interface IMath as Math
+		interface "IItems" as Items
+	} 
+
+	database "PostgreSQL\n" {
+		[Stored Procs]
+	}
+
+	GUI -down-> Internet
+	Internet -down-( Math
+	[Business Logic] -up- Math
+	DA -- Items
+	[Business Logic] --( Items
+	DA .. [Stored Procs]
+
+	@enduml

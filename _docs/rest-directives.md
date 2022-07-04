@@ -140,3 +140,9 @@ extension:
 ```py
 extensions = ['sphinxcontrib.plantuml']
 ```
+
+## Links
+
+```rst
+`anchor text <URL>`__
+```
