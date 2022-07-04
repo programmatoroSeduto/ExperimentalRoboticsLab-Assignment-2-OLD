@@ -48,9 +48,9 @@ extensions = [
 	'sphinx.ext.inheritance_diagram',
 	'sphinx.ext.duration',
 	'myst_parser',
-	'breathe'
-	# 'sphinx.ext.graphviz', 
-	# 'sphinxcontrib.plantuml'
+	'breathe', 
+	'sphinx.ext.graphviz', 
+	'sphinxcontrib.plantuml'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -108,3 +108,8 @@ breathe_projects = {
 # title of the Doxygen project
 breathe_default_project = "robocluedo"
 breathe_default_members = ('members', 'undoc-members')
+
+
+# -- plantUML extension ------------------------------------------------------
+
+plantuml = 'java -Djava.awt.headless=true -jar ./_ext/plantuml.jar'
