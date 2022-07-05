@@ -1,4 +1,5 @@
-(define (problem blocks3)
+
+(define (:problem blocks3)
 
     (:domain blocksworld)
     

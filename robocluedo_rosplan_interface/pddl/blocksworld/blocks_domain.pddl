@@ -2,7 +2,7 @@
     
     ; no negative preconditions
     ; no negative goals
-    (:requirements :strips)
+    ;; (:requirements :strips)
 
     (:predicates
         ; We have just blocks so we do need predicates for "types"

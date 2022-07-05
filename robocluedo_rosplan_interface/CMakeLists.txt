@@ -150,6 +150,11 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_executable( test_load_and_run src/test_load_and_run.cpp )
+add_dependencies( test_load_and_run ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( test_load_and_run ${catkin_LIBRARIES} )
+
+
 #############
 ## Install ##
 #############

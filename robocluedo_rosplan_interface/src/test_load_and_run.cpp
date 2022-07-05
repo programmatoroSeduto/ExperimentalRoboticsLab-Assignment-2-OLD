@@ -42,46 +42,56 @@ public:
 	// load the PDDL model, solve and parse it
 	void spin(  )
 	{
+		TLOG( "loading model ... " );
+		this->pddl_load( );
+		TLOG( "loading model ... OK" );
 		
+		TLOG( "solving the problem ... " );
+		this->pddl_solve( );
+		TLOG( "solving the problem ... OK" );
+		
+		TLOG( "parsing ... " );
+		this->pddl_parse_plan( );
+		TLOG( "parsing ... OK" );
 	}
 	
 	// load the PDDL model, run the problem instance node
 	void pddl_load( )
 	{
 		// load the service
-		std_srvs::Empty sm( );
+		std_srvs::Empty sm;
 		if( !cl_problem_generation_server->call( sm ) ) 
 		{ 
 			TERR( "unable to make a service request -- failed calling service " 
 				<< LOGSQUARE( SERVICE_PROBLEM_GENERATION_SERVER ) 
-				<< (!cl_problem_generation_server.exists( ) ? " -- it seems not opened" : "") );
-			return 0;
+				<< (!cl_problem_generation_server->exists( ) ? " -- it seems not opened" : "") );
+			return;
 		}
 	}
 	
 	// get the plan of the problem
 	void pddl_solve( )
 	{
-		std_srvs::Empty sm( );
+		std_srvs::Empty sm;
 		if( !cl_planning_server->call( sm ) ) 
 		{ 
 			TERR( "unable to make a service request -- failed calling service " 
 				<< LOGSQUARE( SERVICE_PLANNING_SERVER ) 
-				<< (!cl_planning_server.exists( ) ? " -- it seems not opened" : "") );
-			return 0;
+				<< (!cl_planning_server->exists( ) ? " -- it seems not opened" : "") );
+			return;
 		}
 	}
 	
 	// parse the plan
 	void pddl_parse_plan( )
 	{
-		std_srvs::Empty sm( );
+		std_srvs::Empty sm;
 		if( !cl_parse_plan->call( sm ) ) 
 		{ 
 			TERR( "unable to make a service request -- failed calling service " 
 				<< LOGSQUARE( SERVICE_PARSE_PLAN ) 
-				<< (!cl_parse_plan.exists( ) ? " -- it seems not opened" : "") );
-			return 0;
+				<< (!cl_parse_plan->exists( ) ? " -- it seems not opened" : "") );
+			return;
 		}
 	}
 	
@@ -90,10 +100,10 @@ protected:
 	
 	// ROS node handle
     ros::NodeHandle nh;
-}
+};
 
 
-void shut_msg( )
+void shut_msg( int sig )
 {
 	TLOG( "stopping... " );
 	ros::shutdown( );
@@ -104,16 +114,16 @@ int main( int argc, char* argv[] )
 {
 	ros::init( argc, argv, NODE_NAME, ros::init_options::NoSigintHandler );
 	signal( SIGINT, shut_msg );
-	// ros::NodeHandle nh;
+	ros::NodeHandle nh;
 	
 	TLOG( "starting ... " );
 	
 	// client problem generation service
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_PROBLEM_GENERATION_SERVER ) << "..." );
 	ros::ServiceClient tcl_problem_generation_server = nh.serviceClient<std_srvs::Empty>( SERVICE_PROBLEM_GENERATION_SERVER );
-	if( !tcl_serv.waitForExistence( ros::Duration( TIMEOUT_PROBLEM_GENERATION_SERVER ) ) )
+	if( !tcl_problem_generation_server.waitForExistence( ros::Duration( TIMEOUT_PROBLEM_GENERATION_SERVER ) ) )
 	{
-		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_SERV << "s) " );
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_PROBLEM_GENERATION_SERVER << "s) " );
 		return 0;
 	}
 	cl_problem_generation_server = &tcl_problem_generation_server;

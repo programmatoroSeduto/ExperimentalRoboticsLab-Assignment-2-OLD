@@ -3,8 +3,8 @@
 <launch>
 
 <!--PDDL domain and problem -->
-<arg name="domain_path"	default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocksworld_domain.pddl" />
-<arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocksworld_problem.pddl" />
+<arg name="domain_path"	 default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocks_domain.pddl" />
+<arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocks_problem.pddl" />
 
 <!-- other options -->
 <arg name="output" default="screen" />
@@ -67,6 +67,6 @@ respawn="false" output="$(arg output)">
 
 
 <!-- run the arch -->
-<node pkg="robocluedo_rosplan_interface" name="load_and_solve" type="test_load_and_solve" required="true" />
+<!-- <node pkg="robocluedo_rosplan_interface" name="test_load_and_run" type="test_load_and_run" required="true" output="screen"/> -->
 
 </launch>
