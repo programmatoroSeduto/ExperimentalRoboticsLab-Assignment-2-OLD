@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!--PDDL domain and problem -->
+<arg name="domain_path"	default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocksworld_domain.pddl" />
+<arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocksworld_problem.pddl" />
+
+<!-- other options -->
+<arg name="output" default="screen" />
+<arg name="problem_instance_topic" default="problem_instance" />
+<arg name="planner_out_topic" default="planner_output" />
+<arg name="planner_node_name" default="popf_planner_interface" />
+<arg name="data_path" default="$(find robocluedo_rosplan_interface)/data" />
+
+
+
+<!-- knowledge base -->
+<node name="rosplan_knowledge_base" pkg="rosplan_knowledge_base" type="knowledgeBase" 
+	respawn="false" output="$(arg output)">
+	
+	<param name="domain_path" value="$(arg domain_path)" />
+	<param name="problem_path" value="$(arg problem_path)" />
+	<param name="use_unknowns" value="false" />
+	
+</node>
+
+
+<!-- problem generation -->
+<include file="$(find rosplan_planning_system)/launch/includes/problem_interface.launch">
+
+	<arg name="knowledge_base"   value="rosplan_knowledge_base" />
+	<arg name="domain_path"      value="$(arg domain_path)" />
+	<arg name="problem_path"     value="$(arg problem_path)" />
+	
+	<arg name="problem_topic"    value="$(arg problem_instance_topic)" />
+
+</include>
+
+
+<!-- planner interface -->
+<include file="$(find rosplan_planning_system)/launch/includes/planner_interface.launch">
+	
+	<arg name="domain_path"          value="$(arg domain_path)" />
+	<arg name="problem_path"         value="$(arg problem_path)" />
+	
+	<arg name="use_problem_topic"    value="true" />
+	<arg name="problem_topic"        value="/rosplan_problem_interface/$(arg problem_instance_topic)" />
+	<arg name="planner_topic"        value="$(arg planner_out_topic)" />
+	<arg name="data_path"            value="$(arg data_path)" />
+	<arg name="planner_command"      value="timeout 10 $(find rosplan_planning_system)/common/bin/popf DOMAIN PROBLEM" />
+	
+</include>
+<node name="$(arg planner_node_name)" pkg="rosplan_planning_system" type="popf_planner_interface" 
+	respawn="false" output="$(arg output)" />
+
+
+<!-- plan parsing -->
+<node name="rosplan_parsing_interface" pkg="rosplan_planning_system" type="pddl_simple_plan_parser" 
+respawn="false" output="$(arg output)">
+	
+	<param name="knowledge_base" value="rosplan_knowledge_base" />
+	<param name="planner_topic"  value="/rosplan_planner_interface/planner_output" />
+	<param name="plan_topic"     value="complete_plan" />
+
+</node>
+
+
+<!-- run the arch -->
+<node pkg="robocluedo_rosplan_interface" name="load_and_solve" type="test_load_and_solve" required="true" />
+
+</launch>

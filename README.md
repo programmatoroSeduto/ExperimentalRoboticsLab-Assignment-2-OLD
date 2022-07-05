@@ -328,6 +328,7 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 - [x] internal structure of the package
 - [x] setup the documentation system for the package
 - [x] sample problem: blocksworld, download
+- [ ] write a simple launch file with a C++ node able to run the arch
 - [ ] test the launch files [on GitHub](github.com/programmatoroSeduto/ros-plan/wiki/ROS-Plan-Cheatsheet)
 - [ ] implementation and templating of the ROS plan actions in a simple case
 - [ ] test the template with a simple model
