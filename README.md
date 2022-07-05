@@ -306,7 +306,7 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 **UML design and analysis**:
 
 - [ ] create place where to put the UML diagrams
-- [ ] 
+- [ ] ...
 
 ## aRMOR and aRMOR interface
 
@@ -318,9 +318,33 @@ See this post, not directly related with this situation: [ContextualVersionConfl
 - [ ] ... put the documentation there, *here* ...
 - [ ] ... and test the package
 - [ ] write the final launch files
+- [ ] ...
 
 ## ROSplan, actions and mission control
 
+**Packaging and first templating work**:
+
+- [x] create a package as interface to ROS plan framework
+- [x] internal structure of the package
+- [x] setup the documentation system for the package
+- [x] sample problem: blocksworld, download
+- [ ] test the launch files [on GitHub](github.com/programmatoroSeduto/ros-plan/wiki/ROS-Plan-Cheatsheet)
+- [ ] implementation and templating of the ROS plan actions in a simple case
+- [ ] test the template with a simple model
+- [ ] ...
+
+**PPDL model**:
+
+- [ ] first design of the PDDL model
+- [ ] first implementation
+- [ ] testing on ROS plan
+- [ ] ...
+
+**ROS plan actions implementation**:
+
+- [ ] implementation of the PDDL actions as classes and libraries
+- [ ] implementation of the node interface for each action
+- [ ] implementation testing
 - [ ] ...
 
 ## movement controller 
