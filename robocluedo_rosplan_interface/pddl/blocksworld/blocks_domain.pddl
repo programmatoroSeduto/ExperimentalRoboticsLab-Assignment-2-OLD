@@ -2,7 +2,7 @@
     
     ; no negative preconditions
     ; no negative goals
-    ;; (:requirements :strips)
+    (:requirements :strips :adl :typing :durative-actions :fluents :duration-inequalities)
 
     (:predicates
         ; We have just blocks so we do need predicates for "types"

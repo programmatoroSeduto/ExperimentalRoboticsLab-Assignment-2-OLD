@@ -1,2 +1,4 @@
 _build/*
 !_build/.build_folder
+
+/root/ros_ws/src/ExperimentalRoboticsLab-Assignment-2/robocluedo_rosplan_interface/pddl/anothertest/*

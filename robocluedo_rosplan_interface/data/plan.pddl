@@ -1,9 +1,9 @@
-Number of literals: 0
+Warnings encountered when parsing Domain/Problem File
+
+Errors: 0, warnings: 4
+/root/ros_ws/src/ExperimentalRoboticsLab-Assignment-2/robocluedo_rosplan_interface/pddl/simpletest/simple_problem.pddl: line: 18: Warning: Undeclared requirement :negative-preconditions 
+/root/ros_ws/src/ExperimentalRoboticsLab-Assignment-2/robocluedo_rosplan_interface/pddl/simpletest/simple_problem.pddl: line: 20: Warning: Undeclared requirement :negative-preconditions 
+/root/ros_ws/src/ExperimentalRoboticsLab-Assignment-2/robocluedo_rosplan_interface/pddl/simpletest/simple_problem.pddl: line: 22: Warning: Undeclared requirement :negative-preconditions 
+/root/ros_ws/src/ExperimentalRoboticsLab-Assignment-2/robocluedo_rosplan_interface/pddl/simpletest/simple_problem.pddl: line: 24: Warning: Undeclared requirement :negative-preconditions 
+Number of literals: 9
 Constructing lookup tables:
-Post filtering unreachable actions: 
-[01;34mNo analytic limits found, not considering limit effects of goal-only operators[00m
-Initial heuristic = 0.000
-;;;; Solution Found
-; States evaluated: 1
-; Cost: 0.000
-; Time 0.00

@@ -5,6 +5,10 @@
 <!--PDDL domain and problem -->
 <arg name="domain_path"	 default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocks_domain.pddl" />
 <arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/blocksworld/blocks_problem.pddl" />
+<!-- <arg name="domain_path"	 default="$(find robocluedo_rosplan_interface)/pddl/simpletest/simple_domain.pddl" />
+<arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/simpletest/simple_problem.pddl" /> -->
+<!-- <arg name="domain_path"	 default="$(find robocluedo_rosplan_interface)/pddl/anothertest/domain.pddl" />
+<arg name="problem_path" default="$(find robocluedo_rosplan_interface)/pddl/anothertest/problem.pddl" /> -->
 
 <!-- other options -->
 <arg name="output" default="screen" />
@@ -15,9 +19,8 @@
 
 
 
-<!-- knowledge base -->
 <node name="rosplan_knowledge_base" pkg="rosplan_knowledge_base" type="knowledgeBase" 
-	respawn="false" output="$(arg output)">
+	respawn="false" output="$(arg output)" required="false">
 	
 	<param name="domain_path" value="$(arg domain_path)" />
 	<param name="problem_path" value="$(arg problem_path)" />
@@ -26,7 +29,7 @@
 </node>
 
 
-<!-- problem generation -->
+
 <include file="$(find rosplan_planning_system)/launch/includes/problem_interface.launch">
 
 	<arg name="knowledge_base"   value="rosplan_knowledge_base" />
@@ -38,7 +41,7 @@
 </include>
 
 
-<!-- planner interface -->
+
 <include file="$(find rosplan_planning_system)/launch/includes/planner_interface.launch">
 	
 	<arg name="domain_path"          value="$(arg domain_path)" />
@@ -55,7 +58,7 @@
 	respawn="false" output="$(arg output)" />
 
 
-<!-- plan parsing -->
+
 <node name="rosplan_parsing_interface" pkg="rosplan_planning_system" type="pddl_simple_plan_parser" 
 respawn="false" output="$(arg output)">
 	
@@ -66,7 +69,19 @@ respawn="false" output="$(arg output)">
 </node>
 
 
+
+
 <!-- run the arch -->
 <!-- <node pkg="robocluedo_rosplan_interface" name="test_load_and_run" type="test_load_and_run" required="true" output="screen"/> -->
+<!--
+rosservice call /rosplan_problem_interface/problem_generation_server
+rostopic echo /rosplan_problem_interface/problem_instance -n 1 -p
+
+rosservice call /rosplan_planner_interface/planning_server
+rostopic echo /rosplan_planner_interface/planner_output -p
+
+rosservice call /rosplan_parsing_interface/parse_plan
+rostopic echo /rosplan_parsing_interface/complete_plan -n 1
+-->
 
 </launch>

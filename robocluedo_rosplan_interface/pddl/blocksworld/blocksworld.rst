@@ -67,7 +67,7 @@ BlocksWorld -- Problem
 
 .. code-block:: LISP
 	
-	(define (:problem blocks3)
+	(define (problem blocks3)
 
 		(:domain blocksworld)
 		
@@ -88,3 +88,19 @@ BlocksWorld -- Problem
 					(arm-empty)))
 
 	)
+
+
+Problem Solution
+------------------
+
+expected solution, using `PDDL online editor <http://editor.planning.domains>`__ :
+
+.. code-block:: LISP
+	
+	(unstack c b)
+	(putdown c)
+	(unstack b a)
+	(stack b c)
+	(pickup a)
+	(stack a b)
+
