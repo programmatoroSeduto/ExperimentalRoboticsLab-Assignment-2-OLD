@@ -6,6 +6,7 @@
 	:typing 
 	:equality 
 	:universal-preconditions 
+	:fluents
 	:durative-actions
 )
 
@@ -21,7 +22,8 @@
 )
 
 (:functions
-	
+	(f-non-zero)
+	(f-zero)
 )
 
 (:durative-action set-start

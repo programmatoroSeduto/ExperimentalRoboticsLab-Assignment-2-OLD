@@ -100,15 +100,16 @@ A PDDL2.1 domain to test the ROSplan in a very simple case.
 
 ```lisp
 
+
 (define (domain dom)
 
 (:requirements 
-	:typing
-	:adl
-	:durative-actions
-	:disjunctive-preconditions
-	:universal-preconditions
+	:strips 
+	:typing 
+	:equality 
+	:universal-preconditions 
 	:fluents
+	:durative-actions
 )
 
 (:types 
@@ -123,7 +124,8 @@ A PDDL2.1 domain to test the ROSplan in a very simple case.
 )
 
 (:functions
-	
+	(f-non-zero)
+	(f-zero)
 )
 
 (:durative-action set-start
@@ -131,11 +133,11 @@ A PDDL2.1 domain to test the ROSplan in a very simple case.
 
 	:duration (= ?duration 1)
 
-	:condition (at start (stop))
+	:condition (at start (stop ))
 	
 	:effect (and
-		(at end (not (stop)))
-		(at end (start))
+		(at end (not (stop )))
+		(at end (start ))
 	)
 )
 
@@ -201,35 +203,42 @@ A PDDL2.1 domain to test the ROSplan in a very simple case.
 )
 
 )
-
 ```
 
 ### Problem file
 
 ```lisp
-
 (define (problem task)
-
 (:domain dom)
-
 (:objects
-	b1 b2 b3 - boolobj
+    b1 b2 b3 - boolobj
 )
-
 (:init
-	(b-true b1)
-	(b-not-true b2)
-	(stop)
-)
+    (b-not-true b2)
 
+    (b-true b1)
+    
+    (b-true b3)
+
+
+    (stop)
+
+
+    (= (f-non-zero) 5)
+
+    (= (f-zero) 0)
+
+)
 (:goal (and
-	(b-true b1) (not (b-not-true b1))
-	(b-true b2) (not (b-not-true b2))
-	(b-not-true b3) (not (b-true b3))
-	(stop) (not (start))
-)
-)
-
+    (b-true b1)
+    ;; (not(b-not-true b1))
+    (b-true b2)
+    ;; (not(b-not-true b2))
+    (b-not-true b3)
+    ;; (not(b-true b3))
+    (stop)
+    ;; (not(start))
+))
 )
 
 ```
