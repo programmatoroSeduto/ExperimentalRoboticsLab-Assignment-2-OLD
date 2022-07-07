@@ -1,9 +1,13 @@
 
-
-#include "ros/ros.h"
+#include <ros/ros.h>
 #include <signal.h>
 
 #include "std_srvs/Empty.h" 
+#include "rosplan_knowledge_msgs/KnowledgeUpdateService.h"
+#include "rosplan_knowledge_msgs/GetAttributeService.h"
+#include "diagnostic_msgs/KeyValue.h"
+#include "rosplan_knowledge_msgs/KnowledgeItem.h"
+#include "rosplan_knowledge_msgs/KnowledgeQueryService.h"
 
 #define NODE_NAME "test_load_and_run"
 
@@ -19,7 +23,6 @@
 #define TIMEOUT_PROBLEM_GENERATION_SERVER 5
 ros::ServiceClient *cl_problem_generation_server;
 
-
 // generate the plan with the planning interface
 #define SERVICE_PLANNING_SERVER "/rosplan_planner_interface/planning_server"
 #define TIMEOUT_PLANNING_SERVER 5
@@ -29,6 +32,34 @@ ros::ServiceClient *cl_planning_server;
 #define SERVICE_PARSE_PLAN "/rosplan_parsing_interface/parse_plan"
 #define TIMEOUT_PARSE_PLAN 5
 ros::ServiceClient *cl_parse_plan;
+
+// service for updating the ontology
+#define SERVICE_KB_UPDATE "/rosplan_knowledge_base/update"
+#define TIMEOUT_KB_UPDATE 5
+ros::ServiceClient *cl_kb_update;
+#define KB_ADD_KNOWLEDGE 0
+#define KB_DEL_KNOWLEDGE 2
+#define KB_KTYPE_FLUENT 2
+#define KB_KTYPE_PREDICATE 1
+
+// fluent from kb
+#define SERVICE_KB_GET_FLUENT "/rosplan_knowledge_base/state/functions"
+#define TIMEOUT_KB_GET_FLUENT 5
+ros::ServiceClient *cl_kb_get_fluent;
+
+/*
+// predicates from kb
+#define SERVICE_KB_GET_PRED "/rosplan_knowledge_base/state/propositions"
+#define TIMEOUT_KB_GET_PRED 5
+ros::ServiceClient *cl_kb_get_pred;
+*/
+
+/*
+// query service of the kb
+#define SERVICE_QUERY "/rosplan_knowledge_base/query_state"
+#define TIMEOUT_QUERY 5
+ros::ServiceClient *cl_query;
+*/
 
 
 
@@ -53,6 +84,20 @@ public:
 		TLOG( "parsing ... " );
 		this->pddl_parse_plan( );
 		TLOG( "parsing ... OK" );
+		
+		TLOG( "setting fluent 'f-non-zero=4' ... " );
+		{
+			this->set_fluent( "f-non-zero", 4.0 );
+		}
+		TLOG( "setting fluent 'f-non-zero=4' ... OK" );
+		
+		TLOG( "reading value of 'f-non-zero' ... " );
+		{
+			float val = 0.0;
+			bool rt = this->get_fluent( "f-non-zero", val );
+			TLOG( "f-non-zero=" << val << (rt ? "returned TRUE" : "returned FALSE") );
+		}
+		TLOG( "reading value of 'f-non-zero' ... OK" );
 	}
 	
 	// load the PDDL model, run the problem instance node
@@ -100,6 +145,62 @@ protected:
 	
 	// ROS node handle
     ros::NodeHandle nh;
+    
+    // set a simple fluent
+    bool set_fluent( const std::string fname, float fvalue )
+    {
+		// prepare command
+		rosplan_knowledge_msgs::KnowledgeUpdateService kbm;
+		
+		kbm.request.update_type = KB_ADD_KNOWLEDGE;
+		kbm.request.knowledge.knowledge_type = KB_KTYPE_FLUENT;
+		kbm.request.knowledge.attribute_name = fname;
+		kbm.request.knowledge.function_value = fvalue;
+		
+		// send the command
+		if( !cl_kb_update->call( kbm ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_KB_UPDATE ) 
+				<< (!cl_kb_update->exists( ) ? " -- it seems not opened" : "") );
+			return false;
+		}
+		
+		return kbm.response.success;
+	}
+	
+	void set_predicate( const std::string pname, std::map<std::string, std::string>& params, bool value )
+	{
+		// TODO implement me!
+	}
+	
+	// rval: return here the fluent value
+	bool get_fluent( const std::string pname, float& rval )
+	{
+		// prepare command
+		rosplan_knowledge_msgs::GetAttributeService kbm;
+		kbm.request.predicate_name = pname;
+		
+		// call the service
+		if( !cl_kb_get_fluent->call( kbm ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_KB_GET_FLUENT ) 
+				<< (!cl_kb_get_fluent->exists( ) ? " -- it seems not opened" : "") );
+			return false;
+		}
+		
+		// return the value
+		rval = kbm.response.attributes[0].function_value;
+		return true;
+	}
+	
+	bool get_predicate( const std::string pname, std::map<std::string, std::string>& params )
+	{
+		// TODO implement me!
+		
+		return true;
+	}
 };
 
 
@@ -148,6 +249,26 @@ int main( int argc, char* argv[] )
 	}
 	cl_parse_plan = &tcl_parse_plan;
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_PARSE_PLAN ) << "... OK" );
+	
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_UPDATE ) << "..." );
+	ros::ServiceClient tcl_kb_update = nh.serviceClient<rosplan_knowledge_msgs::KnowledgeUpdateService>( SERVICE_KB_UPDATE );
+	if( !tcl_kb_update.waitForExistence( ros::Duration( TIMEOUT_KB_UPDATE ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_KB_UPDATE << "s) " );
+		return 0;
+	}
+	cl_kb_update = &tcl_kb_update;
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_UPDATE ) << "... OK" );
+	
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_GET_FLUENT ) << "..." );
+	ros::ServiceClient tcl_kb_get_fluent = nh.serviceClient<rosplan_knowledge_msgs::GetAttributeService>( SERVICE_KB_GET_FLUENT );
+	if( !tcl_kb_get_fluent.waitForExistence( ros::Duration( TIMEOUT_KB_GET_FLUENT ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_KB_GET_FLUENT << "s) " );
+		return 0;
+	}
+	cl_kb_get_fluent = &tcl_kb_get_fluent;
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_GET_FLUENT ) << "... OK" );
 	
 	TLOG( "ready" );
 	
