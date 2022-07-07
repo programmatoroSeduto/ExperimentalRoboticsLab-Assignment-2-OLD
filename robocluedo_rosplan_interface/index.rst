@@ -14,6 +14,8 @@ About the package
 	:titlesonly:
 	:glob:
 	
+	_docs/*
+	
 
 ROS Interfaces documentation
 --------------------------------

@@ -8,7 +8,21 @@ from inside the folder `(package robocluedo_rosplan_interface)/pddl/` run the co
 ./parser <domain file> <(opt) problem file>
 ```
 
-## Specific rules
+## Specific rules for the PDDL in ROS Plan
+
+you can set the planner in a suitable way for your application by the `planner_command` parameter in the planner interface. BUT the knowledge base node is able to interpret a non-standard particular version of PDDL, otherwise it closes unexpectedly. 
+
+- use this list of requirements:
+
+	```lisp
+	(:requirements 
+		:strips 
+		:typing 
+		:equality 
+		:universal-preconditions 
+		:durative-actions
+	)
+	```
 
 - seemingly there's no bugs in tabulation parsing
 
@@ -21,6 +35,8 @@ from inside the folder `(package robocluedo_rosplan_interface)/pddl/` run the co
 - *don't use `(and ...)` with only one argument!* If the and is going to contain only one predicate, simply don't use such operators: just write the predicate, and nothing else. 
 
 - **empty `:condition (... )` statements are not allowed!**
+
+- you cannot use `(not ...)` inside the goal statement: the planner doesn't fully support `:adl` requirement. 
 
 ## Durative Actions - the right syntax
 
@@ -40,7 +56,7 @@ from inside the folder `(package robocluedo_rosplan_interface)/pddl/` run the co
 
 ## ADL support
 
-When you set the requirement *ADL*, the message is this:
+**ROSPlan doesn't have a complete support for ADL**, which is definitely a bad news. Classical planning isn't supported, in particular the common actions. When you set the requirement *ADL*, the message is this:
 
 ```
 A problem has been encountered, and the planner has to terminate.
@@ -60,6 +76,10 @@ for them, please contact the authors to discuss it with them, who may be able to
 extend the planner to meet your needs.
 ```
 
+## Available Planners
+
+**Attention** : Better to use POPF, as suggested in the official tutorial. 
+
 ## POPF help
 
 see [popf infos](https://planning.wiki/ref/planners/popf)
@@ -75,6 +95,8 @@ see [popf infos](https://planning.wiki/ref/planners/popf)
 	:durative-actions
 )
 ```
+
+**PLanning interface** : `<node pkg="rosplan_planning_system" name="popf_planning_interface" type="popf_planning_interface">`
 
 help from the program:
 
@@ -106,20 +128,76 @@ Options are:
 	-L<n>		LP verbose to degree n (n defaults to 1 if not specified).
 ```
 
+**Command line for POPF** : for normal planning,
+
+```bash
+timeout 10 <popf_path>/popf -v2 DOMAIN PROBLEM > plan.pddl
+```
+
+*optimal planning if possible* : (it could significantly slow down the planning workflow)
+
+```bash
+<popf_path>/popf -n -v2 DOMAIN PROBLEM > plan.pddl
+```
+
 ## Metric-ff help
 
-```
+see [Metric-FF on planning.wiki](https://planning.wiki/ref/planners/metricff)
+
+see also the [official page of Metric-FF](https://fai.cs.uni-saarland.de/hoffmann/metric-ff.html)
+
+**temporal and numerical planning (with support for ADL)**. Supported requirements:
 
 ```
+(:requirements 
+	;; === PDDL1.1 === ;;
+	:strips 
+	:typing 
+	:equality 
+	:existential-preconditions
+	:universal-preconditions 
+	:conditional-effects
+	:quantified-preconditions
+	
+	;; === PDDL2.1 === ;;
+	:fluents
+	:durative-actions
+)
+```
 
-## Contingent-FF help
+help from metric-ff:
+
+```
+root@dbfbde77a543:~/ros_ws/src/ROSPlan/rosplan_planning_system/common/bin# ./Metric-FF --help
+
+usage of ff:
+
+OPTIONS   DESCRIPTIONS
+
+-p <str>    Path for operator and fact file
+-o <str>    Operator file name
+-f <str>    Fact file name
+
+-r <int>    Random seed [used for random restarts; preset: 0]
+
+-s <int>    Search configuration [preset: s=5]; '+H': helpful actions pruning
+      0     Standard-FF: EHC+H then BFS (cost minimization: NO)
+      1     BFS (cost minimization: NO)
+      2     BFS+H (cost minimization: NO)
+      3     Weighted A* (cost minimization: YES)
+      4     A*epsilon (cost minimization: YES)
+      5     EHC+H then A*epsilon (cost minimization: YES)
+-w <num>    Set weight w for search configs 3,4,5 [preset: w=5]
+
+-C          Do NOT use cost-minimizing relaxed plans for options 3,4,5
+
+-b <float>  Fixed upper bound on solution cost (prune based on g+hmax); active only with cost minimization
 
 ```
 
+**Command line for Metric-FF** : 
+
+```bash
+timeout 10 <metric-ff_path>/Metric-FF -o DOMAIN -p PROBLEM 
 ```
 
-## PANDA help
-
-```
-
-```
