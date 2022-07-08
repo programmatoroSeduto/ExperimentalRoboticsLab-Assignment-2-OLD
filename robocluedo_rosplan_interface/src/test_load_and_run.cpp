@@ -54,12 +54,10 @@ ros::ServiceClient *cl_kb_get_fluent;
 ros::ServiceClient *cl_kb_get_pred;
 */
 
-/*
 // query service of the kb
 #define SERVICE_QUERY "/rosplan_knowledge_base/query_state"
 #define TIMEOUT_QUERY 5
 ros::ServiceClient *cl_query;
-*/
 
 
 
@@ -73,6 +71,8 @@ public:
 	// load the PDDL model, solve and parse it
 	void spin(  )
 	{
+		TLOG( "=== TESTING ROSPLAN PIPELINE ===" );
+		
 		TLOG( "loading model ... " );
 		this->pddl_load( );
 		TLOG( "loading model ... OK" );
@@ -85,6 +85,10 @@ public:
 		this->pddl_parse_plan( );
 		TLOG( "parsing ... OK" );
 		
+		
+		
+		TLOG( "=== TESTING FLUENTS ===" );
+		
 		TLOG( "setting fluent 'f-non-zero=4' ... " );
 		{
 			this->set_fluent( "f-non-zero", 4.0 );
@@ -95,9 +99,95 @@ public:
 		{
 			float val = 0.0;
 			bool rt = this->get_fluent( "f-non-zero", val );
-			TLOG( "f-non-zero=" << val << (rt ? "returned TRUE" : "returned FALSE") );
+			TLOG( "f-non-zero=" << val << (rt ? " returned TRUE" : " returned FALSE") );
 		}
 		TLOG( "reading value of 'f-non-zero' ... OK" );
+		
+		TLOG( "setting fluent 'f-non-zero=6' ... " );
+		{
+			this->set_fluent( "f-non-zero", 6 );
+		}
+		TLOG( "setting fluent 'f-non-zero=6' ... OK" );
+		
+		TLOG( "reading value of 'f-non-zero' ... " );
+		{
+			float val = 0.0;
+			bool rt = this->get_fluent( "f-non-zero", val );
+			TLOG( "f-non-zero=" << val << (rt ? " returned TRUE" : " returned FALSE") );
+		}
+		TLOG( "reading value of 'f-non-zero' ... OK" );
+		
+		
+		
+		TLOG( "=== TESTING PREDICATES WITH NO ARGS ===" );
+		
+		TLOG( "setting predicate '(signal-stop )=FALSE' ... " );
+		{
+			std::map<std::string, std::string> m;
+			this->set_predicate( "signal-stop", m, false );
+		}
+		TLOG( "setting predicate '(signal-stop )=FALSE' ... OK" );
+		
+		TLOG( "reading value of '(signal-stop )' ... " );
+		{
+			std::map<std::string, std::string> m;
+			bool res = this->get_predicate( "signal-stop", m );
+			TLOG( "expected FALSE -- (signal-stop )=" << (res ? "TRUE" : "FALSE") );
+		}
+		TLOG( "reading value of '(signal-stop )' ... OK" );
+		
+		TLOG( "setting predicate '(signal-stop )=TRUE' ... " );
+		{
+			std::map<std::string, std::string> m;
+			this->set_predicate( "signal-stop", m, true );
+		}
+		TLOG( "setting predicate '(signal-stop )=TRUE' ... OK" );
+		
+		TLOG( "reading value of '(signal-stop )' ... " );
+		{
+			std::map<std::string, std::string> m;
+			bool res = this->get_predicate( "signal-stop", m );
+			TLOG( "expected TRUE -- (signal-stop )=" << (res ? "TRUE" : "FALSE") );
+		}
+		TLOG( "reading value of '(signal-stop )' ... OK" );
+		
+		
+		
+		TLOG( "=== TESTING PREDICATES WITH ONE ARG ===" );
+		
+		TLOG( "setting predicate '(b-true b1)=FALSE' ... " );
+		{
+			std::map<std::string, std::string> m;
+			m["b"] = "b1";
+			this->set_predicate( "b-true", m, false );
+		}
+		TLOG( "setting predicate '(b-true b1)=FALSE' ... OK" );
+		
+		TLOG( "reading value of '(b-true b1)' ... " );
+		{
+			std::map<std::string, std::string> m;
+			m["b"] = "b1";
+			bool res = this->get_predicate( "b-true", m );
+			TLOG( "expected FALSE -- (b-true b1)=" << (res ? "TRUE" : "FALSE") );
+		}
+		TLOG( "reading value of '(b-true b1)' ... OK" );
+		
+		TLOG( "setting predicate '(b-true b1)=TRUE' ... " );
+		{
+			std::map<std::string, std::string> m;
+			m["b"] = "b1";
+			this->set_predicate( "b-true", m, true );
+		}
+		TLOG( "setting predicate '(b-true b1)=TRUE' ... OK" );
+		
+		TLOG( "reading value of '(b-true b1)' ... " );
+		{
+			std::map<std::string, std::string> m;
+			m["b"] = "b1";
+			bool res = this->get_predicate( "b-true", m );
+			TLOG( "expected TRUE -- (b-true b1)=" << (res ? "TRUE" : "FALSE") );
+		}
+		TLOG( "reading value of '(b-true b1)' ... OK" );
 	}
 	
 	// load the PDDL model, run the problem instance node
@@ -140,6 +230,12 @@ public:
 		}
 	}
 	
+	// print the problem output
+	void print_problem_instance( )
+	{
+		
+	}
+	
 	
 protected:
 	
@@ -169,17 +265,42 @@ protected:
 		return kbm.response.success;
 	}
 	
-	void set_predicate( const std::string pname, std::map<std::string, std::string>& params, bool value )
+	bool set_predicate( const std::string pname, std::map<std::string, std::string>& params, bool value=true )
 	{
-		// TODO implement me!
+		// prepare command
+		rosplan_knowledge_msgs::KnowledgeUpdateService kbm;
+		
+		kbm.request.update_type = ( value ? KB_ADD_KNOWLEDGE : KB_DEL_KNOWLEDGE );
+		kbm.request.knowledge.knowledge_type = KB_KTYPE_PREDICATE;
+		kbm.request.knowledge.attribute_name = pname;
+		
+		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
+		{
+			diagnostic_msgs::KeyValue kv;
+			kv.key = it->first;
+			kv.value = it->second;
+			kbm.request.knowledge.values.push_back( kv );
+		}
+		
+		// send command
+		if( !cl_kb_update->call( kbm ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_KB_UPDATE ) 
+				<< (!cl_kb_update->exists( ) ? " -- it seems not opened" : "") );
+			return false;
+		}
+		
+		// return success
+		return kbm.response.success;
 	}
 	
 	// rval: return here the fluent value
-	bool get_fluent( const std::string pname, float& rval )
+	bool get_fluent( const std::string fname, float& rval )
 	{
 		// prepare command
 		rosplan_knowledge_msgs::GetAttributeService kbm;
-		kbm.request.predicate_name = pname;
+		kbm.request.predicate_name = fname;
 		
 		// call the service
 		if( !cl_kb_get_fluent->call( kbm ) ) 
@@ -197,9 +318,40 @@ protected:
 	
 	bool get_predicate( const std::string pname, std::map<std::string, std::string>& params )
 	{
-		// TODO implement me!
+		// query message
+		rosplan_knowledge_msgs::KnowledgeQueryService query;
+		rosplan_knowledge_msgs::KnowledgeItem kbm;
 		
-		return true;
+		kbm.knowledge_type = KB_KTYPE_PREDICATE;
+		kbm.attribute_name = pname;
+		/*
+		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
+			request.knowledge.values.push_back( diagnostic_msgs::KeyValue( it->first, it->second ) );
+		*/
+		
+		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
+		{
+			diagnostic_msgs::KeyValue kv;
+			kv.key = it->first;
+			kv.value = it->second;
+			kbm.values.push_back( kv );
+		}
+		
+		query.request.knowledge.push_back( kbm );
+		
+		// call the query service
+		if( !cl_query->call( query ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_QUERY ) 
+				<< (!cl_query->exists( ) ? " -- it seems not opened" : "") );
+			return false;
+		}
+		
+		// always true!
+		// return ( query.response.results.size( ) > 0 );
+		
+		return query.response.all_true;
 	}
 };
 
@@ -269,6 +421,16 @@ int main( int argc, char* argv[] )
 	}
 	cl_kb_get_fluent = &tcl_kb_get_fluent;
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_GET_FLUENT ) << "... OK" );
+	
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY ) << "..." );
+	ros::ServiceClient tcl_query = nh.serviceClient<rosplan_knowledge_msgs::KnowledgeQueryService>( SERVICE_QUERY );
+	if( !tcl_query.waitForExistence( ros::Duration( TIMEOUT_QUERY ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_QUERY << "s) " );
+		return 0;
+	}
+	cl_query = &tcl_query;
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY ) << "... OK" );
 	
 	TLOG( "ready" );
 	

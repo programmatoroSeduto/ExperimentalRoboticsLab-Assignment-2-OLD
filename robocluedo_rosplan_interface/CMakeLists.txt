@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   std_srvs
   rosplan_knowledge_msgs
-  # diagnostic_msgs
+  diagnostic_msgs
 )
 
 ## System dependencies are found with CMake's conventions
