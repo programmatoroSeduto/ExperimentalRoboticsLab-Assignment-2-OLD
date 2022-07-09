@@ -3,72 +3,76 @@
 (:domain robocluedo)
 
 (:objects
-	;; hypothesis IDs
-	ID1 ID2 ID3 ID4 ID5 ID6 - hypothesisID
+	;; ontology 
+	ID1 ID2 ID3 ID4 ID5 ID6 - hypID
 	
-	;; hypothesis elements
-	; missScarlett colonelMustard mrsWhite mrGreen mrsPeacock profPlum - who
-	; candlestick dagger leadPipe revolver rope spanner - what
-	; conservatory lounge kitchen library hall study bathroom diningRoom billiardRoom - where
-	
-	;; navigation system
-	wp1 wp2 wp3 wp4 center - waypoint
-	
+	;; environment
+	w1 w2 w3 w4 - waypoint
 )
 
 (:init
-	;; the system must be initalized
-	; (not (kb-init ))
+	;; init state of the system
+	(pre-init )
 	
-	;; by default max loop is 3
-	(= (max-loop ) 3)
+	;; moves
+	(= (remaining-moves ) 3)
 	
-	;; hypothesis allocation
-	;(hyp-active ID1)
-	;; not (hyp-discarded ID1)
-	;; not (hyp-complete ID1)
-	;(= (count-who-for-ID ID1) 0)
-	;(= (count-what-for-ID ID1) 0)
-	;(= (count-where-for-ID ID1) 0)
-	;(hyp-active ID2)
-	;; not (hyp-discarded ID2)
-	;; not (hyp-complete ID2)
-	;(= (count-who-for-ID ID2) 0)
-	;(= (count-what-for-ID ID2) 0)
-	;(= (count-where-for-ID ID2) 0)
-	;(hyp-active ID3)
-	;; not (hyp-discarded ID3)
-	;; not (hyp-complete ID3)
-	;(= (count-who-for-ID ID3) 0)
-	;(= (count-what-for-ID ID3) 0)
-	;(= (count-where-for-ID ID3) 0)
-	;(hyp-active ID4)
-	;; not (hyp-discarded ID4)
-	;; not (hyp-complete ID4)
-	;(= (count-who-for-ID ID4) 0)
-	;(= (count-what-for-ID ID4) 0)
-	;(= (count-where-for-ID ID4) 0)
-	;(hyp-active ID5)
-	;; not (hyp-discarded ID5)
-	;; not (hyp-complete ID5)
-	;(= (count-who-for-ID ID5) 0)
-	;(= (count-what-for-ID ID5) 0)
-	;(= (count-where-for-ID ID5) 0)
-	;(hyp-active ID6)
-	;; not (hyp-discarded ID6)
-	;; not (hyp-complete ID6)
-	;(= (count-who-for-ID ID6) 0)
-	;(= (count-what-for-ID ID6) 0)
-	;(= (count-where-for-ID ID6) 0)
+	;; quality of the solution
+	(= (solution-quality ) 0)
+	
+	;; environment data
+	(passage w1 w2 )
+		(passage w1 w3 )
+		(passage w1 w4 )
+		(passage w1 center )
+	(passage w2 w1 )
+		(passage w2 w3 )
+		(passage w2 w4 )
+		(passage w2 center )
+	(passage w3 w1 )
+		(passage w3 w2 )
+		(passage w3 w4 )
+		(passage w3 center )
+	(passage w4 w1 )
+		(passage w4 w2 )
+		(passage w4 w3 )
+		(passage w4 center )
+	(passage center w1 )
+		(passage center w2 )
+		(passage center w3 )
+		(passage center w4 )
 	
 	;; navigation system
-	(is-center center)
-	(robot-position center)
-	(last-place-visited center)
+	(robot-position center )
+	(not-explored w1 )
+	(not-explored w2 )
+	(not-explored w3 )
+	(not-explored w4 )
+	
+	;; manipulator
+	(manipulator-off )
+	
+	;; hints gathering system
+	(can-give-hint w1 )
+		(not-acquired-hint w1 )
+	(can-give-hint w2 )
+		(not-acquired-hint w2 )
+	(can-give-hint w3 )
+		(not-acquired-hint w3 )
+	(can-give-hint w4 )
+		(not-acquired-hint w1 )
+	
+	;; hypotheses classification
+	(h-open ID1 )
+	(h-complete ID2 )
+	(h-open ID3 )
+	(h-open ID4 )
+	(h-discard ID5 )
+	(h-open ID6 )
 )
 
-(:goal
-	(robot-position wp3)
-)
+(:goal (elementary-whatson ))
+
+(:metric maximize (solution-quality ))
 
 )
