@@ -204,6 +204,25 @@ public:
 		else TLOG( "(expected '" << randval << "') (f-two-args kk1 kk2)=" << rval );
 		// === //
 		
+		
+		// === PARTIAL QUERIES === //
+		TLOG( "query : #(b-true b1=???)" );
+		res = this->exists_predicate( "b-true", params_2 );
+		TLOG( "(expected: 1) " << "#(b-true b1=???)=" << res );
+		params_1["b"] = "b1";
+		res = this->get_predicate( "b-true", params_1 );
+		if( !this->ok( ) ) return;
+		else TLOG( "(b-true b1)=" << (res? "1" : "0") );
+		params_1["b"] = "b2";
+		res = this->get_predicate( "b-true", params_1 );
+		if( !this->ok( ) ) return;
+		else TLOG( "(b-true b2)=" << (res? "1" : "0") );
+		params_1["b"] = "b3";
+		res = this->get_predicate( "b-true", params_1 );
+		if( !this->ok( ) ) return;
+		else TLOG( "(b-true b3)=" << (res? "1" : "0") );
+		// === //
+		
 	}
 	
 private:

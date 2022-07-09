@@ -6,21 +6,42 @@
 	:equality 
 	:universal-preconditions 
 	:durative-actions
+	:negative-preconditions
+	:fluents
 )
 
 (:types
-	hypothesis-ID
-	who where what
+	;; reasoning system
+	hypothesisID
+	; who where what
+	
+	;; movement system
+	waypoint
 )
 
 (:predicates
+	;; workig phases
+	(investigating )
+	(ready-to-acquire )
+	(acquiring )
+	
 	;; initialization of the system
 	(kb-init )
 	
 	;; predicates characterization
-	(hyp-active ?id - hypothesis-ID)
-	(hyp-discarded ?id - hypothesis-ID)
-	(hyp-complete ?id - hypothesis-ID)
+	(hyp-active ?id - hypothesisID)
+	(hyp-discarded ?id - hypothesisID)
+	(hyp-complete ?id - hypothesisID)
+	
+	;; hypothesis and its elements
+	(hyp-who ?id - hypothesisID ?who - who)
+	(hyp-where ?id - hypothesisID ?where - where)
+	(hyp-what ?id - hypothesisID ?what - what)
+	
+	;; movement system
+	(robot-position ?p - waypoint)
+	(last-place-visited ?p - waypoint)
+	(is-center ?p - waypoint)
 )
 
 (:functions
@@ -28,9 +49,9 @@
 	(max-loop )
 	
 	;; predicates characterization
-	(count-who-for-ID ?id - hypothesis-ID)
-	(count-what-for-ID ?id - hypothesis-ID)
-	(count-where-for-ID ?id - hypothesis-ID)
+	(count-who-for-ID ?id - hypothesisID)
+	(count-what-for-ID ?id - hypothesisID)
+	(count-where-for-ID ?id - hypothesisID)
 )
 
 
@@ -43,11 +64,50 @@
 	
 	:duration (= ?duration 1)
 	
-	:condition (not (kb-init))
+	:condition (at start (and
+		(not (kb-init))
+		(not (investigating))
+	))
 	
-	:effect (and
+	:effect (at end (and
 		(kb-init )
-	)
+		(investigating )
+	))
+)
+
+
+
+;; === MOVEMENT SYSTEM === ;;
+
+(:durative-action move-to
+	:parameters ( ?from ?to - waypoint )
+	
+	:duration (= ?duration 1)
+	
+	:condition (at start (and
+		(investigating )
+		(not (ready-to-acquire ))
+		(not (acquiring ))
+		
+		(robot-position ?from)
+		(last-place-visited ?from)
+		(not (last-place-visited ?to))
+		(not (is-center ?to))
+		
+		(> (max-loop ) 0)
+	))
+	
+	:effect (at end (and
+		(not (last-place-visited ?from))
+		(last-place-visited ?to)
+		
+		(not (robot-position ?from))
+		(robot-position ?to)
+		
+		(decrease (max-loop ) 1)
+		
+		(ready-to-acquire )
+	))
 )
 
 

@@ -130,6 +130,10 @@
 #define SERVICE_QUERY "/rosplan_knowledge_base/query_state"
 #define TIMEOUT_QUERY 5
 
+// KB propositions query
+#define SERVICE_QUERY_2 "/rosplan_knowledge_base/state/propositions"
+#define TIMEOUT_QUERY_2 5
+
 // KB update (fluents and predicates)
 #define SERVICE_KB_UPDATE "/rosplan_knowledge_base/update"
 #define TIMEOUT_KB_UPDATE 5
@@ -235,6 +239,9 @@ public:
 	 * @note the boolean 'false' is returned also when the call fails, so
 	 * remember to check the valdity of the value using \ref ok
 	 * 
+	 * @todo the method assumes that only one result is returned, which is
+	 * true for fully defined queries, but what about partial queries?
+	 * 
 	 ***********************************************/
 	bool get_predicate( 
 		const std::string& pname, 
@@ -252,7 +259,6 @@ public:
 	 * 
 	 * @warning remember to check the success flag using \ref ok
 	 * 
-	 * @todo implementation spceifying the parameters
 	 * @todo check that the list of returned fluents is not empty!
 	 * 
 	 ***********************************************/
@@ -300,13 +306,45 @@ public:
 	 * 
 	 * @note no need here to check the success of the call using \ref ok
 	 * 
-	 * @todo implement the arguments for the fluents!
-	 * 
 	 ***********************************************/
 	bool set_fluent(
 		std::string fname,
 		std::map<std::string, std::string>& params,
 		float fvalue );
+	
+	
+	
+	
+	// === OTHER QUERIES
+	
+	/********************************************//**
+	 *  
+	 * \brief check how many elements are in a partial predicate query
+	 * 
+	 * in this application, the query "how many predicates with this argument
+	 * are true?" occurs often. this method can count how many elements are
+	 * involved in a partial query. 
+	 * 
+	 * asking something like that means asking the system to find <i>how many 
+	 * predicates with this arguments are true</i>. If the request is fully
+	 * defined, there's at most one element; if the query contains a 
+	 * number of arguments less than the complete list, the function
+	 * will return how many predicates are true with these parameters. 
+	 * 
+	 * @param pname the name of the predicate to get
+	 * @param params list of parameters, <b>even a partial list</b>
+	 * 
+	 * @returns (int) how many elements are true with these parameters for
+	 * that particular predicate. 
+	 * 
+	 * @warning remember to check the success flag using \ref ok
+	 * 
+	 * @todo code review: avoid code duplication!
+	 * 
+	 ***********************************************/
+	int exists_predicate(
+		const std::string& pname, 
+		std::map<std::string, std::string>& params );
 	
 protected:
 	
@@ -406,6 +444,9 @@ private:
 	
 	/// predicates query client handle
 	ros::ServiceClient cl_query;
+	
+	/// another query client handle
+	ros::ServiceClient cl_query_2;
 	
 	/// update clent handle
 	ros::ServiceClient cl_kb_update;

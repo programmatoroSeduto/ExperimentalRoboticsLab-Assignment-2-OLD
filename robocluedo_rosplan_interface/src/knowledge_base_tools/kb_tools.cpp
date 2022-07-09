@@ -212,6 +212,88 @@ bool kb_tools::set_fluent(
 
 
 
+// === OTHER QUERIES
+
+int kb_tools::exists_predicate(
+		const std::string& pname, 
+		std::map<std::string, std::string>& params )
+{
+	// query message
+	rosplan_knowledge_msgs::GetAttributeService query;
+	query.request.predicate_name = pname;
+	
+	if( debug_mode ) 
+	{
+		std::string pm = "";
+		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
+			pm += ", " + it->first + "=" + it->second;
+		TLOG( "kb_tools::exists_predicate" << "( " << pname << pm << " )"  );
+	}
+
+	// call the query service
+	if( !this->cl_query_2.call( query ) ) 
+	{ 
+		TERR( "unable to make a service request -- failed calling service " 
+			<< LOGSQUARE( SERVICE_QUERY ) 
+			<< (!this->cl_query_2.exists( ) ? " -- it seems not opened" : "") );
+		
+		this->success = false;
+		return false;
+	}
+	
+	// count the results
+	int res = 0;
+	// for( auto it=query.response.attributes.begin( ) ; it!=query.response.attributes.end( ) ; ++it )
+	
+	if( params.size( ) == 0 ) res = query.response.attributes.size( );
+	else
+	{
+		bool found = false;
+		int n_max_params = query.response.attributes.size( );
+		
+		for( auto it=query.response.attributes.begin( ) ; it!=query.response.attributes.end( ) ; ++it )
+		{
+			// check parameters (brute force)
+			int n_params = n_max_params;
+			for( auto it_par=params.begin() ; it_par!=params.end() ; ++it_par ) // for each parameter...
+			{
+				int newval = n_params - 1;
+				for( auto it_k=it->values.begin( ) ; it_k!=it->values.end( ) ; ++it_k ) // ... and for each value in the knowledge item ...
+				{
+					if( ( it_par->first ==  it_k->key ) && ( it_par->second ==  it_k->value ) )
+					{
+						--n_params;
+						break;
+					}
+				}
+				
+				if( newval < n_params )
+				{
+					break;
+				}
+				else if( n_params == 0 )
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if( found )
+			{
+				++res;
+				found = false;
+			}
+		}
+	}
+	
+	if( debug_mode ) 
+		TLOG( "kb_tools::get_predicate" << " CALL SUCCESS with return " << res );
+	
+	return res;
+}
+
+
+
 
 // === PROTECTED METHODS
 
@@ -387,6 +469,19 @@ void kb_tools::open_services( )
 		return;
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY ) << "... OK" );
+	
+	
+	// === another Predicate query service === //
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY_2 ) << "..." );
+	this->cl_query_2 = nh.serviceClient<rosplan_knowledge_msgs::GetAttributeService>( SERVICE_QUERY_2 );
+	if( !this->cl_query_2.waitForExistence( ros::Duration( TIMEOUT_QUERY_2 ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_QUERY_2 << "s) " );
+		
+		this->success = false;
+		return;
+	}
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY_2 ) << "... OK" );
 	
 	
 	// === Fluents Query service === //
