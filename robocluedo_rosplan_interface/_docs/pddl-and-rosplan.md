@@ -1,6 +1,8 @@
 # PDDL and ROSPlan
 
-## validation wit Parser
+Unfortunately, the ROS Plan knowledge base is able only to parse a very particular, limited version of the PDDL. And worse, this doesn't seem to appear in any documentation about ROS Plan! 
+
+## validation with Parser
 
 from inside the folder `(package robocluedo_rosplan_interface)/pddl/` run the command
 
@@ -76,11 +78,13 @@ for them, please contact the authors to discuss it with them, who may be able to
 extend the planner to meet your needs.
 ```
 
+the funny thing is that *the planners support ADL, but KB does not!* And, since KB parses the problem, there's no way to parse things like classical planning, unless you don't want to throw away most of the ROS Plan framework. 
+
 ## Available Planners
 
 **Attention** : Better to use POPF, as suggested in the official tutorial. 
 
-## POPF help
+### POPF help
 
 see [popf infos](https://planning.wiki/ref/planners/popf)
 
@@ -140,7 +144,7 @@ timeout 10 <popf_path>/popf -v2 DOMAIN PROBLEM > plan.pddl
 <popf_path>/popf -n -v2 DOMAIN PROBLEM > plan.pddl
 ```
 
-## Metric-ff help
+### Metric-ff help
 
 see [Metric-FF on planning.wiki](https://planning.wiki/ref/planners/metricff)
 

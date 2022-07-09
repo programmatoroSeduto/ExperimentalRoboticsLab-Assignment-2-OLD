@@ -5,18 +5,11 @@
 )
 (:init
     (b-not-true b2)
-
     (b-true b1)
     (b-true b3)
-
-
     (stop)
-
-
     (= (f-non-zero) 5)
-
     (= (f-zero) 0)
-
 )
 (:goal (and
     (b-true b1)
