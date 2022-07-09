@@ -96,12 +96,12 @@
 #ifndef __H_KB_TOOLS__
 #define __H_KB_TOOLS__
 
-
 #include "ros/ros.h"
 
 #include "rosplan_knowledge_msgs/KnowledgeQueryService.h"
 #include "rosplan_knowledge_msgs/KnowledgeUpdateService.h"
 #include "rosplan_knowledge_msgs/KnowledgeItem.h"
+#include "rosplan_knowledge_msgs/GetAttributeService.h"
 #include "diagnostic_msgs/KeyValue.h"
 
 #include <string>
@@ -109,6 +109,8 @@
 
 #ifndef __DEBUG_MACROS__
 #define __DEBUG_MACROS__
+
+#define NODE_NAME "kb_tools"
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )

@@ -28,7 +28,7 @@ kb_tools::kb_tools( bool pdebug_mode ) :
 
 
 // class destructor 
-~kb_tools( ) 
+kb_tools::~kb_tools( ) 
 {
 	// ...
 };
@@ -37,20 +37,20 @@ kb_tools::kb_tools( bool pdebug_mode ) :
 // check if the last action succeeded or not
 bool kb_tools::ok( )
 {
-	if( dbmode ) TLOG( "kb_tools::ok( )" << ( this->success ? "" : " !!! FAILURE !!!" ) );
+	if( debug_mode ) TLOG( "kb_tools::ok( )" << ( this->success ? "" : " !!! FAILURE !!!" ) );
 	
 	return this->success;
 }
 
 
 // set the log verosity level
-void kb_tools::set_debug_mode( bool dbmode )
+void kb_tools::set_debug_mode( bool db_mode )
 {
 	// set the mode
 	this->debug_mode = db_mode;
 	
 	// notify it
-	if( dbmode ) TLOG( "kb_tools::set_debug_mode : DEBUG MODE ENABLED" );
+	if( db_mode ) TLOG( "kb_tools::set_debug_mode : DEBUG MODE ENABLED" );
 	else TLOG( "kb_tools::set_debug_mode : debug mode not enabled" );
 }
 
@@ -68,7 +68,7 @@ bool kb_tools::get_predicate(
 	rosplan_knowledge_msgs::KnowledgeQueryService query = this->request_query(
 		pname, params );
 	
-	if( dbmode ) 
+	if( debug_mode ) 
 	{
 		std::string pm = "";
 		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
@@ -89,7 +89,7 @@ bool kb_tools::get_predicate(
 	
 	this->success = true;
 	
-	if( dbmode ) TLOG( "kb_tools::get_predicate" << " CALL SUCCESS with return " 
+	if( debug_mode ) TLOG( "kb_tools::get_predicate" << " CALL SUCCESS with return " 
 		<< (query.response.all_true ? "true" : "false")  );
 	return query.response.all_true;
 }
@@ -103,7 +103,7 @@ float kb_tools::get_fluent(
 	rosplan_knowledge_msgs::GetAttributeService kbm;
 	kbm.request.predicate_name = fname;
 	
-	if( dbmode ) TLOG( "kb_tools::get_fluent(" << fname << ")"  );
+	if( debug_mode ) TLOG( "kb_tools::get_fluent(" << fname << ")"  );
 
 	// call the service
 	if( !cl_kb_get_fluent->call( kbm ) ) 
@@ -118,7 +118,7 @@ float kb_tools::get_fluent(
 	
 	this->success = true;
 	
-	if( dbmode ) TLOG( "kb_tools::get_fluent(" << " CALL SUCCESS with return " 
+	if( debug_mode ) TLOG( "kb_tools::get_fluent(" << " CALL SUCCESS with return " 
 		<< kbm.response.attributes[0].function_value 
 		<< " (size=" << kbm.response.attributes.size() << ")"  );
 	return kbm.response.attributes[0].function_value;
@@ -139,7 +139,7 @@ bool kb_tools::set_predicate(
 	rosplan_knowledge_msgs::KnowledgeUpdateService kbm = 
 		this->request_update( pname, params, pvalue );
 	
-	if( dbmode ) 
+	if( debug_mode ) 
 	{
 		std::string pm = "";
 		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
@@ -159,7 +159,7 @@ bool kb_tools::set_predicate(
 	}
 	
 	this->success = kbm.response.success;
-	if( dbmode ) TLOG( "kb_tools::set_predicate" << " CALL SUCCESS with return " 
+	if( debug_mode ) TLOG( "kb_tools::set_predicate" << " CALL SUCCESS with return " 
 		<< (kbm.response.success ? "success" : "NOT success")  );
 	return kbm.response.success;
 }
@@ -172,9 +172,9 @@ bool kb_tools::set_fluent(
 {
 	// prepare command
 	rosplan_knowledge_msgs::KnowledgeUpdateService kbm = 
-		this->request_update( fname, fvalue )
+		this->request_update( fname, fvalue );
 	
-	if( dbmode ) TLOG( "kb_tools::set_fluent(" << fname << ", fvalue=" << fvalue << ")"  );
+	if( debug_mode ) TLOG( "kb_tools::set_fluent(" << fname << ", fvalue=" << fvalue << ")"  );
 
 	// send the command
 	if( !this->cl_kb_update->call( kbm ) ) 
@@ -188,7 +188,7 @@ bool kb_tools::set_fluent(
 	}
 	
 	this->success = kbm.response.success;
-	if( dbmode ) TLOG( "kb_tools::set_predicate" << " CALL SUCCESS with return " 
+	if( debug_mode ) TLOG( "kb_tools::set_predicate" << " CALL SUCCESS with return " 
 		<< (kbm.response.success ? "success" : "NOT success")  );
 	return kbm.response.success;
 }
@@ -277,7 +277,9 @@ void kb_tools::open_services( )
 	if( !tcl_query.waitForExistence( ros::Duration( TIMEOUT_QUERY ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_QUERY << "s) " );
-		return 0;
+		
+		this->success = false;
+		return;
 	}
 	this->cl_query = &tcl_query;
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY ) << "... OK" );
@@ -289,7 +291,9 @@ void kb_tools::open_services( )
 	if( !tcl_kb_get_fluent.waitForExistence( ros::Duration( TIMEOUT_KB_GET_FLUENT ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_KB_GET_FLUENT << "s) " );
-		return 0;
+		
+		this->success = false;
+		return;
 	}
 	this->cl_kb_get_fluent = &tcl_kb_get_fluent;
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_GET_FLUENT ) << "... OK" );
@@ -301,7 +305,9 @@ void kb_tools::open_services( )
 	if( !tcl_kb_update.waitForExistence( ros::Duration( TIMEOUT_KB_UPDATE ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_KB_UPDATE << "s) " );
-		return 0;
+		
+		this->success = false;
+		return;
 	}
 	this->cl_kb_update = &tcl_kb_update;
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_KB_UPDATE ) << "... OK" );
