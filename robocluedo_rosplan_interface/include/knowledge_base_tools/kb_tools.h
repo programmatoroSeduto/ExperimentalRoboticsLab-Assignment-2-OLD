@@ -94,7 +94,7 @@
  ***********************************************/
 
 #ifndef __H_KB_TOOLS__
-#define __H_KB_TOOLS__
+#define __H_KB_TOOLS__ "__H_KB_TOOLS__"
 
 #include "ros/ros.h"
 
@@ -110,7 +110,9 @@
 #ifndef __DEBUG_MACROS__
 #define __DEBUG_MACROS__
 
-#define NODE_NAME "kb_tools"
+#ifndef NODE_NAME
+	#define NODE_NAME "kb_tools"
+#endif
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )
@@ -255,7 +257,8 @@ public:
 	 * 
 	 ***********************************************/
 	float get_fluent( 
-		const std::string fname );
+		const std::string fname,
+		std::map<std::string, std::string>& params );
 	
 	
 	
@@ -302,6 +305,7 @@ public:
 	 ***********************************************/
 	bool set_fluent(
 		std::string fname,
+		std::map<std::string, std::string>& params,
 		float fvalue );
 	
 protected:
@@ -372,18 +376,42 @@ protected:
 	 ***********************************************/
 	rosplan_knowledge_msgs::KnowledgeUpdateService request_update(
 		const std::string fname, 
+		std::map<std::string, std::string>& params, 
 		float fvalue );
+	
+	/********************************************//**
+	 *  
+	 * \brief search a particular fluent inside a list of fluents
+	 * 
+	 * Brute force search inside a list of fluents: the function looks for
+	 * a fluent with that name and those arguments, and returns its value. 
+	 * 
+	 * @param fname the name of the fluent
+	 * @param params the list of parameters
+	 * @param res the response from the service containing the functionals
+	 * 
+	 * @returns the value of the fluent, if it exists; otherwise, see \ref ok
+	 * 
+	 * @note remember to check the validity of the result using \ref ok
+	 * 
+	 * @todo alternatives to a pure brute force search?
+	 * 
+	 ***********************************************/
+	float read_fluents_list(
+		const std::string fname, 
+		std::map<std::string, std::string>& params,
+		rosplan_knowledge_msgs::GetAttributeService::Response& res );
 
 private:
 	
 	/// predicates query client handle
-	ros::ServiceClient *cl_query;
+	ros::ServiceClient cl_query;
 	
 	/// update clent handle
-	ros::ServiceClient *cl_kb_update;
+	ros::ServiceClient cl_kb_update;
 	
 	/// fluents query client handle
-	ros::ServiceClient *cl_kb_get_fluent;
+	ros::ServiceClient cl_kb_get_fluent;
 	
 	/********************************************//**
 	 *  

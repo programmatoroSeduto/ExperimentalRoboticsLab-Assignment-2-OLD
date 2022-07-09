@@ -24,6 +24,7 @@
 (:functions
 	(f-non-zero)
 	(f-zero)
+	(f-two-args ?k1 ?k2 - key)
 )
 
 (:durative-action set-start
