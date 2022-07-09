@@ -1,4 +1,16 @@
 
+/********************************************//**
+*  
+* @file kb_tools
+* @brief implementation of the class \ref kb_tools
+* 
+* @authors Fracesco Ganci
+* @version v1.0
+*  
+* @see kb_tools.h
+* 
+***********************************************/
+
 #include "knowledge_base_tools/kb_tools.h"
 
 
@@ -59,7 +71,23 @@ bool kb_tools::get_predicate(
 float kb_tools::get_fluent( 
 	const std::string fname )
 {
-	// TODO
+	// prepare command
+	rosplan_knowledge_msgs::GetAttributeService kbm;
+	kbm.request.predicate_name = fname;
+
+	// call the service
+	if( !cl_kb_get_fluent->call( kbm ) ) 
+	{ 
+		TERR( "unable to make a service request -- failed calling service " 
+			<< LOGSQUARE( SERVICE_KB_GET_FLUENT ) 
+			<< (!cl_kb_get_fluent->exists( ) ? " -- it seems not opened" : "") );
+		
+		this->success = false;
+		return 0.0;
+	}
+	
+	this->success = true;
+	return kbm.response.attributes[0].function_value;
 }
 
 
@@ -163,7 +191,7 @@ rosplan_knowledge_msgs::KnowledgeUpdateService kb_tools::request_update(
 // open the services with the knowledge base
 void kb_tools::open_services( )
 {
-	// === Query service === //
+	// === Predicates Query service === //
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_QUERY ) << "..." );
 	ros::ServiceClient tcl_query = nh.serviceClient<rosplan_knowledge_msgs::KnowledgeQueryService>( SERVICE_QUERY );
 	if( !tcl_query.waitForExistence( ros::Duration( TIMEOUT_QUERY ) ) )

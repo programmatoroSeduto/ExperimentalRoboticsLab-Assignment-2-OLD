@@ -5,6 +5,8 @@
 - the header contains the big part of the documentation
 - the cpp file contains a reference to the documentation in the header
 - **use the header documentation both for nodes and for header files**
+- where possible, better to use javadoc supported by many other doc systems instead of the (horrible) doxygen statement, poorly supported except by doxygen itself. 
+- **use HTML** to alter the markup inside the documentation text
 
 ## file documentation
 
@@ -213,3 +215,41 @@ this template can be used to document a function callback which also publishes s
  ***********************************************/
 ```
 
+## useful doxygen statements
+
+see [doxygen statements](https://www.doxygen.nl/manual/commands.html)
+
+see also [javadoc official giude](https://www.oracle.com/it/technical-resources/articles/java/javadoc-tool.html)
+
+### TODO remarks
+
+```
+@todo something still to do
+@bug describe the bug here ...
+```
+
+### annotations and remarks
+
+```
+\note
+...your annotation...
+
+
+\remark
+...your annotation...
+
+===AN EXAMPLE===
+\note
+This note consists of two paragraphs. <br>
+This is the first paragraph.
+```
+
+### warnings and limitations
+
+```
+@warning this is a warning
+@deprecated ...deprecation notice here...
+
+\attention
+\warning
+```
