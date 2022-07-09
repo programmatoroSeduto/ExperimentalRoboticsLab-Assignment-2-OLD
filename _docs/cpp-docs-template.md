@@ -153,6 +153,8 @@ the most free template.
 
 ### classical function documentation
 
+use this also for class methods!
+
 ```html
 /********************************************//**
  *  
