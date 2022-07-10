@@ -175,7 +175,7 @@
 	
 </node>
 
-<!-- PDDL ACTION : bright-bulb-over-head (simulated) --><!--
+<!-- PDDL ACTION : bright-bulb-over-head (simulated) -->
 <node name="rosplan_interface_bright_bulb_over_head" pkg="rosplan_planning_system" type="simulatedAction" 
 	respawn="false" output="screen">
 	
@@ -188,10 +188,9 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
-<!-- PDDL ACTION : move-to-center --><!--
-<node name="rosplan_interface_move_to_center" pkg="robocluedo_rosplan_interface" type="node_move_to_center" 
+<!-- PDDL ACTION : move-to-center -->
+<node name="rosplan_interface_move_to_center" pkg="robocluedo_rosplan_interface" type="node_move_to" 
 	respawn="false" output="screen">
 
 	<param name="knowledge_base"		value="rosplan_knowledge_base" />
@@ -203,7 +202,6 @@
 	<param name="action_probability"	value="1.0" />
 
 </node>
--->
 
 
 

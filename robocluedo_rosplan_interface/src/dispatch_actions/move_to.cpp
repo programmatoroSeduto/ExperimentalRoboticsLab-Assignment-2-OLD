@@ -57,16 +57,12 @@ RP_move_to::~RP_move_to( )
 bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
 {
 	// parameters
-	auto params = this->keyvalue2map( msg->parameters );
-	std::string from = params["from"];
-	std::string to = params["to"];
+	std::string action_name = msg->name;
 	
-	TLOG( "(move_to from=" << params["from"] << " to=" << params["to"] << ") CALLED" );
-		
-	/// @todo send the command to the navigation system and wait
-	TWARN( "(TODO) sending position to the navigation system" );
-	
-	return true;
+	if( action_name == "move-to" )
+		return this->action_move_to( msg );
+	else
+		return this->action_move_to_center( msg );
 }
 
 
@@ -89,6 +85,7 @@ void RP_move_to::cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm
 	TLOG( "(move-to ) RECEIVED MARKERS" );
 }
 
+
 // write a pose
 geometry_msgs::Pose RP_move_to::make_pose( float x, float y, float z, float qx, float qy, float qz, float qw )
 {
@@ -106,6 +103,38 @@ geometry_msgs::Pose RP_move_to::make_pose( float x, float y, float z, float qx, 
 	p.orientation.w = qw;
 	
 	return p;
+}
+
+
+// implementation of the action (move-to ?from ?to)
+bool RP_move_to::action_move_to( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
+{
+	auto params = this->keyvalue2map( msg->parameters );
+	std::string from = params["from"];
+	std::string to = params["to"];
+	
+	TLOG( "(move-to from=" << params["from"] << " to=" << params["to"] << ") CALLED" );
+		
+	/// @todo send the command to the navigation system and wait
+	TWARN( "(TODO) sending position to the navigation system" );
+	
+	return true;
+}
+
+
+// implementation of the action (move-to-center ?from)
+bool RP_move_to::action_move_to_center( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
+{
+	auto params = this->keyvalue2map( msg->parameters );
+	std::string from = params["from"];
+	std::string to = params["to"];
+	
+	TLOG( "(move-to-center from=" << params["from"] << ") CALLED" );
+		
+	/// @todo send the command to the navigation system and wait
+	TWARN( "(TODO) sending position to the navigation system" );
+	
+	return true;
 }
 
 }

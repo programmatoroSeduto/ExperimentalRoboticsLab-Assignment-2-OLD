@@ -107,8 +107,7 @@
 
 )
 (:goal (and
-    (robot-position w2)
-    (thinking)
-    (manipulator-off)
+    (wanna-solve)
+    (robot-position center)
 ))
 )

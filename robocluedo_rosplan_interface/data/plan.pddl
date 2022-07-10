@@ -7,11 +7,13 @@ Constructing lookup tables: [10%] [20%] [30%] [40%] [50%] [60%] [70%] [80%] [90%
 Post filtering unreachable actions:  [10%] [20%] [30%] [40%] [50%] [60%] [70%] [80%] [90%] [100%]
 [01;34mNo analytic limits found, not considering limit effects of goal-only operators[00m
 41% of the ground temporal actions in this problem are compression-safe
-Initial heuristic = 11.000
-b (10.000 | 1.000)b (9.000 | 2.001)b (8.000 | 2.001)b (7.000 | 3.002)b (6.000 | 4.003)b (5.000 | 5.004)b (4.000 | 5.004)b (3.000 | 6.005)b (2.000 | 11.010)b (1.000 | 11.010);;;; Solution Found
-; States evaluated: 23
-; Cost: 12.011
-; Time 0.00
+Initial heuristic = 2.000
+b (1.000 | 1.000)
+Resorting to best-first search
+b (1.000 | 1.000);;;; Solution Found
+; States evaluated: 1110
+; Cost: 21.020
+; Time 0.65
 0.000: (init-planning-system)  [1.000]
 1.001: (move-to center w1)  [1.000]
 2.002: (signal-info-acquisition w1)  [1.000]
@@ -24,3 +26,12 @@ b (10.000 | 1.000)b (9.000 | 2.001)b (8.000 | 2.001)b (7.000 | 3.002)b (6.000 | 
 9.009: (manipulator-near-marker w2)  [1.000]
 10.010: (acquire-hint w2)  [1.000]
 11.011: (manipulator-far-marker w2)  [1.000]
+12.012: (sherlock-is-thinking w2)  [1.000]
+13.013: (move-to w2 w3)  [1.000]
+14.014: (signal-info-acquisition w3)  [1.000]
+15.015: (manipulator-near-marker w3)  [1.000]
+16.016: (acquire-hint w3)  [1.000]
+17.017: (manipulator-far-marker w3)  [1.000]
+18.018: (sherlock-is-thinking w3)  [1.000]
+19.019: (move-to w3 center)  [1.000]
+20.020: (bright-bulb-over-head center)  [1.000]

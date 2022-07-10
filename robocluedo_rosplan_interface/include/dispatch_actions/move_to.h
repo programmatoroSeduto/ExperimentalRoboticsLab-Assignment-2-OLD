@@ -214,6 +214,20 @@ private:
 	 * 
 	 ***********************************************/
 	geometry_msgs::Pose make_pose( float x, float y, float z, float qx, float qy, float qz, float qw );
+	
+	/********************************************//**
+	 *  
+	 * \brief implementation of the action (move-to ?from ?to)
+	 * 
+	 ***********************************************/
+	bool action_move_to( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
+	
+	/********************************************//**
+	 *  
+	 * \brief implementation of the action (move-to-center ?from)
+	 * 
+	 ***********************************************/
+	bool action_move_to_center( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
 };
 
 }
