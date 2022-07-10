@@ -92,7 +92,7 @@
 		(= (h-count-what ID6 ) 0)
 	
 	;; hypothesis counting
-	(= (h-count-open ) (number-of-ids-in-the-problem ))
+	(= (h-count-open ) 6)
 	(= (h-count-complete ) 0)
 	(= (h-count-discard ) 0)
 )
