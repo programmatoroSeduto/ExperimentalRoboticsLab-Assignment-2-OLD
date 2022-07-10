@@ -97,7 +97,8 @@
 	(= (h-count-discard ) 0)
 )
 
-(:goal (elementary-whatson ))
+;; (:goal (elementary-whatson ))
+(:goal (investigating ))
 
 (:metric maximize (solution-quality ))
 

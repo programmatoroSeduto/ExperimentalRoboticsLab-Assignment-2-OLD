@@ -101,7 +101,7 @@
 
 )
 (:goal (and
-    (elementary-whatson)
+    (investigating)
 ))
 (:metric maximize (solution-quality))
 )

@@ -11,7 +11,7 @@
 <!-- other options -->
 <arg name="output" default="screen" />
 <arg name="problem_instance_topic" default="problem_instance" />
-<arg name="planner_out_topic" default="planner_output" />
+<arg name="planner_out_topic" default="/rosplan_planner_interface/planner_output" />
 <arg name="planner_node_name" default="popf_planner_interface" />
 <arg name="data_path" default="$(find robocluedo_rosplan_interface)/data" />
 <arg name="planning_timeout" default="10"/>
@@ -45,7 +45,7 @@
 	
 	<arg name="use_problem_topic"    value="true" />
 	<arg name="problem_topic"        value="/rosplan_problem_interface/$(arg problem_instance_topic)" />
-	<arg name="planner_topic"        value="$(arg planner_out_topic)" />
+	<arg name="planner_topic"        value="planner_output" />
 	<arg name="data_path"            value="$(arg data_path)" />
 	<arg name="planner_command"      value="timeout $(arg planning_timeout) $(find rosplan_planning_system)/common/bin/popf -T DOMAIN PROBLEM" />
 	
@@ -226,7 +226,7 @@ rostopic echo /rosplan_planner_interface/planner_output -p
 rosservice call /rosplan_parsing_interface/parse_plan
 rostopic echo /rosplan_parsing_interface/complete_plan -n 1
 
-
+rosservice call /rosplan_plan_dispatcher/dispatch_plan
 -->
 
 </launch>
