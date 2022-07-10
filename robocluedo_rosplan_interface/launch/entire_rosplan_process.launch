@@ -106,7 +106,7 @@
 </node>
 -->
 
-<!-- PDDL ACTION : signal-info-acquisition --><!--
+<!-- PDDL ACTION : signal-info-acquisition (simulated) --><!--
 <node name="rosplan_interface_signal_info_acquisition" pkg="rosplan_planning_system" type="simulatedAction" 
 	respawn="false" output="screen">
 	
@@ -157,6 +157,36 @@
 	
 	<param name="knowledge_base"		value="rosplan_knowledge_base" />
 	<param name="pddl_action_name"		value="manipulator-far-marker" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+	
+</node>
+-->
+
+<!-- PDDL ACTION : sherlock-is-thinking --><!--
+<node name="rosplan_interface_sherlock_is_thinking" pkg="robocluedo_rosplan_interface" type="node_sherlock_is_thinking" 
+	respawn="false" output="screen">
+	
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="sherlock-is-thinking" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+	
+</node>
+-->
+
+<!-- PDDL ACTION : bright-bulb-over-head (simulated) --><!--
+<node name="rosplan_interface_bright_bulb_over_head" pkg="rosplan_planning_system" type="simulatedAction" 
+	respawn="false" output="screen">
+	
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="bright-bulb-over-head" />
 	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
 	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
 	
