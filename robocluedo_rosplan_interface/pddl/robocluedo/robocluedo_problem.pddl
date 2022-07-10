@@ -104,6 +104,6 @@
 
 ;; (:goal (elementary-whatson ))
 
-(:goal (and (robot-position w2 ) (acquired ) (manipulator-on )))
+(:goal (and (robot-position w2 ) (thinking ) (manipulator-off )))
 
 )

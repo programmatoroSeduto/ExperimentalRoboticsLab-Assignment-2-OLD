@@ -147,8 +147,8 @@
 	
 </node>
 
-<!-- PDDL ACTION : manipulator-far-marker --><!--
-<node name="rosplan_interface_manipulator_far_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_far_marker" 
+<!-- PDDL ACTION : manipulator-far-marker -->
+<node name="rosplan_interface_manipulator_far_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_near_marker" 
 	respawn="false" output="screen">
 	
 	<param name="knowledge_base"		value="rosplan_knowledge_base" />
@@ -160,7 +160,6 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
 <!-- PDDL ACTION : sherlock-is-thinking --><!--
 <node name="rosplan_interface_sherlock_is_thinking" pkg="robocluedo_rosplan_interface" type="node_sherlock_is_thinking" 

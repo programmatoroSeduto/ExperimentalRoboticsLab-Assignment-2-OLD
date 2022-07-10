@@ -198,9 +198,6 @@ target_link_libraries( manipulator_near_marker ${catkin_LIBRARIES} kb_tools robo
 add_library( acquire_hint src/dispatch_actions/acquire_hint.cpp )
 target_link_libraries( acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
 
-# add_library( manipulator_far_marker src/dispatch_actions/manipulator_far_marker.cpp )
-# target_link_libraries( manipulator_far_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
-
 # add_library( sherlock_is_thinking src/dispatch_actions/sherlock_is_thinking.cpp )
 # target_link_libraries( sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
 
@@ -253,10 +250,6 @@ target_link_libraries( node_manipulator_near_marker ${catkin_LIBRARIES} kb_tools
 add_executable( node_acquire_hint src/node_acquire_hint.cpp )
 add_dependencies( node_acquire_hint ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( node_acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface acquire_hint )
-
-# add_executable( node_manipulator_far_marker src/node_manipulator_far_marker.cpp )
-# add_dependencies( node_manipulator_far_marker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-# target_link_libraries( node_manipulator_far_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface manipulator_far_marker )
 
 # add_executable( node_sherlock_is_thinking src/node_sherlock_is_thinking.cpp )
 # add_dependencies( node_sherlock_is_thinking ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )

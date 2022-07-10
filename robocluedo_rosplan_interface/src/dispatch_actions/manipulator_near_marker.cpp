@@ -54,10 +54,13 @@ bool RP_manipulator_near_marker::concreteCallback( const rosplan_dispatch_msgs::
 	std::string wp = params["wp"];
 	
 	if( debug_mode )
-		TLOG( "(manipulator_near_marker wp=" << wp << ") CALLED" );
+		TLOG( "(" << msg->name << " wp=" << wp << ") CALLED" );
 	
 	/// @todo send the point to reach to the manipulation servce
-	TWARN( "(TODO) put the manipulator near to the marker wp=" << wp );
+	if( msg->name == "manipulator-near-marker" )
+		TWARN( "(TODO) put the manipulator near to the marker wp=" << wp );
+	else
+		TWARN( "(TODO) put the manipulator far from the marker wp=" << wp );
 	
 	return true;
 }
