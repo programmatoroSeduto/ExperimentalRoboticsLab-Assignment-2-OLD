@@ -119,6 +119,27 @@
 
 #endif
 
+/********************************************//**
+ * 
+ * \enum hypothesis_class
+ *  
+ * @brief classes of hypothesis
+ * 
+ * @note the value UNKNOWN is returned when the query fails. 
+ * 
+ * @note each hypothesis ID can belong to only one class
+ * at time. a ID can't have two classes at the same time.
+ * 
+ ***********************************************/
+enum hypothesis_class
+{
+	OPEN,			// open hypothesis
+	COMPLETE,		// complete hypothesis
+	DISCARD,		// discarded hypothesis
+	UNKNOWN,		// service call failed
+	UNCONSISTENT_NO_CLASS,	// problem inconsistent: no class for a hypID
+	UNCONSISTENT_REDUNDANT	// problem not consistent: two classes or more for the same hypID
+};
 
 /********************************************//**
  *  
@@ -149,28 +170,6 @@
 class robocluedo_kb_tools : public kb_tools
 {
 public:
-
-	/********************************************//**
-	 * 
-	 * \enum hypothesis_class
-	 *  
-	 * @brief classes of hypothesis
-	 * 
-	 * @note the value UNKNOWN is returned when the query fails. 
-	 * 
-	 * @note each hypothesis ID can belong to only one class
-	 * at time. a ID can't have two classes at the same time.
-	 * 
-	 ***********************************************/
-	static enum hypothesis_class
-	{
-		OPEN,			// open hypothesis
-		COMPLETE,		// complete hypothesis
-		DISCARD,		// discarded hypothesis
-		UNKNOWN,		// service call failed
-		UNCONSISTENT_NO_CLASS,	// problem inconsistent: no class for a hypID
-		UNCONSISTENT_REDUNDANT	// problem not consistent: two classes or more for the same hypID
-	};
 	
 	/********************************************//**
 	 *  
@@ -264,7 +263,7 @@ public:
 	 * @todo negative IDs?
 	 * 
 	 ***********************************************/
-	robocluedo_kb_tools::hypothesis_class get_status_of_hypothesis( int id );
+	hypothesis_class get_status_of_hypothesis( int id );
 	 
 	 /********************************************//**
 	 *  
@@ -297,24 +296,7 @@ public:
 	 * @todo negative IDs?
 	 * 
 	 ***********************************************/
-	bool update_hypothesis( int id, robocluedo_kb_tools::hypothesis_class& new_type );
-	 
-	/********************************************//**
-	 *  
-	 * \brief update the classification of one hypothesis
-	 * 
-	 * override of the original function which takes only one
-	 * argument. 
-	 * 
-	 * @param id (int) the ID of the hyothesis to inspect
-	 * 
-	 * @returns true is the operation succeeded or not. 
-	 * 
-	 * @see update_hypothesis
-	 * 
-	 ***********************************************/
-	override 
-	bool update_hypothesis( int id );
+	bool update_hypothesis( int id, hypothesis_class& new_type );
 
 
 
@@ -343,8 +325,7 @@ private:
 	 * 
 	 ***********************************************/
 	bool set_hypothesis_class( 
-		int id, 
-		robocluedo_kb_tools::hypothesis_class new_class );
+		int id, hypothesis_class new_class );
 	
 	/********************************************//**
 	 *  

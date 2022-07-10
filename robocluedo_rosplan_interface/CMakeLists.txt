@@ -159,6 +159,9 @@ include_directories(
 add_library( kb_tools src/knowledge_base_tools/kb_tools.cpp )
 target_link_libraries( kb_tools ${catkin_LIBRARIES} )
 
+add_library( robocluedo_kb_tools src/knowledge_base_tools/robocluedo_kb_tools.cpp )
+target_link_libraries( robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools )
+
 ## === CPP NODES === ##
 
 # testing modules

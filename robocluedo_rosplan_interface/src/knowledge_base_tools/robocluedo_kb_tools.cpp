@@ -12,7 +12,7 @@
 * 
 ***********************************************/
 
-#include "knowledge_base_tools/kb_tools.h"
+#include "knowledge_base_tools/robocluedo_kb_tools.h"
 
 
 
@@ -86,8 +86,7 @@ int robocluedo_kb_tools::get_discard_ids( )
 // === HYPOTHESES MANAGEMENT === //
 
 // check the current classification of one hypothesis
-robocluedo_kb_tools::hypothesis_class 
-	robocluedo_kb_tools::get_status_of_hypothesis( int id )
+hypothesis_class robocluedo_kb_tools::get_status_of_hypothesis( int id )
 {
 	// query
 	std::string hname = "ID"; hname += id;
@@ -126,7 +125,7 @@ robocluedo_kb_tools::hypothesis_class
 
 
 // update the classification of one hypothesis
-bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypothesis_class& new_type )
+bool robocluedo_kb_tools::update_hypothesis( int id, hypothesis_class& new_type )
 {
 	// query
 	std::string hname = "ID"; hname += id;
@@ -134,7 +133,7 @@ bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypoth
 	params["id"] = hname;
 	
 	// check the current status of the hypothesis
-	robocluedo_kb_tools::hypothesis_class prev_status = this->get_status_of_hypothesis( id );
+	hypothesis_class prev_status = this->get_status_of_hypothesis( id );
 	new_type = prev_status;
 	int who = this->get_fluent( "h-count-who", params );
 	if( !this->ok( ) ) 
@@ -157,23 +156,23 @@ bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypoth
 	// hypothesis update
 	switch( prev_status )
 	{	
-	case robocluedo_kb_tools::hypothesis_class::UNCONSISTENT_NO_CLASS :
-	case robocluedo_kb_tools::hypothesis_class::UNCONSISTENT_REDUNDANT :
+	case hypothesis_class::UNCONSISTENT_NO_CLASS :
+	case hypothesis_class::UNCONSISTENT_REDUNDANT :
 		// there's something wrong with the ontology!
 		return false;
 	break;
 	
-	case robocluedo_kb_tools::hypothesis_class::DISCARD :
+	case hypothesis_class::DISCARD :
 		// nothig to do: already discarded
 		return true;
 	break;
 	
-	case robocluedo_kb_tools::hypothesis_class::COMPLETE :
+	case hypothesis_class::COMPLETE :
 	{
 		if( (who > 1) || (where > 1) || (what > 1) ) // check for inconsistency
 		{
 			this->set_hypothesis_class( id, 
-				robocluedo_kb_tools::hypothesis_class::DISCARD );
+				hypothesis_class::DISCARD );
 			
 			--num_complete;
 			++num_discard;
@@ -183,14 +182,13 @@ bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypoth
 			// nothing to do: the hypothesis is still complete
 			return true; 
 	}
-	break
+	break;
 	
-	case robocluedo_kb_tools::hypothesis_class::OPEN :
+	case hypothesis_class::OPEN :
 	{
 		if( (who > 1) || (where > 1) || (what > 1) ) // check for inconsistency
 		{
-			this->set_hypothesis_class( id, 
-				robocluedo_kb_tools::hypothesis_class::DISCARD );
+			this->set_hypothesis_class( id, hypothesis_class::DISCARD );
 			
 			--num_open;
 			++num_discard;
@@ -198,8 +196,7 @@ bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypoth
 		}
 		else if( (who == 1) && (where == 1) && (what == 1) ) // check for complete hypothesis
 		{
-			this->set_hypothesis_class( id, 
-				robocluedo_kb_tools::hypothesis_class::COMPLETE );
+			this->set_hypothesis_class( id, hypothesis_class::COMPLETE );
 			
 			--num_open;
 			++num_complete;
@@ -219,21 +216,13 @@ bool robocluedo_kb_tools::update_hypothesis( int id, robocluedo_kb_tools::hypoth
 }
 
 
-// update the classification of one hypothesis (no type return)
-bool robocluedo_kb_tools::update_hypothesis( int id )
-{
-	robocluedo_kb_tools::hypothesis_class c;
-	return this->update_hypothesis( id, c );
-}
-
-
 
 
 // === PRIVATE METHODS === //
 
 // set a particular class for that hypothesis
 bool robocluedo_kb_tools::set_hypothesis_class( 
-	int id, robocluedo_kb_tools::hypothesis_class new_class )
+	int id, hypothesis_class new_class )
 {
 	bool res = true;
 	
@@ -242,7 +231,7 @@ bool robocluedo_kb_tools::set_hypothesis_class(
 	params["id"] = hname;
 	
 	// first step : update the predicates status
-	switch( new_class ):
+	switch( new_class )
 	{
 	case OPEN:
 		res = this->set_predicate( "h-open", params, true )
@@ -258,7 +247,7 @@ bool robocluedo_kb_tools::set_hypothesis_class(
 		res = this->set_predicate( "h-open", params, false )
 			&& this->set_predicate( "h-complete", params, true )
 			&& this->set_predicate( "h-discard", params, false ) ;
-	break
+	break;
 	default:
 		// update request not acceptable
 		return false;
