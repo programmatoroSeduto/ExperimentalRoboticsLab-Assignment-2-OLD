@@ -13,7 +13,7 @@ Resorting to best-first search
 b (3.000 | 1.000)b (2.000 | 20.019)b (1.000 | 21.020);;;; Solution Found
 ; States evaluated: 1109
 ; Cost: 0.000
-; Time 0.65
+; Time 0.69
 0.000: (init-planning-system)  [1.000]
 1.001: (move-to center w1)  [1.000]
 2.002: (signal-info-acquisition w1)  [1.000]

@@ -56,11 +56,15 @@ bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::Act
 {
 	bool res = true; 
 	
+	if( debug_mode )
+		TLOG( "(init_planning_system ) CALLED" );
+	
 	// hypothese classification
-	this->classify_hypotheses( );
+	res = this->classify_hypotheses( );
 	if( !res ) 
 	{
 		/// @todo send a feedback to the mission control, not consistent
+		TWARN( "(init_planning_system ) PLAN FAILED : inconsistent problem state" );
 		
 		// plan failed
 		return false;
@@ -75,6 +79,7 @@ bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::Act
 	if( num_discard >= num_ids )
 	{
 		/// @todo send a feedback to the mission control, unsolvable
+		TWARN( "(init_planning_system ) PLAN FAILED : not solvable" );
 		
 		// unsolvable
 		return false;
@@ -84,10 +89,14 @@ bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::Act
 	if( ((num_complete + num_open) == 1) && (num_discard == (num_ids - 1)) )
 	{
 		/// @todo send a feedback to the mission control, solve by exclusion
+		TLOG( "(init_planning_system ) PLAN SOLVABLE : by exclusion" );
 		
 		// replanning required
 		return false;
 	}
+	
+	/// @todo sed a feedback to the mission contro, plan solvable in a common way
+	TLOG( "(init_planning_system ) PLAN SOLVABLE : common way" );
 	
 	return true;
 
