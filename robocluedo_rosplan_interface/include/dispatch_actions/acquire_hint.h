@@ -133,6 +133,9 @@ private:
 	/// reference to the node handle
 	ros::NodeHandle& nh;
 	
+	/// hint subscriber
+	ros::Subscriber sub_hint;
+	
 	/// last hint received 
 	erl2::ErlOracle last_hint;
 	

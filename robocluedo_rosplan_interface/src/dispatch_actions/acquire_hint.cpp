@@ -30,7 +30,7 @@ RP_acquire_hint::RP_acquire_hint( ros::NodeHandle& nh, bool debug_mode ) :
 	pending_messages( false )
 {
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_HINT ) << "..." );
-	this->sub_hint = nh.subscribe( TOPIC_HINT, Q_SZ, cbk_hint );
+	this->sub_hint = nh.subscribe( TOPIC_HINT, Q_SZ, &RP_acquire_hint::cbk_hint, this );
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_HINT ) << "... OK" );
 }
 
@@ -49,15 +49,11 @@ RP_acquire_hint::~RP_acquire_hint( )
 // the callback
 bool RP_acquire_hint::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
 {
-	bool res = true; 
-	
-	/// @todo a method to read the arguments each received each time the callback is issued
-	
 	if( debug_mode )
-		TLOG( "(acquire_hint ) CALLED" );
+		TLOG( "(acquire_hint wp=" << msg->parameters[0].value << ") CALLED" );
 	
 	// just to be sure that the message has been received
-	ros::spin_once( );
+	// ros::spin_once( );
 		
 	// check if there's a pending message
 	if( !this->pending_messages )

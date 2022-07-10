@@ -133,7 +133,7 @@
 	
 </node>
 
-<!-- PDDL ACTION : acquire-hint --><!--
+<!-- PDDL ACTION : acquire-hint -->
 <node name="rosplan_interface_acquire_hint" pkg="robocluedo_rosplan_interface" type="node_acquire_hint" 
 	respawn="false" output="screen">
 	
@@ -146,7 +146,6 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
 <!-- PDDL ACTION : manipulator-far-marker --><!--
 <node name="rosplan_interface_manipulator_far_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_far_marker" 
