@@ -196,6 +196,21 @@
 </node>
 -->
 
+<!-- PDDL ACTION : move-to-center --><!--
+<node name="rosplan_interface_move_to_center" pkg="robocluedo_rosplan_interface" type="node_move_to_center" 
+	respawn="false" output="screen">
+
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="move-to-center" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+
+</node>
+-->
+
 
 
 
