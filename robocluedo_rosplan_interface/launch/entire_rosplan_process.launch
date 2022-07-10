@@ -151,6 +151,21 @@
 </node>
 -->
 
+<!-- PDDL ACTION : manipulator-far-marker --><!--
+<node name="rosplan_interface_manipulator_far_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_far_marker" 
+	respawn="false" output="screen">
+	
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="manipulator-far-marker" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+	
+</node>
+-->
+
 
 
 
