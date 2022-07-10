@@ -100,7 +100,6 @@ public:
 		 
 		hypothesis_class cls;
 		
-		
 		TLOG( "making ID1 complete ... " );
 		this->test_change_id_status( 1, hypothesis_class::COMPLETE );
 		this->update_hypothesis( 1 , cls );

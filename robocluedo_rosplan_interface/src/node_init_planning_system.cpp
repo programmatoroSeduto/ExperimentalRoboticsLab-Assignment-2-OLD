@@ -91,6 +91,9 @@
  * 
  ***********************************************/
 
+#include "ros/ros.h"
+#include "dispatch_actions/init_planning_system.h"
+
 #define NODE_NAME "node_init_planning_system"
 
 #ifndef __DEBUG_MACROS__
@@ -103,9 +106,6 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #endif
-
-#include "ros/ros.h"
-#include "dispatch_actions/init_planning_interface.h"
 
 #include <string>
 #include <map>

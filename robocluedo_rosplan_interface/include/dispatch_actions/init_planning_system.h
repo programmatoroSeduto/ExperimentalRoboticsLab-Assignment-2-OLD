@@ -25,7 +25,7 @@
 
 #include "ros/ros.h"
 #include "knowledge_base_tools/robocluedo_kb_tools.h"
-#include "rosplan_action_interface/RPActionInterface.h"
+#include "robocluedo_rosplan_action_interface/RPActionInterface.h"
 
 #include "diagnostic_msgs/KeyValue.h"
 #include "rosplan_dispatch_msgs/ActionDispatch.h"
@@ -59,6 +59,9 @@ namespace KCL_rosplan
 class RP_init_planning_system : public RPActionInterface, public robocluedo_kb_tools
 {
 public:
+	
+	/// empty constructor (don't use it!)
+	RP_init_planning_system( );
 	
 	/********************************************//**
 	 *  
@@ -109,7 +112,7 @@ public:
 private:
 	
 	/// reference to the node handle
-	ros::NodeHandle& nh;
+	ros::NodeHandle nh;
 	
 	/********************************************//**
 	 *  

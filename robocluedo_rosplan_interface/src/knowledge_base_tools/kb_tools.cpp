@@ -37,7 +37,13 @@ kb_tools::~kb_tools( )
 // check if the last action succeeded or not
 bool kb_tools::ok( )
 {
-	if( debug_mode ) TLOG( "kb_tools::ok( )" << ( this->success ? "" : " !!! FAILURE !!!" ) );
+	if( debug_mode ) 
+	{
+		if( this->success )
+			TLOG( "kb_tools::ok( )" );
+		else
+			TWARN( "kb_tools::ok( ) !!! FAILURE !!!" );
+	}
 	
 	return this->success;
 }

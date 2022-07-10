@@ -9,10 +9,15 @@ project(robocluedo_rosplan_interface)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  actionlib
   std_msgs
   std_srvs
-  rosplan_knowledge_msgs
   diagnostic_msgs
+  rosplan_dispatch_msgs
+  rosplan_knowledge_msgs
+  rosplan_dependencies
+  roslib
+  rostest
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,10 +111,27 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES knowledge_base_tools
- CATKIN_DEPENDS roscpp std_msgs rosplan_knowledge_msgs diagnostic_msgs
+ LIBRARIES 
+	knowledge_base_tools 
+	dispatch_actions 
+	robocluedo_rosplan_action_interface
+ CATKIN_DEPENDS 
+	roscpp 
+	actionlib 
+	std_msgs 
+	std_srvs 
+	diagnostic_msgs
+	rosplan_dispatch_msgs 
+	rosplan_knowledge_msgs 
+	roslib 
+	rostest
 #  DEPENDS system_lib
 )
+
+find_package(FLEX REQUIRED)
+
+# Disable deprecated declarations warning (about std::auto_ptr)
+add_definitions(-Wno-deprecated-declarations)
 
 ###########
 ## Build ##
@@ -162,6 +184,16 @@ target_link_libraries( kb_tools ${catkin_LIBRARIES} )
 add_library( robocluedo_kb_tools src/knowledge_base_tools/robocluedo_kb_tools.cpp )
 target_link_libraries( robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools )
 
+# dispatch actions
+
+add_library( init_planning_system src/dispatch_actions/init_planning_system.cpp )
+target_link_libraries( init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+
+# rosplan action interface
+
+add_library( robocluedo_rosplan_action_interface src/ActionInterface/RPActionInterface.cpp )
+add_dependencies( robocluedo_rosplan_action_interface ${catkin_EXPORTED_TARGETS} )
+
 ## === CPP NODES === ##
 
 # testing modules
@@ -181,6 +213,12 @@ target_link_libraries( test_kb_tools ${catkin_LIBRARIES} kb_tools )
 add_executable( test_robocluedo_kb_tools src/testing/test_robocluedo_kb_tools.cpp )
 add_dependencies( test_robocluedo_kb_tools ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( test_robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+
+# dispatch actions
+
+add_executable( node_init_planning_system src/node_init_planning_system.cpp )
+add_dependencies( node_init_planning_system ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( node_init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface init_planning_system )
 
 
 #############

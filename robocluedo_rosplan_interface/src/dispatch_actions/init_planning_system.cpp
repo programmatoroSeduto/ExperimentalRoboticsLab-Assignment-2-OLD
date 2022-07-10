@@ -13,11 +13,22 @@
 ***********************************************/
 
 
+#include "dispatch_actions/init_planning_system.h"
+
+
 
 namespace KCL_rosplan
 {
 
 // === BASE METHODS === //
+
+// empty constructor
+RP_init_planning_system::RP_init_planning_system( ) :
+	RPActionInterface( ),
+	robocluedo_kb_tools( false )
+{
+	// ...
+}
 
 // the class constructor
 RP_init_planning_system::RP_init_planning_system( ros::NodeHandle& nh, bool debug_mode ) : 
@@ -66,7 +77,7 @@ bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::Act
 		/// @todo send a feedback to the mission control, unsolvable
 		
 		// unsolvable
-		return false
+		return false;
 	}
 	
 	// in particular, check if the problem is solvable by exclusion
@@ -90,17 +101,16 @@ bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::Act
 // classify the hypotheses
 bool RP_init_planning_system::classify_hypotheses( )
 {
-	robocluedo_kb_tools::hypothesis_class cls;
+	hypothesis_class cls;
 	int num_hyp = this->get_num_of_ids( );
 	
 	for( int i=1; i<=num_hyp; ++i )
 	{
 		// update the hypothesis
-		this>update_hypothesis( i, cls );
+		this->update_hypothesis( i, cls );
 		
 		// check the new status of the hypothesis (also detect inconsistencies)
-		if( cls == robocluedo_kb_tools::hypothesis_class::UNCONSISTENT_NO_CLASS ||
-			cls == robocluedo_kb_tools::hypothesis_class::UNCONSISTENT_REDUNDANT )
+		if( (cls == hypothesis_class::UNCONSISTENT_NO_CLASS) || (cls == hypothesis_class::UNCONSISTENT_REDUNDANT) )
 		{	
 			// plan failed
 			return false;
@@ -108,4 +118,6 @@ bool RP_init_planning_system::classify_hypotheses( )
 	}
 	
 	return true;
+}
+
 }

@@ -133,11 +133,11 @@
  ***********************************************/
 enum hypothesis_class
 {
-	OPEN,			// open hypothesis
-	COMPLETE,		// complete hypothesis
-	DISCARD,		// discarded hypothesis
-	UNKNOWN,		// service call failed
-	UNCONSISTENT_NO_CLASS,	// problem inconsistent: no class for a hypID
+	OPEN,					// open hypothesis
+	COMPLETE,				// complete hypothesis
+	DISCARD,				// discarded hypothesis
+	UNKNOWN,				// service call failed
+	UNCONSISTENT_NO_CLASS,	// problem not consistent: no class for a hypID
 	UNCONSISTENT_REDUNDANT	// problem not consistent: two classes or more for the same hypID
 };
 
