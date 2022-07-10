@@ -3,7 +3,7 @@
 *  
 * @file init_planning_system.cpp
 * 
-* @brief implementation of the action init_planning_system
+* @brief implementation of the action (init-planning-system )
 * 
 * @authors Francesco Ganci
 * @version v1.0

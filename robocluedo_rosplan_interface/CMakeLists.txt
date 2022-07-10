@@ -189,6 +189,9 @@ target_link_libraries( robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools )
 add_library( init_planning_system src/dispatch_actions/init_planning_system.cpp )
 target_link_libraries( init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
 
+# add_library( move_to src/dispatch_actions/move_to.cpp )
+# target_link_libraries( move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+
 # rosplan action interface
 
 add_library( robocluedo_rosplan_action_interface src/ActionInterface/RPActionInterface.cpp )
@@ -219,6 +222,10 @@ target_link_libraries( test_robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools rob
 add_executable( node_init_planning_system src/node_init_planning_system.cpp )
 add_dependencies( node_init_planning_system ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( node_init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface init_planning_system )
+
+# add_executable( node_move_to src/node_move_to.cpp )
+# add_dependencies( node_move_to ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+# target_link_libraries( node_move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface move_to )
 
 
 #############

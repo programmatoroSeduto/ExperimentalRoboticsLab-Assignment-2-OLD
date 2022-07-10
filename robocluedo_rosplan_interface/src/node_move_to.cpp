@@ -1,21 +1,21 @@
 
 /********************************************//**
 *  
-* @file node_init_planning_system.cpp
+* @file node_move_to.cpp
 * 
-* @brief implementation of the action (init-planning-system )
+* @brief implementation of the action (move-to ?from ?to )
 * 
 * @authors Francesco Ganci
 * @version v1.0
 * 
-* @see init_planning_system.h the header file
+* @see move_to.h the header file
 * 
 ***********************************************/
 
 #include "ros/ros.h"
-#include "dispatch_actions/init_planning_system.h"
+#include "dispatch_actions/move_to.h"
 
-#define NODE_NAME "node_init_planning_system"
+#define NODE_NAME "node_move_to"
 
 #ifndef __DEBUG_MACROS__
 	#define __DEBUG_MACROS__
@@ -51,7 +51,7 @@ void shut_msg( int sig )
 
 /********************************************//**
  *  
- * \brief ROS node main - node_init_planning_system
+ * \brief ROS node main - node_move_to
  * 
  * ... more details
  * 
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	
 	// create PDDL action publisher
 	TLOG( "starting ... " );
-	KCL_rosplan::RP_init_planning_system ac( nh );
+	KCL_rosplan::RP_move_to ac( nh );
 	
 	// run the node
 	TLOG( "ready" );
