@@ -1,9 +1,9 @@
 
 /********************************************//**
 *  
-* @file manipulator_near_marker.h
+* @file acquire_hint.h
 * 
-* @brief implementation of the action (manipulator-near-marker ?wp )
+* @brief implementation of the action (acquire-hint ?wp)
 * 
 * @authors Francesco Ganci
 * @version v1.0
@@ -12,14 +12,14 @@
 * 
 ***********************************************/
 
-#ifndef __H_KCL_MANIPULATOR_NEAR_MARKER__
-#define __H_KCL_MANIPULATOR_NEAR_MARKER__ "__H_MANIPULATOR_NEAR_MARKER__"
+#ifndef __H_KCL_ACQUIRE_HINT__
+#define __H_KCL_ACQUIRE_HINT__ "__H_ACQUIRE_HINT__"
 
 #include "ros/ros.h"
 #include "knowledge_base_tools/robocluedo_kb_tools.h"
 #include "robocluedo_rosplan_action_interface/RPActionInterface.h"
 
-#define NODE_NAME "manipulator_near_marker"
+#define NODE_NAME "acquire_hint"
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )
@@ -40,19 +40,19 @@ namespace KCL_rosplan
 
 /********************************************//**
  * 
- * \class RP_manipulator_near_marker
+ * \class RP_acquire_hint
  * 
- * \brief implementation of the action manipulator_near_marker
+ * \brief implementation of the action acquire_hint
  * 
  * ... more details
  * 
  ***********************************************/
-class RP_manipulator_near_marker : public RPActionInterface, public robocluedo_kb_tools
+class RP_acquire_hint : public RPActionInterface, public robocluedo_kb_tools
 {
 public:
 	
 	/// empty constructor (don't use it!)
-	RP_manipulator_near_marker( );
+	RP_acquire_hint( );
 	
 	/********************************************//**
 	 *  
@@ -66,14 +66,14 @@ public:
 	 * @todo open the publisher to the mission manager?
 	 * 
 	 ***********************************************/
-	RP_manipulator_near_marker( ros::NodeHandle &nh, bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
+	RP_acquire_hint( ros::NodeHandle &nh, bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
 	
 	/********************************************//**
 	 *  
 	 * \brief class destructor
 	 * 
 	 ***********************************************/
-	~RP_manipulator_near_marker( );
+	~RP_acquire_hint( );
 	
 	/********************************************//**
 	 *  

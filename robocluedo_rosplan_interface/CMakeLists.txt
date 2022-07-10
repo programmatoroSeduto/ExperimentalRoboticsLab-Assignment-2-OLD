@@ -195,6 +195,9 @@ target_link_libraries( init_planning_system ${catkin_LIBRARIES} kb_tools roboclu
 # add_library( manipulator_near_marker src/dispatch_actions/manipulator_near_marker.cpp )
 # target_link_libraries( manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
 
+# add_library( acquire_hint src/dispatch_actions/acquire_hint.cpp )
+# target_link_libraries( acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+
 # rosplan action interface
 
 add_library( robocluedo_rosplan_action_interface src/ActionInterface/RPActionInterface.cpp )
@@ -233,6 +236,10 @@ target_link_libraries( node_init_planning_system ${catkin_LIBRARIES} kb_tools ro
 # add_executable( node_manipulator_near_marker src/node_manipulator_near_marker.cpp )
 # add_dependencies( node_manipulator_near_marker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 # target_link_libraries( node_manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface manipulator_near_marker )
+
+# add_executable( node_acquire_hint src/node_acquire_hint.cpp )
+# add_dependencies( node_acquire_hint ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+# target_link_libraries( node_acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface acquire_hint )
 
 
 #############

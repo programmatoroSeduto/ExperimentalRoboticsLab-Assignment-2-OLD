@@ -12,8 +12,8 @@
 * 
 ***********************************************/
 
-#ifndef __H_KCL_INIT_PLANNING_SYSTEM__
-#define __H_KCL_INIT_PLANNING_SYSTEM__ "__H_INIT_PLANNING_SYSTEM__"
+#ifndef __H_KCL_MOVE_TO__
+#define __H_KCL_MOVE_TO__ "__H_MOVE_TO__"
 
 #include "ros/ros.h"
 #include "knowledge_base_tools/robocluedo_kb_tools.h"
@@ -40,9 +40,9 @@ namespace KCL_rosplan
 
 /********************************************//**
  * 
- * \class RP_init_planning_system
+ * \class RP_move_to
  * 
- * \brief implementation of the action init_planning_system
+ * \brief implementation of the action move_to
  * 
  * ... more details
  * 
