@@ -28,7 +28,21 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #include "diagnostic_msgs/KeyValue.h"
+/*
+string key
+string value 
+*/
+
 #include "rosplan_dispatch_msgs/ActionDispatch.h"
+/*
+#actionDispatch message
+int32 action_id
+int32 plan_id
+string name
+diagnostic_msgs/KeyValue[] parameters
+float32 duration
+float32 dispatch_time
+*/
 
 #include <vector>
 #include <unistd.h>
@@ -101,6 +115,21 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/********************************************//**
+	 *  
+	 * \brief update the ontology before starting with the reasoning
+	 * 
+	 * @returns true if there are not inconsistencies in the problem 
+	 * formulation. 
+	 * 
+	 * @todo often we assume that every simple query works fine... but 
+	 * is it really true? do we trust so much? 
+	 * 
+	 * @todo what about unknown classifications?
+	 * 
+	 ***********************************************/
+	bool update_classes( );
 };
 
 }

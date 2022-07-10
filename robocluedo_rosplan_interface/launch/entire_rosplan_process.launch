@@ -161,7 +161,7 @@
 	
 </node>
 
-<!-- PDDL ACTION : sherlock-is-thinking --><!--
+<!-- PDDL ACTION : sherlock-is-thinking -->
 <node name="rosplan_interface_sherlock_is_thinking" pkg="robocluedo_rosplan_interface" type="node_sherlock_is_thinking" 
 	respawn="false" output="screen">
 	
@@ -174,7 +174,6 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
 <!-- PDDL ACTION : bright-bulb-over-head (simulated) --><!--
 <node name="rosplan_interface_bright_bulb_over_head" pkg="rosplan_planning_system" type="simulatedAction" 
