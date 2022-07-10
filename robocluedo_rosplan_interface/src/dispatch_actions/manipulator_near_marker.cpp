@@ -28,7 +28,10 @@ RP_manipulator_near_marker::RP_manipulator_near_marker( ros::NodeHandle& nh, boo
 	robocluedo_kb_tools( debug_mode ),
 	nh( nh )
 {
-	// ...
+	// one-shot topic for markers
+	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "..." );
+	this->sub_marker = nh.subscribe( TOPIC_MARKER, Q_SZ, &RP_manipulator_near_marker::cbk_marker, this );
+	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "... OK" );
 }
 
 
@@ -46,17 +49,17 @@ RP_manipulator_near_marker::~RP_manipulator_near_marker( )
 // the callback
 bool RP_manipulator_near_marker::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
 {
-	bool res = true; 
-	
-	/// @todo a method to read the arguments each received each time the callback is issued
+	// read the parameters
+	auto params = this->keyvalue2map( msg->parameters );
+	std::string wp = params["wp"];
 	
 	if( debug_mode )
-		TLOG( "(manipulator_near_marker ) CALLED" );
-		
-	// ...
+		TLOG( "(manipulator_near_marker wp=" << wp << ") CALLED" );
+	
+	/// @todo send the point to reach to the manipulation servce
+	TWARN( "(TODO) put the manipulator near to the marker wp=" << wp );
 	
 	return true;
-
 }
 
 
@@ -64,6 +67,19 @@ bool RP_manipulator_near_marker::concreteCallback( const rosplan_dispatch_msgs::
 
 // === PRIVATE METHODS === //
 
-// ...
+// update the markers (one shot)
+void RP_manipulator_near_marker::cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm )
+{
+	// update the z component for each pose
+	this->waypoints["wp1"] = pm->markers[0].pose;
+	this->waypoints["wp2"] = pm->markers[1].pose;
+	this->waypoints["wp3"] = pm->markers[2].pose;
+	this->waypoints["wp4"] = pm->markers[3].pose;
+	
+	// shut down the subscriber 
+	this->sub_marker.shutdown( );
+	
+	TLOG( "(move-to ) RECEIVED MARKERS" );
+}
 
 }

@@ -8,6 +8,11 @@
 	
 	;; environment
 	w1 w2 w3 w4 - waypoint
+	
+	;; hypothesis elements
+	missscarlett colonelmustard mrswhite mrgreen mrspeacock profplum - who
+	conservatory lounge kitchen library hall study bathroom diningRoom billiardRoom - where
+	candlestick dagger leadpipe revolver rope spanner - what
 )
 
 (:init
@@ -98,8 +103,7 @@
 )
 
 ;; (:goal (elementary-whatson ))
-;; (:goal (investigating ))
 
-(:goal (and (investigating ) (robot-position w2)))
+(:goal (and (robot-position w2 ) (acquiring ) (manipulator-on )))
 
 )

@@ -30,10 +30,10 @@ RP_move_to::RP_move_to( ros::NodeHandle& nh, bool debug_mode ) :
 {
 	// setup manually the waypoints (https://quaternions.online)
 	this->waypoints["center"] = this->make_pose( 0, 0, 0, 0, 0, 0, 1 );
-	this->waypoints["wp1"] = this->make_pose( -3.0, 0, 0, 0, 0, 1, 0 );
-	this->waypoints["wp2"] = this->make_pose( 3.0, 0, 0, 0, 0, 0, 1 );
-	this->waypoints["wp3"] = this->make_pose( 0, -3.0, 0, 0, 0, -0.707, 0.707 );
-	this->waypoints["wp4"] = this->make_pose( 0, 3.0, 0, 0, 0, 0.707, 0.707 );
+	this->waypoints["wp1"] = this->make_pose( -2.75, 0, 0, 0, 0, 1, 0 );
+	this->waypoints["wp2"] = this->make_pose( 2.75, 0, 0, 0, 0, 0, 1 );
+	this->waypoints["wp3"] = this->make_pose( 0, -2.75, 0, 0, 0, -0.707, 0.707 );
+	this->waypoints["wp4"] = this->make_pose( 0, 2.75, 0, 0, 0, 0.707, 0.707 );
 	
 	// topic for markers
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "..." );
@@ -64,7 +64,7 @@ bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::
 	TLOG( "(move_to from=" << params["from"] << " to=" << params["to"] << ") CALLED" );
 		
 	/// @todo send the command to the navigation system and wait
-	TLOG( "(TODO) sending position to the navigation system" );
+	TWARN( "(TODO) sending position to the navigation system" );
 	
 	return true;
 }

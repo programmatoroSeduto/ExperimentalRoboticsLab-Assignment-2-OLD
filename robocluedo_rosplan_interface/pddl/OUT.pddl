@@ -3,6 +3,9 @@
 (:objects
     id1 id2 id3 id4 id5 id6 - hypid
     w1 w2 w3 w4 center - waypoint
+    missscarlett colonelmustard mrswhite mrgreen mrspeacock profplum - who
+    conservatory lounge kitchen library hall study bathroom diningroom billiardroom - where
+    candlestick dagger leadpipe revolver rope spanner - what
 )
 (:init
     (pre-init)
@@ -66,6 +69,9 @@
 
 
 
+
+
+
     (= (number-of-ids-in-the-problem) 6)
 
     (= (remaining-moves) 3)
@@ -101,7 +107,8 @@
 
 )
 (:goal (and
-    (investigating)
     (robot-position w2)
+    (acquiring)
+    (manipulator-on)
 ))
 )

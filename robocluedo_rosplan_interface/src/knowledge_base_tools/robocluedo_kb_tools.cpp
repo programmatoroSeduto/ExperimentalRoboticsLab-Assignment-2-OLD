@@ -310,6 +310,124 @@ bool robocluedo_kb_tools::update_hypothesis( int id, hypothesis_class& new_type 
 
 
 
+// === HINTS === //
+
+// add one predicate to the knowledge base from a hint
+bool robocluedo_kb_tools::add_hint( int ID, std::string key, std::string value )
+{
+	if( debug_mode )
+		TLOG( "robocluedo_kb_tools::add_hint( " << ID << ", " << key << ", " << value << ")" );
+	
+	// transform key and value
+	std::string hname  = "id" + std::to_string( ID );
+	// std::string tkey   = std::tolower( key );
+	std::string tkey   = this->to_lowercase( key );
+	// std::string tvalue = std::tolower( value );
+	std::string tvalue = this->to_lowercase( value );
+	
+	// first check if the hint is already in the ontology
+	bool is_new_hint = !this->value_of_hint( ID, key, value );
+	if( !this->ok( ) )
+	{
+		if( debug_mode )
+			TWARN( "robocluedo_kb_tools::add_hint( ... ) QUERY FAILED" );
+		return false;
+	}
+	
+	// add only if it is new
+	if( is_new_hint )
+	{
+		std::map<std::string, std::string> params;
+		std::map<std::string, std::string> params_2;
+		params["id"] = hname;
+		params_2["id"] = hname;
+		
+		// add the hint
+		/*
+		(h-count-who ?id - hypID )
+		(h-count-where ?id - hypID )
+		(h-count-what ?id - hypID )
+		*/
+		if( key == "who" )
+		{
+			params["who"] = value;
+			this->set_predicate( "hyp-who", params, true );
+			
+			// update the counter
+			return this->set_fluent( "h-count-who", params_2, this->get_fluent( "h-count-who", params_2 ) + 1.0 );
+		}
+		else if( key == "where" )
+		{
+			params["where"] = value;
+			this->set_predicate( "hyp-where", params, true );
+			
+			return this->set_fluent( "h-count-where", params_2, this->get_fluent( "h-count-where", params_2 ) + 1.0 );
+		}
+		else
+		{
+			params["what"] = value;
+			this->set_predicate( "hyp-what", params, true );
+			
+			return this->set_fluent( "h-count-what", params_2, this->get_fluent( "h-count-what", params_2 ) + 1.0 );
+		}
+		
+	}
+	else
+	{
+		if( debug_mode )
+			TLOG( "robocluedo_kb_tools::add_hint NOT A NEW HINT, skip" );
+		
+		return true;
+	}
+}
+
+
+// check if a hint already exists in the knowledge base
+bool robocluedo_kb_tools::value_of_hint( int ID, std::string key, std::string value )
+{
+	if( debug_mode )
+		TLOG( "robocluedo_kb_tools::value_of_hint( " << ID << ", " << key << ", " << value << ")" );
+	
+	// transform key and value
+	std::string hname  = "id" + std::to_string( ID );
+	// std::string tkey   = std::tolower( key );
+	std::string tkey   = this->to_lowercase( key );
+	// std::string tvalue = std::tolower( value );
+	std::string tvalue = this->to_lowercase( value );
+	
+	std::map<std::string, std::string> params;
+	params["id"] = hname;
+	
+	// search for a predicate depending on the hint
+	if( key == "who" )
+	{
+		params["who"] = value;
+		return this->get_predicate( "hyp-who", params );
+	}
+	else if( key == "where" )
+	{
+		params["where"] = value;
+		return this->get_predicate( "hyp-where", params );
+	}
+	else if( key == "what" )
+	{
+		params["what"] = value;
+		return this->get_predicate( "hyp-what", params );
+	}
+	else
+	{
+		// not a valid hint!
+		if( debug_mode )
+		TWARN( "robocluedo_kb_tools::value_of_hint( " << ID << ", " << key << ", " << value << ") NOT A VALID HINT!" );
+		
+		this->success = false;
+		return false;
+	}
+}
+
+
+
+
 // === PRIVATE METHODS === //
 
 // set a particular class for that hypothesis
@@ -375,4 +493,15 @@ bool robocluedo_kb_tools::set_counters_status(
 	}
 	
 	return true;
+}
+
+
+// convert a string into another with lowercase letters only
+std::string robocluedo_kb_tools::to_lowercase( std::string data )
+{
+	std::for_each(data.begin(), data.end(), [](char & c){
+		c = std::tolower(c);
+	});
+	
+	return data;
 }

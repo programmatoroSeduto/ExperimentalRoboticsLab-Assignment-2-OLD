@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	
 	// create PDDL action publisher
 	TLOG( "starting ... " );
-	KCL_rosplan::RP_move_to ac( nh );
+	KCL_rosplan::RP_manipulator_near_marker ac( nh );
 	
 	// run the node
 	TLOG( "ready" );

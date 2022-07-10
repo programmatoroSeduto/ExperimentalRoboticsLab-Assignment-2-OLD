@@ -28,12 +28,43 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #include "diagnostic_msgs/KeyValue.h"
+/*
+string key
+string value 
+*/
+
 #include "rosplan_dispatch_msgs/ActionDispatch.h"
+/*
+#actionDispatch message
+int32 action_id
+int32 plan_id
+string name
+diagnostic_msgs/KeyValue[] parameters
+float32 duration
+float32 dispatch_time
+*/
+
+#include "erl2/ErlOracle.h"
+/*
+int32 ID
+string key
+string value
+*/
+
+#include "erl2/Oracle.h"
+/*
+---
+int32 ID
+*/
 
 #include <vector>
 #include <unistd.h>
 
+/// default queue size
+#define Q_SZ 1000
 
+// hint topic
+#define TOPIC_HINT "/oracle_hint"
 
 namespace KCL_rosplan
 {
@@ -101,6 +132,45 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/// last hint received 
+	erl2::ErlOracle last_hint;
+	
+	/// received a hint and not read before (turn off after reading the message)
+	bool pending_messages;
+	
+	/********************************************//**
+	 *  
+	 * \brief subscriber listening for the hints from the Oracle
+	 * 
+	 * @param pm
+	 * 		the hint from the Oracle, as message
+	 * 
+	 * @note we're making here strong assumptions about how the Oracle
+	 * works. In particular, the oracle publishes only one message after
+	 * the manipulator has reached the neighborhood of the marker. 
+	 * 
+	 ***********************************************/
+	void cbk_hint( const erl2::ErlOracle::ConstPtr& pm );
+	
+	/********************************************//**
+	 *  
+	 * \brief check if the hint is valid or not
+	 * 
+	 * The oracle can send sometimes a not well-formed message, using one
+	 * among these disturbances: 
+	 * <ul>
+	 * <li>missing fields</li>
+	 * <li>value corresponding to a negative number</li>
+	 * </ul>
+	 * 
+	 * @param hint 
+	 * 		the hint message to check
+	 * 
+	 * @returns true if the message is not corrupted, false otherwise
+	 * 
+	 ***********************************************/
+	bool is_valid_hint( erl2::ErlOracle hint );
 };
 
 }

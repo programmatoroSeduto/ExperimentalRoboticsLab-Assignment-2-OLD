@@ -82,11 +82,8 @@ public:
 		}
 		this->print_counting( num_ids, num_open, num_complete, num_discard );
 		
-		
-		
 		TLOG( "checking solution existence using counters ... " );
 		this->test_solvable( num_ids, num_open, num_complete, num_discard );
-		
 		
 		TLOG( "checking hypotheses status ... " );
 		this->print_hyp_status( num_ids );
@@ -130,6 +127,39 @@ public:
 		TLOG( "checking --- ID3 discard --- " );
 		this->print_hyp_status( num_ids );
 		
+		
+		/*
+		 * da qui inizia il test sulle funzioni per aggiungere gli hint. 
+		 * Supponiamo qui che gli hint siano sempre ben formati. 
+		 * */
+		
+		// (hyp-who ?id - hypID ?who - who)
+		// (hyp-where ?id - hypID ?where - where)
+		// (hyp-what ?id - hypID ?what - what)
+		
+		TLOG( "adding hint (hyp-who id4 mrGreen) ... " );
+		this->add_hint( 4, "who", "mrGreen" );
+		this->update_hypothesis( 4 , cls );
+		TLOG( "checking ..." );
+		bool res = this->value_of_hint( 4, "who", "mrGreen" );
+		if( !res )
+		{
+			if( !this->ok( ) )
+			{
+				TWARN( "something went wrong during the update..." );
+				return;
+			}
+			
+			TLOG( "not true" );
+		}
+		else
+			TLOG( "true, found the hint" );
+		
+		TLOG( "adding hint (hyp-who id4 profplum) ... " );
+		this->add_hint( 4, "who", "profplum" );
+		this->update_hypothesis( 4 , cls );
+		TLOG( "checking ... (expected: id4 discarded)" );
+		this->print_hyp_status( num_ids );
 	}
 		
 	

@@ -105,7 +105,7 @@
 
 </node>
 
-<!-- PDDL ACTION : signal-info-acquisition (simulated) --><!--
+<!-- PDDL ACTION : signal-info-acquisition (simulated) -->
 <node name="rosplan_interface_signal_info_acquisition" pkg="rosplan_planning_system" type="simulatedAction" 
 	respawn="false" output="screen">
 	
@@ -118,9 +118,8 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
-<!-- PDDL ACTION : manipulator-near-marker --><!--
+<!-- PDDL ACTION : manipulator-near-marker -->
 <node name="rosplan_interface_manipulator_near_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_near_marker" 
 	respawn="false" output="screen">
 	
@@ -133,7 +132,6 @@
 	<param name="action_probability"	value="1.0" />
 	
 </node>
--->
 
 <!-- PDDL ACTION : acquire-hint --><!--
 <node name="rosplan_interface_acquire_hint" pkg="robocluedo_rosplan_interface" type="node_acquire_hint" 

@@ -28,12 +28,80 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #include "diagnostic_msgs/KeyValue.h"
+/*
+string key
+string value 
+*/
+
 #include "rosplan_dispatch_msgs/ActionDispatch.h"
+/*
+#actionDispatch message
+int32 action_id
+int32 plan_id
+string name
+diagnostic_msgs/KeyValue[] parameters
+float32 duration
+float32 dispatch_time
+*/
+
+#include "visualization_msgs/MarkerArray.h"
+// http://docs.ros.org/en/noetic/api/visualization_msgs/html/msg/MarkerArray.html
+/*
+Marker[] markers
+*/
+
+#include "visualization_msgs/Marker.h"
+/*
+uint8 ARROW=0
+uint8 CUBE=1
+uint8 SPHERE=2
+uint8 CYLINDER=3
+uint8 LINE_STRIP=4
+uint8 LINE_LIST=5
+uint8 CUBE_LIST=6
+uint8 SPHERE_LIST=7
+uint8 POINTS=8
+uint8 TEXT_VIEW_FACING=9
+uint8 MESH_RESOURCE=10
+uint8 TRIANGLE_LIST=11
+uint8 ADD=0
+uint8 MODIFY=0
+uint8 DELETE=2
+uint8 DELETEALL=3
+
+std_msgs/Header header
+string ns
+int32 id
+int32 type
+int32 action
+geometry_msgs/Pose pose
+geometry_msgs/Vector3 scale
+std_msgs/ColorRGBA color
+duration lifetime
+bool frame_locked
+geometry_msgs/Point[] points
+std_msgs/ColorRGBA[] colors
+string text
+string mesh_resource
+bool mesh_use_embedded_materials
+*/
+
+#include "geometry_msgs/Pose.h"
+/*
+Point position {x, y, z}
+Quaternion orientation {x, y, z, w}
+*/
+
+#include "geometry_msgs/Vector3.h"
+// x, y, z
 
 #include <vector>
 #include <unistd.h>
+#include <cmath>
 
-
+// markers update
+#define TOPIC_MARKER "/visualization_marker"
+#define Q_SZ 1
 
 namespace KCL_rosplan
 {
@@ -101,6 +169,25 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/// subscriber to the marker topic
+	ros::Subscriber sub_marker;
+	
+	/// waypoints 
+	std::map<std::string, geometry_msgs::Pose> waypoints;
+	
+	/********************************************//**
+	 *  
+	 * \brief callback, subscriber to \ref SUBSCRIBER_MARKER
+	 * 
+	 * this callback only updates the markers. 
+	 * 
+	 * @param emptySignal empty 'request'
+	 * 
+	 * @see visualization_msgs/MarkerArray.msg [IN]
+	 * 
+	 ***********************************************/
+	void cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm );
 };
 
 }

@@ -105,6 +105,7 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
 
 #define NODE_NAME "robocluedo_kb_tools"
 
@@ -118,6 +119,8 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #endif
+
+#define TO_LOWER( s ) transform( s.begin( ), s.end( ), s.begin( ), ::tolower )
 
 /********************************************//**
  * 
@@ -297,6 +300,48 @@ public:
 	 * 
 	 ***********************************************/
 	bool update_hypothesis( int id, hypothesis_class& new_type );
+	
+	
+	
+	// === HINTS === //
+	
+	/********************************************//**
+	 *  
+	 * \brief add one predicate to the knowledge base from a hint
+	 * 
+	 * @param ID (int)
+	 * 	the ID of the hint
+	 * @param key (string)
+	 * 	the type of hint
+	 * @param value (string)
+	 * 	the value of the hint
+	 * 
+	 * @returns true if the operation succeeded or not. 
+	 * 
+	 * @note the names are transformed in lower case names due to a 
+	 * poor support of the case letters in storing the objects. 
+	 * 
+	 ***********************************************/
+	bool add_hint( int ID, std::string key, std::string value );
+	
+	/********************************************//**
+	 *  
+	 * \brief check if a hint already exists in the knowledge base
+	 * 
+	 * @param ID (int)
+	 * 	the ID of the hint
+	 * @param key (string)
+	 * 	the type of hint
+	 * @param value (string)
+	 * 	the value of the hint
+	 * 
+	 * @returns true if the hint was previously defined, false otherwise
+	 * 
+	 * @note the names are transformed in lower case names due to a 
+	 * poor support of the case letters in storing the objects. 
+	 * 
+	 ***********************************************/
+	bool value_of_hint( int ID, std::string key, std::string value );
 
 
 
@@ -346,6 +391,13 @@ private:
 	 * 
 	 ***********************************************/
 	bool set_counters_status( int n_open, int n_complete, int n_discard );
+	
+	/********************************************//**
+	 *  
+	 * \brief convert a string into another with lowercase letters only
+	 * 
+	 ***********************************************/
+	std::string to_lowercase( std::string data );
 };
 
 #endif

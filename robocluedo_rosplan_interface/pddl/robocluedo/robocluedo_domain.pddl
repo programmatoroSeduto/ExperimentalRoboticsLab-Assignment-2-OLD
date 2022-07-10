@@ -21,6 +21,11 @@
 	
 	;; navigation system
 	waypoint
+	
+	;; hypothesis elements
+	who
+	where
+	what
 )
 
 (:constants
@@ -59,6 +64,11 @@
 	(h-open ?id - hypID )
 	(h-complete ?id - hypID )
 	(h-discard ?id - hypID )
+	
+	;; hypothesis elements
+	(hyp-who ?id - hypID ?who - who)
+	(hyp-where ?id - hypID ?where - where)
+	(hyp-what ?id - hypID ?what - what)
 )
 
 (:functions
