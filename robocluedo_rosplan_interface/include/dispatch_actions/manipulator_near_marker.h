@@ -1,9 +1,9 @@
 
 /********************************************//**
 *  
-* @file move_to.h
+* @file manipulator_near_marker.h
 * 
-* @brief implementation of the action (move-to ?from ?to )
+* @brief implementation of the action (manipulator-near-marker ?wp )
 * 
 * @authors Francesco Ganci
 * @version v1.0
@@ -19,7 +19,7 @@
 #include "knowledge_base_tools/robocluedo_kb_tools.h"
 #include "robocluedo_rosplan_action_interface/RPActionInterface.h"
 
-#define NODE_NAME "move_to"
+#define NODE_NAME "manipulator_near_marker"
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )
@@ -47,12 +47,12 @@ namespace KCL_rosplan
  * ... more details
  * 
  ***********************************************/
-class RP_move_to : public RPActionInterface, public robocluedo_kb_tools
+class RP_manipulator_near_marker : public RPActionInterface, public robocluedo_kb_tools
 {
 public:
 	
 	/// empty constructor (don't use it!)
-	RP_move_to( );
+	RP_manipulator_near_marker( );
 	
 	/********************************************//**
 	 *  
@@ -66,14 +66,14 @@ public:
 	 * @todo open the publisher to the mission manager?
 	 * 
 	 ***********************************************/
-	RP_move_to( ros::NodeHandle &nh, bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
+	RP_manipulator_near_marker( ros::NodeHandle &nh, bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
 	
 	/********************************************//**
 	 *  
 	 * \brief class destructor
 	 * 
 	 ***********************************************/
-	~RP_move_to( );
+	~RP_manipulator_near_marker( );
 	
 	/********************************************//**
 	 *  

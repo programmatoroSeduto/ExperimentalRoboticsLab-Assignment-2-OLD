@@ -91,8 +91,7 @@
 
 </node>
 
-<!-- PDDL ACTION : move-to -->
-<!--
+<!-- PDDL ACTION : move-to --><!--
 <node name="rosplan_interface_move_to" pkg="robocluedo_rosplan_interface" type="node_move_to" 
 	respawn="false" output="screen">
 
@@ -107,13 +106,27 @@
 </node>
 -->
 
-<!-- PDDL ACTION : signal-info-acquisition -->
-<!--
+<!-- PDDL ACTION : signal-info-acquisition --><!--
 <node name="rosplan_interface_signal_info_acquisition" pkg="rosplan_planning_system" type="simulatedAction" 
 	respawn="false" output="screen">
 	
 	<param name="knowledge_base"		value="rosplan_knowledge_base" />
 	<param name="pddl_action_name"		value="signal-info-acquisition" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+	
+</node>
+-->
+
+<!-- PDDL ACTION : manipulator-near-marker --><!--
+<node name="rosplan_interface_manipulator_near_marker" pkg="robocluedo_rosplan_interface" type="node_manipulator_near_marker" 
+	respawn="false" output="screen">
+	
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="manipulator-near-marker" />
 	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
 	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
 	
