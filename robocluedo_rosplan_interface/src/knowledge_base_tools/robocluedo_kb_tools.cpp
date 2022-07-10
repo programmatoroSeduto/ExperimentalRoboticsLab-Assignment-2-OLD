@@ -238,15 +238,15 @@ bool robocluedo_kb_tools::set_hypothesis_class(
 			&& this->set_predicate( "h-complete", params, false )
 			&& this->set_predicate( "h-discard", params, false ) ;
 	break;
-	case DISCARD:
-		res = this->set_predicate( "h-open", params, false )
-			&& this->set_predicate( "h-complete", params, false )
-			&& this->set_predicate( "h-discard", params, true ) ;
-	break;
 	case COMPLETE:
 		res = this->set_predicate( "h-open", params, false )
 			&& this->set_predicate( "h-complete", params, true )
 			&& this->set_predicate( "h-discard", params, false ) ;
+	break;
+	case DISCARD:
+		res = this->set_predicate( "h-open", params, false )
+			&& this->set_predicate( "h-complete", params, false )
+			&& this->set_predicate( "h-discard", params, true ) ;
 	break;
 	default:
 		// update request not acceptable
