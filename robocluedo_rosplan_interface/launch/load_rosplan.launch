@@ -15,6 +15,7 @@
 <arg name="planner_out_topic" default="planner_output" />
 <arg name="planner_node_name" default="popf_planner_interface" />
 <arg name="data_path" default="$(find robocluedo_rosplan_interface)/data" />
+<arg name="planning_timeout" default="10"/>
 
 
 
@@ -51,7 +52,7 @@
 	<arg name="problem_topic"        value="/rosplan_problem_interface/$(arg problem_instance_topic)" />
 	<arg name="planner_topic"        value="$(arg planner_out_topic)" />
 	<arg name="data_path"            value="$(arg data_path)" />
-	<arg name="planner_command"      value="timeout 10 $(find rosplan_planning_system)/common/bin/popf DOMAIN PROBLEM" />
+	<arg name="planner_command"      value="timeout $(arg planning_timeout) $(find rosplan_planning_system)/common/bin/popf -T DOMAIN PROBLEM" />
 	
 </include>
 <node name="$(arg planner_node_name)" pkg="rosplan_planning_system" type="popf_planner_interface" 

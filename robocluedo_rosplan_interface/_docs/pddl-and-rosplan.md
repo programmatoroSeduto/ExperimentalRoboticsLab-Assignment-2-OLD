@@ -10,6 +10,22 @@ from inside the folder `(package robocluedo_rosplan_interface)/pddl/` run the co
 ./parser <domain file> <(opt) problem file>
 ```
 
+## solution with popf
+
+the repository contains a already compiled version of the planner popf. In case is doesn't work, you can find another executable in the folder `<tour workspace>/src/ROSPlan/rosplan_planning_system/common/bin/`. 
+
+```bash
+<path>/popf DOMAIN PROBLEM
+```
+
+some useful options:
+
+- `-n` search for many solutions (optimal search)
+- `-v2` verbose option
+- `-LP2` another verbose option
+- `-b` disable best-first-search; often it couldn't solve the plan with this method
+- `-T` in the case of the robocluedo project, it helped me to speed up the planning process
+
 ## Specific rules for the PDDL in ROS Plan
 
 you can set the planner in a suitable way for your application by the `planner_command` parameter in the planner interface. BUT the knowledge base node is able to interpret a non-standard particular version of PDDL, otherwise it closes unexpectedly. 
@@ -55,6 +71,26 @@ you can set the planner in a suitable way for your application by the `planner_c
 	)
 )
 ```
+
+## Issue in the problem preprocessing
+
+even with a perfect PDDL code, the planner, after the preprocessing phase, could complain a mysterious syntax error... 
+
+maybe you wrote this in the original problem:
+
+```lisp
+(:goal (my-predicate ))
+```
+
+ROSPlan will process it into this:
+
+```lisp
+(:goal (and (my-predicate )))
+```
+
+*that is syntactically wrong!* It explains the strange message. 
+
+**but notice that** this is just a warning, therefore you can skip it. 
 
 ## ADL support
 

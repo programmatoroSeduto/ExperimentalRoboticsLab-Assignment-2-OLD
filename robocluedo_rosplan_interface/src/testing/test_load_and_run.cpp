@@ -230,12 +230,6 @@ public:
 		}
 	}
 	
-	// print the problem output
-	void print_problem_instance( )
-	{
-		
-	}
-	
 	
 protected:
 	

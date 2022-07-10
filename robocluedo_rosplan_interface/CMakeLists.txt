@@ -167,6 +167,10 @@ add_executable( test_load_and_run src/testing/test_load_and_run.cpp )
 add_dependencies( test_load_and_run ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( test_load_and_run ${catkin_LIBRARIES} )
 
+add_executable( test_pipeline src/testing/test_pipeline.cpp )
+add_dependencies( test_pipeline ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( test_pipeline ${catkin_LIBRARIES} )
+
 add_executable( test_kb_tools src/testing/test_kb_tools.cpp )
 add_dependencies( test_kb_tools ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( test_kb_tools ${catkin_LIBRARIES} kb_tools )
