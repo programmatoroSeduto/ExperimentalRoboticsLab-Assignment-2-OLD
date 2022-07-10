@@ -62,8 +62,19 @@
 )
 
 (:functions
+	(number-of-ids-in-the-problem )
 	(remaining-moves )
 	(solution-quality )
+	
+	;; hypotheses classification
+	(h-count-who ?id - hypID )
+	(h-count-where ?id - hypID )
+	(h-count-what ?id - hypID )
+	
+	;; hypothesis counting
+	(h-count-open )
+	(h-count-complete )
+	(h-count-discard )
 )
 
 ;; === SYSTEM INIT === ;;

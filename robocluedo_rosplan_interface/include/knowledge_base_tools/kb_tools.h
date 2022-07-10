@@ -283,7 +283,8 @@ public:
 	 * @returns (bool) <b>true</b> if the operation has gone well, <b>false</b>
 	 * otherwise.
 	 * 
-	 * @note no need here to check the success of the call using \ref ok
+	 * @note no need here to check the success of the call using \ref ok:
+	 * the return value is sufficient to understand what's going on.
 	 * 
 	 ***********************************************/
 	bool set_predicate(

@@ -11,6 +11,9 @@
 )
 
 (:init
+	;; problem metadata
+	(= (number-of-ids-in-the-problem ) 6)
+		
 	;; init state of the system
 	(pre-init )
 	
@@ -64,11 +67,34 @@
 	
 	;; hypotheses classification
 	(h-open ID1 )
+		(= (h-count-who ID1 ) 0)
+		(= (h-count-where ID1 ) 0)
+		(= (h-count-what ID1 ) 0)
 	(h-open ID2 )
+		(= (h-count-who ID2 ) 0)
+		(= (h-count-where ID2 ) 0)
+		(= (h-count-what ID2 ) 0)
 	(h-open ID3 )
+		(= (h-count-who ID3 ) 0)
+		(= (h-count-where ID3 ) 0)
+		(= (h-count-what ID3 ) 0)
 	(h-open ID4 )
+		(= (h-count-who ID4 ) 0)
+		(= (h-count-where ID4 ) 0)
+		(= (h-count-what ID4 ) 0)
 	(h-open ID5 )
+		(= (h-count-who ID5 ) 0)
+		(= (h-count-where ID5 ) 0)
+		(= (h-count-what ID5 ) 0)
 	(h-open ID6 )
+		(= (h-count-who ID6 ) 0)
+		(= (h-count-where ID6 ) 0)
+		(= (h-count-what ID6 ) 0)
+	
+	;; hypothesis counting
+	(= (h-count-open ) (number-of-ids-in-the-problem ))
+	(= (h-count-complete ) 0)
+	(= (h-count-discard ) 0)
 )
 
 (:goal (elementary-whatson ))

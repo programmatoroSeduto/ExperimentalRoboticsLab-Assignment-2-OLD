@@ -4,6 +4,9 @@
 
 - il planner risolve il problema fino alla fine come se non ci fosse nessun problema
 - è il sistema esterno a risolvere gli imprevisti con eventuali richieste di replanning
+- la knowledge base è formata da un insieme di informazioni non comunicanti: quelle che servono per il planner PDDL, e quelle che servono per la reale gestione del reasoning
+- date le funzionalità della knowledge base, contare via query è davvero una pessima idea: il PDDL dovrà portare con se tutta una serie di metadati da aggiornare ogni volta che viene ricevuto un nuovo hint dall'oracolo. questa operazione permette inoltre di usare la knowledge base come una shared memory tra le varie actions
+- ogni nodo ha la sua particolare istanza di `robocluedo_kb_tools`, per giunta su processi diversi, dunque l'unica vera memoria condivisa è la knowledge base: inutile tenere dei conteggi nella classe senza aggiornare la knowledge base: dei fluents di conteggio devono esserci sempre nel problema. 
 
 ## system inizialization
 

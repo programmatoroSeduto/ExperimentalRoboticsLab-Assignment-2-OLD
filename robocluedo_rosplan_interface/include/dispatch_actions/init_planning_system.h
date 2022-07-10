@@ -69,6 +69,8 @@ public:
 	 * @param nh (ros::NodeHandle) the handle of the node
 	 * @param debug_mode verbose print or not?
 	 * 
+	 * @todo open the publisher to the mission manager?
+	 * 
 	 ***********************************************/
 	RP_init_planning_system( ros::NodeHandle &nh, bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
 	
@@ -83,11 +85,23 @@ public:
 	 *  
 	 * \brief listen to and process action_dispatch topic
 	 * 
-	 * ... more details
+	 * here's the procedure: 
+	 * <ol>
+	 * <li> check the classification of the hypotheses, and send a failure
+	 * feedback in case of unconsistency of the database </li>
+	 * <li> check if the problem is still solvable, that is if not every
+	 * hypothesis ID have been discarded </li>
+	 * <li> check if the problem can be solved by exclusion, and in case
+	 * send a feedback to the mission controller asking to replan and
+	 * solve by exclusion </li>
+	 * </ol>
 	 * 
 	 * @param msg the action to execute
 	 * 
 	 * @returns useless, it always returns true
+	 * 
+	 * @note the solution by exclusion can be called when there's only one
+	 * hypothesis which is complete OR simply active. 
 	 * 
 	 ***********************************************/
 	bool concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
@@ -96,6 +110,26 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/********************************************//**
+	 *  
+	 * \brief classify the hypotheses
+	 * 
+	 * the system tracks the hypotheses into three categories: 
+	 * <ul>
+	 * <li><b>open</b> : there's no proof that it is incorrect, and some element is missing</li>
+	 * <li><b>complete</b> : the hypotheses has its three elements</li>
+	 * <li><b>discard</b> : at least one field has more than one option</li>
+	 * </ul><br>
+	 * 
+	 * @param msg the action to execute
+	 * 
+	 * @returns false in case on unconsistenied in the ontology
+	 * 
+	 * @todo what about the UNKNOWN value?
+	 * 
+	 ***********************************************/
+	bool classify_hypotheses( );
 };
 
 }
