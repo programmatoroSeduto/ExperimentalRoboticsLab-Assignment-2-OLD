@@ -484,6 +484,19 @@ float kb_tools::read_fluents_list(
 }
 
 
+// cast a KeyValue message into a simple map
+std::map<std::string, std::string> kb_tools::keyvalue2map( 
+		const std::vector<diagnostic_msgs::KeyValue>& kv )
+{
+	std::map<std::string, std::string> res;
+	
+	for( auto it=kv.begin( ) ; it!=kv.end( ) ; ++it )
+		res[it->key] = it->value;
+	
+	return res;
+}
+
+
 
 
 // === PRIVATE METHODS

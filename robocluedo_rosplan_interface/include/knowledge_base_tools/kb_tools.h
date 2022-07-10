@@ -440,6 +440,21 @@ protected:
 		const std::string fname, 
 		std::map<std::string, std::string>& params,
 		rosplan_knowledge_msgs::GetAttributeService::Response& res );
+	
+	/********************************************//**
+	 *  
+	 * \brief cast a KeyValue message into a simple map
+	 * 
+	 * this function is often useful, since the messages of the
+	 * knowledge base use a lot the message type diagnostic_msgs::KeyValue. 
+	 * 
+	 * @param kv the vector of messages diagnostic_msgs::KeyValue
+	 * 
+	 * @returns a map from that vector
+	 * 
+	 ***********************************************/
+	std::map<std::string, std::string> keyvalue2map( 
+		const std::vector<diagnostic_msgs::KeyValue>& kv );
 
 private:
 	

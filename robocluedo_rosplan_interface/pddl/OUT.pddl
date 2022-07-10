@@ -102,6 +102,6 @@
 )
 (:goal (and
     (investigating)
+    (robot-position w2)
 ))
-(:metric maximize (solution-quality))
 )

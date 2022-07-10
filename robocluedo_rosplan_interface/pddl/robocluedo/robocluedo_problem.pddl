@@ -98,8 +98,8 @@
 )
 
 ;; (:goal (elementary-whatson ))
-(:goal (investigating ))
+;; (:goal (investigating ))
 
-(:metric maximize (solution-quality ))
+(:goal (and (investigating ) (robot-position w2)))
 
 )

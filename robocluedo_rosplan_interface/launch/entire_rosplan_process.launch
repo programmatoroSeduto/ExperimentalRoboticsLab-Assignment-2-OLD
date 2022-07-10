@@ -91,7 +91,7 @@
 
 </node>
 
-<!-- PDDL ACTION : move-to --><!--
+<!-- PDDL ACTION : move-to -->
 <node name="rosplan_interface_move_to" pkg="robocluedo_rosplan_interface" type="node_move_to" 
 	respawn="false" output="screen">
 
@@ -104,7 +104,6 @@
 	<param name="action_probability"	value="1.0" />
 
 </node>
--->
 
 <!-- PDDL ACTION : signal-info-acquisition (simulated) --><!--
 <node name="rosplan_interface_signal_info_acquisition" pkg="rosplan_planning_system" type="simulatedAction" 

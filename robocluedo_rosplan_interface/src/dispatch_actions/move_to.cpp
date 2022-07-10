@@ -28,7 +28,17 @@ RP_move_to::RP_move_to( ros::NodeHandle& nh, bool debug_mode ) :
 	robocluedo_kb_tools( debug_mode ),
 	nh( nh )
 {
-	// ...
+	// setup manually the waypoints (https://quaternions.online)
+	this->waypoints["center"] = this->make_pose( 0, 0, 0, 0, 0, 0, 1 );
+	this->waypoints["wp1"] = this->make_pose( -3.0, 0, 0, 0, 0, 1, 0 );
+	this->waypoints["wp2"] = this->make_pose( 3.0, 0, 0, 0, 0, 0, 1 );
+	this->waypoints["wp3"] = this->make_pose( 0, -3.0, 0, 0, 0, -0.707, 0.707 );
+	this->waypoints["wp4"] = this->make_pose( 0, 3.0, 0, 0, 0, 0.707, 0.707 );
+	
+	// topic for markers
+	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "..." );
+	this->sub_marker = nh.subscribe( TOPIC_MARKER, Q_SZ, &RP_move_to::cbk_marker, this );
+	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "... OK" );
 }
 
 
@@ -46,17 +56,17 @@ RP_move_to::~RP_move_to( )
 // the callback
 bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
 {
-	bool res = true; 
+	// parameters
+	auto params = this->keyvalue2map( msg->parameters );
+	std::string from = params["from"];
+	std::string to = params["to"];
 	
-	/// @todo a method to read the arguments each received each time the callback is issued
-	
-	if( debug_mode )
-		TLOG( "(move_to ) CALLED" );
+	TLOG( "(move_to from=" << params["from"] << " to=" << params["to"] << ") CALLED" );
 		
-	// ...
+	/// @todo send the command to the navigation system and wait
+	TLOG( "(TODO) sending position to the navigation system" );
 	
 	return true;
-
 }
 
 
@@ -64,6 +74,38 @@ bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::
 
 // === PRIVATE METHODS === //
 
-// ...
+// update the markers (one shot)
+void RP_move_to::cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm )
+{
+	// update the z component for each pose
+	this->waypoints["wp1"].position.z = pm->markers[0].pose.position.z;
+	this->waypoints["wp2"].position.z = pm->markers[1].pose.position.z;
+	this->waypoints["wp3"].position.z = pm->markers[2].pose.position.z;
+	this->waypoints["wp4"].position.z = pm->markers[3].pose.position.z;
+	
+	// shut down the subscriber 
+	this->sub_marker.shutdown( );
+	
+	TLOG( "(move-to ) RECEIVED MARKERS" );
+}
+
+// write a pose
+geometry_msgs::Pose RP_move_to::make_pose( float x, float y, float z, float qx, float qy, float qz, float qw )
+{
+	geometry_msgs::Pose p;
+	
+	// position
+	p.position.x = x;
+	p.position.y = y;
+	p.position.z = z;
+	
+	// quaternion
+	p.orientation.x = qx;
+	p.orientation.y = qy;
+	p.orientation.z = qz;
+	p.orientation.w = qw;
+	
+	return p;
+}
 
 }
