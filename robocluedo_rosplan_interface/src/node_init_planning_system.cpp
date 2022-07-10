@@ -1,9 +1,9 @@
 
 /********************************************//**
  *  
- * \file robocluedo_kb_tools.h
+ * \file file.ext
  * <div><b>ROS Node Name</b> 
- *      <ul><li>robocluedo_kb_tools</li></ul></div>
+ *      <ul><li>???ros_node???</li></ul></div>
  * \brief ...brief...
  * 
  * \authors ???
@@ -91,25 +91,10 @@
  * 
  ***********************************************/
 
-#ifndef __H_ROBOCLUEDO_KB_TOOLS__
-#define __H_ROBOCLUEDO_KB_TOOLS__ "__H_ROBOCLUEDO_KB_TOOLS__"
-
-#include "ros/ros.h"
-#include "knowledge_base_tools/kb_tools.h"
-
-#include "rosplan_knowledge_msgs/KnowledgeQueryService.h"
-#include "rosplan_knowledge_msgs/KnowledgeUpdateService.h"
-#include "rosplan_knowledge_msgs/KnowledgeItem.h"
-#include "rosplan_knowledge_msgs/GetAttributeService.h"
-#include "diagnostic_msgs/KeyValue.h"
-
-#include <string>
-#include <map>
-
-#define NODE_NAME "robocluedo_kb_tools"
+#define NODE_NAME "node_init_planning_system"
 
 #ifndef __DEBUG_MACROS__
-#define __DEBUG_MACROS__
+	#define __DEBUG_MACROS__
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )
@@ -119,37 +104,50 @@
 
 #endif
 
+#include "ros/ros.h"
+#include "dispatch_actions/init_planning_interface.h"
+
+#include <string>
+#include <map>
+#include <signal.h>
+
+
+
 
 /********************************************//**
  *  
- * \class robocluedo_kb_tools
+ * \brief shutdown message
  * 
- * \brief more services for the robocluedo project!
+ ***********************************************/
+void shut_msg( int sig )
+{
+	TLOG( "stopping... " );
+	ros::shutdown( );
+}
+
+
+
+
+/********************************************//**
+ *  
+ * \brief ROS node main - node_init_planning_system
  * 
  * ... more details
  * 
- * @see kb_tools
- * 
  ***********************************************/
-class robocluedo_kb_tools : public kb_tools
+int main(int argc, char **argv) 
 {
-public:
+	ros::init(argc, argv, ROSPLAN_ACTION_NAME, ros::init_options::AnonymousName);
+	signal(SIGINT, shut_msg);
+	ros::NodeHandle nh("~");
 	
-	/********************************************//**
-	 *  
-	 * \brief class constructor
-	 * 
-	 * @param debug_mode verbose print or not?
-	 * 
-	 ***********************************************/
-	robocluedo_kb_tools( bool debug_mode = KB_TOOLS_DEFAULT_DEBUG_MODE );
+	// create PDDL action publisher
+	TLOG( "starting ... " );
+	KCL_rosplan::RP_init_planning_system ac( nh );
 	
-	/********************************************//**
-	 *  
-	 * \brief class destructor
-	 * 
-	 ***********************************************/
-	 ~robocluedo_kb_tools( );
-};
-
-#endif
+	// run the node
+	TLOG( "ready" );
+	ac.runActionInterface( );
+	
+	return 0;
+}

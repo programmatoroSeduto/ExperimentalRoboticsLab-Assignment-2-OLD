@@ -1,7 +1,7 @@
 
 /********************************************//**
 *  
-* @file kb_tools
+* @file kb_tools.cpp
 * @brief implementation of the class \ref kb_tools
 * 
 * @authors Fracesco Ganci

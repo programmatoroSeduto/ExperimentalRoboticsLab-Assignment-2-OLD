@@ -107,12 +107,10 @@
 #include <string>
 #include <map>
 
+#define NODE_NAME "kb_tools"
+
 #ifndef __DEBUG_MACROS__
 #define __DEBUG_MACROS__
-
-#ifndef NODE_NAME
-	#define NODE_NAME "kb_tools"
-#endif
 
 #define LOGSQUARE( str )  "[" << str << "] "
 #define OUTLABEL          LOGSQUARE( NODE_NAME )
@@ -345,7 +343,9 @@ public:
 	int exists_predicate(
 		const std::string& pname, 
 		std::map<std::string, std::string>& params );
-	
+
+
+
 protected:
 	
 	/// node handle reference

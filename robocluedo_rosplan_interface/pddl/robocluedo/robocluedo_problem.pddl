@@ -64,10 +64,10 @@
 	
 	;; hypotheses classification
 	(h-open ID1 )
-	(h-complete ID2 )
+	(h-open ID2 )
 	(h-open ID3 )
 	(h-open ID4 )
-	(h-discard ID5 )
+	(h-open ID5 )
 	(h-open ID6 )
 )
 
