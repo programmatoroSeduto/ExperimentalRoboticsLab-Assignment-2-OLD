@@ -243,7 +243,7 @@ public:
 	 ***********************************************/
 	bool get_predicate( 
 		const std::string& pname, 
-		std::map<std::string, std::string>& params );
+		std::map<std::string, std::string> params );
 	
 	/********************************************//**
 	 *  
@@ -262,7 +262,7 @@ public:
 	 ***********************************************/
 	float get_fluent( 
 		const std::string fname,
-		std::map<std::string, std::string>& params );
+		std::map<std::string, std::string> params );
 	
 	
 	
@@ -289,7 +289,7 @@ public:
 	 ***********************************************/
 	bool set_predicate(
 		const std::string& pname, 
-		std::map<std::string, std::string>& params,
+		std::map<std::string, std::string> params,
 		bool pvalue );
 	
 	/********************************************//**
@@ -308,7 +308,7 @@ public:
 	 ***********************************************/
 	bool set_fluent(
 		std::string fname,
-		std::map<std::string, std::string>& params,
+		std::map<std::string, std::string> params,
 		float fvalue );
 	
 	

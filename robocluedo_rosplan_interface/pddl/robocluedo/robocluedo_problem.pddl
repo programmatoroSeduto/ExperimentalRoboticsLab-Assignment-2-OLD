@@ -4,7 +4,7 @@
 
 (:objects
 	;; ontology 
-	ID1 ID2 ID3 ID4 ID5 ID6 - hypID
+	id1 id2 id3 id4 id5 id6 - hypID
 	
 	;; environment
 	w1 w2 w3 w4 - waypoint
@@ -66,30 +66,30 @@
 		(not-acquired-hint w1 )
 	
 	;; hypotheses classification
-	(h-open ID1 )
-		(= (h-count-who ID1 ) 0)
-		(= (h-count-where ID1 ) 0)
-		(= (h-count-what ID1 ) 0)
-	(h-open ID2 )
-		(= (h-count-who ID2 ) 0)
-		(= (h-count-where ID2 ) 0)
-		(= (h-count-what ID2 ) 0)
-	(h-open ID3 )
-		(= (h-count-who ID3 ) 0)
-		(= (h-count-where ID3 ) 0)
-		(= (h-count-what ID3 ) 0)
-	(h-open ID4 )
-		(= (h-count-who ID4 ) 0)
-		(= (h-count-where ID4 ) 0)
-		(= (h-count-what ID4 ) 0)
-	(h-open ID5 )
-		(= (h-count-who ID5 ) 0)
-		(= (h-count-where ID5 ) 0)
-		(= (h-count-what ID5 ) 0)
-	(h-open ID6 )
-		(= (h-count-who ID6 ) 0)
-		(= (h-count-where ID6 ) 0)
-		(= (h-count-what ID6 ) 0)
+	(h-open id1 )
+		(= (h-count-who id1 ) 0)
+		(= (h-count-where id1 ) 0)
+		(= (h-count-what id1 ) 0)
+	(h-open id2 )
+		(= (h-count-who id2 ) 0)
+		(= (h-count-where id2 ) 0)
+		(= (h-count-what id2 ) 0)
+	(h-open id3 )
+		(= (h-count-who id3 ) 0)
+		(= (h-count-where id3 ) 0)
+		(= (h-count-what id3 ) 0)
+	(h-open id4 )
+		(= (h-count-who id4 ) 0)
+		(= (h-count-where id4 ) 0)
+		(= (h-count-what id4 ) 0)
+	(h-open id5 )
+		(= (h-count-who id5 ) 0)
+		(= (h-count-where id5 ) 0)
+		(= (h-count-what id5 ) 0)
+	(h-open id6 )
+		(= (h-count-who id6 ) 0)
+		(= (h-count-where id6 ) 0)
+		(= (h-count-what id6 ) 0)
 	
 	;; hypothesis counting
 	(= (h-count-open ) 6)

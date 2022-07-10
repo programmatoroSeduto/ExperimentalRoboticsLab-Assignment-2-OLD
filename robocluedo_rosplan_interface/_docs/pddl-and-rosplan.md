@@ -56,6 +56,55 @@ you can set the planner in a suitable way for your application by the `planner_c
 
 - you cannot use `(not ...)` inside the goal statement: the planner doesn't fully support `:adl` requirement. 
 
+- **don't use the upper case characters!** ROSPlan poorly supports the uppercase letters, and sometimes it returns lower-case names instead of the expected upper-case ones, making the query to fail without reason. 
+	
+	here's an example of this nasty feature. let's suppose to have written this in the problem file:
+	
+	```lisp
+	(h-open ID1 )
+		(= (h-count-who ID1 ) 0)
+		(= (h-count-where ID1 ) 0)
+		(= (h-count-what ID1 ) 0)
+	(h-open ID2 )
+		(= (h-count-who ID2 ) 0)
+		(= (h-count-where ID2 ) 0)
+		(= (h-count-what ID2 ) 0)
+	(h-open ID3 )
+		(= (h-count-who ID3 ) 0)
+		(= (h-count-where ID3 ) 0)
+		(= (h-count-what ID3 ) 0)
+	(h-open ID4 )
+		(= (h-count-who ID4 ) 0)
+		(= (h-count-where ID4 ) 0)
+		(= (h-count-what ID4 ) 0)
+	(h-open ID5 )
+		(= (h-count-who ID5 ) 0)
+		(= (h-count-where ID5 ) 0)
+		(= (h-count-what ID5 ) 0)
+	(h-open ID6 )
+		(= (h-count-who ID6 ) 0)
+		(= (h-count-where ID6 ) 0)
+		(= (h-count-what ID6 ) 0)
+	```
+	
+	but, after a simple test, we discover that the knowledge base returns this instead. Here is a simple query, which fails because of this buggy, not documented behaviour of the knowledge base:
+	
+	```lisp
+	[ INFO] [1657462216.628493200]: [kb_tools] kb_tools::get_fluent( h-count-who, id=ID1 )
+	[ INFO] [1657462216.638314500]: [kb_tools] kb_tools::get_fluent FROM SERVICE: 
+	[0]	(h-count-who, id=id1)
+	[1]	(h-count-who, id=id2)
+	[2]	(h-count-who, id=id3)
+	[3]	(h-count-who, id=id4)
+	[4]	(h-count-who, id=id5)
+	[5]	(h-count-who, id=id6)
+
+	[ INFO] [1657462216.638412900]: [kb_tools] kb_tools::get_fluent( CALL SUCCESS with return 0 (success=0)
+	[ INFO] [1657462216.638467900]: [kb_tools] kb_tools::ok( ) !!! FAILURE !!!
+	```
+	
+	whatever query fails with this return! beautiful ROSPlan ... 
+
 ## Durative Actions - the right syntax
 
 ```lisp

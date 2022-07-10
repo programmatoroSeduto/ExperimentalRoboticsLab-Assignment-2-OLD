@@ -40,7 +40,7 @@ public:
 	
 	// node constructor
 	test_robocluedo_kb_tools( ) :
-		robocluedo_kb_tools( true );
+		robocluedo_kb_tools( false )
 	{
 		// ...
 	}
@@ -97,11 +97,40 @@ public:
 		 * ci si aspetta che l'interfaccia reagisca cambiando opportunamente lo
 		 * stato delle ipotesi alterate di volta in volta. 
 		 * */
+		 
+		hypothesis_class cls;
+		
 		
 		TLOG( "making ID1 complete ... " );
-		this->make_ID_complete( 1 );
+		this->test_change_id_status( 1, hypothesis_class::COMPLETE );
+		this->update_hypothesis( 1 , cls );
 		TLOG( "checking --- ID1 complete --- " );
 		this->print_hyp_status( num_ids );
+		
+		TLOG( "making ID2 discarded ... " );
+		this->test_change_id_status( 2, hypothesis_class::DISCARD );
+		this->update_hypothesis( 2 , cls );
+		TLOG( "checking --- ID2 discard --- " );
+		this->print_hyp_status( num_ids );
+		
+		TLOG( "making ID3 complete ... " );
+		this->test_change_id_status( 3, hypothesis_class::COMPLETE );
+		this->update_hypothesis( 3 , cls );
+		TLOG( "checking --- ID3 complete --- " );
+		this->print_hyp_status( num_ids );
+		
+		TLOG( "making ID3 open ... " );
+		this->test_change_id_status( 3, hypothesis_class::OPEN );
+		this->update_hypothesis( 3 , cls );
+		TLOG( "checking --- ID3 complete (expected no effect, COMPLETE???) --- " );
+		this->print_hyp_status( num_ids );
+		
+		TLOG( "making ID3 discarded ... " );
+		this->test_change_id_status( 3, hypothesis_class::DISCARD );
+		this->update_hypothesis( 3 , cls );
+		TLOG( "checking --- ID3 discard --- " );
+		this->print_hyp_status( num_ids );
+		
 	}
 		
 	
@@ -113,10 +142,10 @@ private:
     // conta gli ID e stampa a video
     void print_counting( int num_ids, int num_open, int num_complete, int num_discard )
     {
-		TLOG( "num_ids" << num_ids );
-		TLOG( "num_open" << num_open );
-		TLOG( "num_complete" << num_complete  );
-		TLOG( "num_discard" << num_discard  );
+		TLOG( "num_ids=" << num_ids );
+		TLOG( "num_open=" << num_open );
+		TLOG( "num_complete=" << num_complete  );
+		TLOG( "num_discard=" << num_discard  );
 	}
 	
 	// controlla se il problema è ancora risolvibile
@@ -125,7 +154,7 @@ private:
 		if( num_discard >= num_ids )
 			TLOG( "(num_discard=" << num_discard << ") >= (num_ids=" << num_ids << ") NOT SOLVABLE" );
 		
-		else if( ((num_complte + num_open) == 1) && (num_discard == (num_ids - 1)) )
+		else if( ((num_complete + num_open) == 1) && (num_discard == (num_ids - 1)) )
 			TLOG( "(num_complete + num_open)=" << (num_complete + num_open) << " && " <<
 				"(num_discard=" << num_discard << ") == " << (num_ids - 1) << " SOLVABLE BY EXCLUSION" );
 		
@@ -166,16 +195,34 @@ private:
 		}
 	}
 	
-	// fai diventare completo un ID
-	void make_ID_complete( int id )
+	// fai assumere un certo stato ad un certo ID senza aggiornare però l'ontology 
+	//    (un modo per simulare la ricezione di un hint) 
+	void test_change_id_status( int id, hypothesis_class cls )
 	{
-		std::string hname = "ID" + id;
+		std::string hname = "ID" + std::to_string( id );
 		std::map<std::string, std::string> params;
 		params["id"] = hname;
 		
-		this->set_fluent( "h-count-who", params, 1 );
-		this->set_fluent( "h-count-where", params, 1 );
-		this->set_fluent( "h-count-what", params, 1 );
+		int nwho = 1;
+		int nwhere = 1;
+		int nwhat = 1;
+		
+		switch( cls )
+		{
+		case hypothesis_class::OPEN :
+			nwho = 0;
+		break;
+		case hypothesis_class::DISCARD :
+			nwho = 2;
+		break; 
+		}
+		
+		if( !this->set_fluent( "h-count-who", params, nwho ) )
+			TWARN( "set fluent who" );
+		if( !this->set_fluent( "h-count-where", params, nwhere ) )
+			TWARN( "set fluent where" );
+		if( !this->set_fluent( "h-count-what", params, nwhat ) )
+			TWARN( "set fluent what" );
 	}
 };
 

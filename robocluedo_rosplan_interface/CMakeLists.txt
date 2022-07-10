@@ -178,6 +178,10 @@ add_executable( test_kb_tools src/testing/test_kb_tools.cpp )
 add_dependencies( test_kb_tools ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( test_kb_tools ${catkin_LIBRARIES} kb_tools )
 
+add_executable( test_robocluedo_kb_tools src/testing/test_robocluedo_kb_tools.cpp )
+add_dependencies( test_robocluedo_kb_tools ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( test_robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+
 
 #############
 ## Install ##

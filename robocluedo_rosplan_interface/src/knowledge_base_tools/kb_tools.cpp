@@ -62,7 +62,7 @@ void kb_tools::set_debug_mode( bool db_mode )
 // get value of a predicate
 bool kb_tools::get_predicate( 
 	const std::string& pname, 
-	std::map<std::string, std::string>& params )
+	std::map<std::string, std::string> params )
 {
 	// query message
 	rosplan_knowledge_msgs::KnowledgeQueryService query = this->request_query(
@@ -98,13 +98,19 @@ bool kb_tools::get_predicate(
 // get a fluent (no params)
 float kb_tools::get_fluent( 
 	const std::string fname,
-	std::map<std::string, std::string>& params )
+	std::map<std::string, std::string> params )
 {
 	// prepare command
 	rosplan_knowledge_msgs::GetAttributeService kbm;
 	kbm.request.predicate_name = fname;
 	
-	if( debug_mode ) TLOG( "kb_tools::get_fluent(" << fname << ")"  );
+	if( debug_mode ) 
+	{
+		std::string pm = "";
+		for ( auto it=params.begin( ) ; it!=params.end( ) ; ++it )
+			pm += ", " + it->first + "=" + it->second;
+		TLOG( "kb_tools::get_fluent" << "( " << fname << pm << " )"  );
+	}
 
 	// call the service
 	if( !cl_kb_get_fluent.call( kbm ) ) 
@@ -126,6 +132,27 @@ float kb_tools::get_fluent(
 	return kbm.response.attributes[0].function_value;
 	*/
 	
+	if( debug_mode )
+		if( kbm.response.attributes.size( ) > 0 )
+		{
+			std::string ress = "";
+			for( int i=0; i<kbm.response.attributes.size( ) ; i++ )
+			{
+				ress += "[" + std::to_string(i) + "]\t(" + kbm.response.attributes[i].attribute_name;
+				for( int j=0; j<kbm.response.attributes[i].values.size( ); j++)
+				{
+					ress += ", " + kbm.response.attributes[i].values[j].key + "=" + 
+						kbm.response.attributes[i].values[j].value;
+				}
+				ress += ")\n";
+			}
+			TLOG( "kb_tools::get_fluent " << "FROM SERVICE: \n" << ress );
+		}
+		else 
+		{
+			TWARN( "kb_tools::get_fluent " << "got a empty response from the KB service" );
+		}
+	
 	// find the value of the fluent
 	float res = this->read_fluents_list( fname, params, kbm.response );
 	
@@ -142,7 +169,7 @@ float kb_tools::get_fluent(
 // set a predicate
 bool kb_tools::set_predicate(
 	const std::string& pname, 
-	std::map<std::string, std::string>& params,
+	std::map<std::string, std::string> params,
 	bool pvalue )
 {
 	// formulate the request
@@ -178,7 +205,7 @@ bool kb_tools::set_predicate(
 // set a fluent (no args)
 bool kb_tools::set_fluent(
 	std::string fname,
-	std::map<std::string, std::string>& params,
+	std::map<std::string, std::string> params,
 	float fvalue )
 {
 	// prepare command
@@ -205,7 +232,7 @@ bool kb_tools::set_fluent(
 	}
 	
 	this->success = kbm.response.success;
-	if( debug_mode ) TLOG( "kb_tools::set_predicate" << " CALL SUCCESS with return " 
+	if( debug_mode ) TLOG( "kb_tools::set_fluent" << " CALL SUCCESS with return " 
 		<< (kbm.response.success ? "success" : "NOT success")  );
 	return kbm.response.success;
 }
@@ -287,7 +314,7 @@ int kb_tools::exists_predicate(
 	}
 	
 	if( debug_mode ) 
-		TLOG( "kb_tools::get_predicate" << " CALL SUCCESS with return " << res );
+		TLOG( "kb_tools::exists_predicate" << " CALL SUCCESS with return " << res );
 	
 	return res;
 }
