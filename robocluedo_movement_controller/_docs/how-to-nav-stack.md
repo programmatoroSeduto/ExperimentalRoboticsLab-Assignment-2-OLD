@@ -297,7 +297,6 @@ geometry_msgs/PoseStamped base_position
 */
 // move_base_msgs::MoveBaseResult
 	// empty
-*/
 ```
 
 ### C++ -- main with async spinner
@@ -327,7 +326,6 @@ int main( int argc, char* argv[] )
 ```C++
 actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> *actcl_move_base( );
 #define ACTION_MOVE_BASE "move_base"
-#define RATE_MOVE_BASE 5
 #define TIMEOUT_MOVE_BASE 5
 ```
 
@@ -461,9 +459,9 @@ public:
 		
 		this->last_goal = goal;
 		actcl_move_base.sendGoal( this->last_goal, 
-			boost::bind(&move_base_interface::cbk_done_move_base, this, _1, _2),
-			boost::bind(&move_base_interface::cbk_active_move_base, this, _1, _2),
-			boost::bind(&move_base_interface::cbk_feedback_move_base, this, _1, _2)
+			boost::bind(&move_base_interface::cbk_done_move_base, this, _1, _2 ),
+			boost::bind(&move_base_interface::cbk_active_move_base, this ),
+			boost::bind(&move_base_interface::cbk_feedback_move_base, this, _1 )
 			);
 		
 		// ...
