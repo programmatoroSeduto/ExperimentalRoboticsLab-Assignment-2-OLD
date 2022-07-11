@@ -201,9 +201,6 @@ target_link_libraries( acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_t
 add_library( sherlock_is_thinking src/dispatch_actions/sherlock_is_thinking.cpp )
 target_link_libraries( sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
 
-# add_library( move_to_center src/dispatch_actions/move_to_center.cpp )
-# target_link_libraries( move_to_center ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
-
 # rosplan action interface
 
 add_library( robocluedo_rosplan_action_interface src/ActionInterface/RPActionInterface.cpp )
@@ -254,10 +251,6 @@ target_link_libraries( node_acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo
 add_executable( node_sherlock_is_thinking src/node_sherlock_is_thinking.cpp )
 add_dependencies( node_sherlock_is_thinking ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( node_sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface sherlock_is_thinking )
-
-# add_executable( node_move_to_center src/node_move_to_center.cpp )
-# add_dependencies( node_move_to_center ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-# target_link_libraries( node_move_to_center ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface move_to_center )
 
 
 #############

@@ -301,6 +301,15 @@ public:
 	 ***********************************************/
 	bool update_hypothesis( int id, hypothesis_class& new_type );
 	
+	/********************************************//**
+	 *  
+	 * \brief discard a hypothesis after a request from the Oracle
+	 * 
+	 * @param id the id of the hypothesis to discard. 
+	 * 
+	 ***********************************************/
+	bool discard_hypothesis( int id );
+	
 	
 	
 	// === HINTS === //

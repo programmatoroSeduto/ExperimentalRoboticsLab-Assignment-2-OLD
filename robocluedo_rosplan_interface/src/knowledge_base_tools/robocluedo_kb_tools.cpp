@@ -308,6 +308,13 @@ bool robocluedo_kb_tools::update_hypothesis( int id, hypothesis_class& new_type 
 }
 
 
+// discard a hypothesis after a request from the Oracle
+bool robocluedo_kb_tools::discard_hypothesis( int id )
+{
+	this->set_hypothesis_class( id, hypothesis_class::DISCARD );
+}
+
+
 
 
 // === HINTS === //

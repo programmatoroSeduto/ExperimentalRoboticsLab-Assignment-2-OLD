@@ -203,6 +203,34 @@
 
 </node>
 
+<!-- PDDL ACTION : who-killed-doctor-black-huh-q1 -->
+<node name="rosplan_interface_who_killed_doctor_black_huh_q1" pkg="robocluedo_rosplan_interface" type="node_init_planning_system" 
+	respawn="false" output="screen">
+
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="who-killed-doctor-black-huh-q1" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+
+</node>
+
+<!-- PDDL ACTION : who-killed-doctor-black-huh-q2 -->
+<node name="rosplan_interface_who_killed_doctor_black_huh_q2" pkg="robocluedo_rosplan_interface" type="node_init_planning_system" 
+	respawn="false" output="screen">
+
+	<param name="knowledge_base"		value="rosplan_knowledge_base" />
+	<param name="pddl_action_name"		value="who-killed-doctor-black-huh-q2" />
+	<param name="action_dispatch_topic" value="/rosplan_plan_dispatcher/action_dispatch" />
+	<param name="action_feedback_topic" value="/rosplan_plan_dispatcher/action_feedback" />
+	
+	<param name="action_duration"		value="1.0" />
+	<param name="action_probability"	value="1.0" />
+
+</node>
+
 
 
 

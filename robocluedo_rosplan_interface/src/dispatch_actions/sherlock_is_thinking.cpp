@@ -65,8 +65,8 @@ bool RP_sherlock_is_thinking::concreteCallback( const rosplan_dispatch_msgs::Act
 	if( debug_mode )
 	{
 		TLOG( "current status of the ontology: \n" 
-			<< "\t " << n_open << " open IDs "
-			<< "\t " << n_comp << " complete IDs "
+			<< "\t " << n_open << " open IDs \n"
+			<< "\t " << n_comp << " complete IDs \n"
 			<< "\t " << n_disc << " discarded IDs " );
 	}
 	

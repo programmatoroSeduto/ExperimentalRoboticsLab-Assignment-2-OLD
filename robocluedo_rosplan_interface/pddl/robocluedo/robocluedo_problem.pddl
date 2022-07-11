@@ -102,10 +102,6 @@
 	(= (h-count-discard ) 0)
 )
 
-;; (:goal (elementary-whatson ))
-
-(:goal (and
-	(wanna-solve ) (robot-position center)
-))
+(:goal (elementary-whatson ))
 
 )

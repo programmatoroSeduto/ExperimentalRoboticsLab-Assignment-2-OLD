@@ -107,7 +107,6 @@
 
 )
 (:goal (and
-    (wanna-solve)
-    (robot-position center)
+    (elementary-whatson)
 ))
 )

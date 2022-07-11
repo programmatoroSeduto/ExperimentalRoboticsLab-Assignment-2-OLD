@@ -28,6 +28,11 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #include "diagnostic_msgs/KeyValue.h"
+/*
+string key
+string value 
+*/
+
 #include "rosplan_dispatch_msgs/ActionDispatch.h"
 /*
 #actionDispatch message
@@ -39,8 +44,25 @@ float32 duration
 float32 dispatch_time
 */
 
+#include "erl2/ErlOracle.h"
+/*
+int32 ID
+string key
+string value
+*/
+
+#include "erl2/Oracle.h"
+/*
+---
+int32 ID
+*/
+
 #include <vector>
 #include <unistd.h>
+
+// Oracle service
+#define SERVICE_ORACLE "/oracle_solution"
+#define TIMEOUT_ORACLE 5
 
 
 
@@ -86,7 +108,42 @@ public:
 	
 	/********************************************//**
 	 *  
-	 * \brief listen to and process action_dispatch topic
+	 * \brief dispatch depending on the action called
+	 * 
+	 ***********************************************/
+	bool concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
+	
+private:
+	
+	/// reference to the node handle
+	ros::NodeHandle nh;
+	
+	/// oracle service client
+	ros::ServiceClient cl_oracle;
+	
+	/********************************************//**
+	 *  
+	 * \brief classify the hypotheses
+	 * 
+	 * the system tracks the hypotheses into three categories: 
+	 * <ul>
+	 * <li><b>open</b> : there's no proof that it is incorrect, and some element is missing</li>
+	 * <li><b>complete</b> : the hypotheses has its three elements</li>
+	 * <li><b>discard</b> : at least one field has more than one option</li>
+	 * </ul><br>
+	 * 
+	 * @param msg the action to execute
+	 * 
+	 * @returns false in case on unconsistenied in the ontology
+	 * 
+	 * @todo what about the UNKNOWN value?
+	 * 
+	 ***********************************************/
+	bool classify_hypotheses( );
+	
+	/********************************************//**
+	 *  
+	 * \brief implementation of (init-planning-system )
 	 * 
 	 * here's the procedure: 
 	 * <ol>
@@ -111,32 +168,15 @@ public:
 	 * becomes necessary. 
 	 * 
 	 ***********************************************/
-	bool concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
-	
-private:
-	
-	/// reference to the node handle
-	ros::NodeHandle nh;
+	bool action_init_planning_system( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
 	
 	/********************************************//**
 	 *  
-	 * \brief classify the hypotheses
-	 * 
-	 * the system tracks the hypotheses into three categories: 
-	 * <ul>
-	 * <li><b>open</b> : there's no proof that it is incorrect, and some element is missing</li>
-	 * <li><b>complete</b> : the hypotheses has its three elements</li>
-	 * <li><b>discard</b> : at least one field has more than one option</li>
-	 * </ul><br>
-	 * 
-	 * @param msg the action to execute
-	 * 
-	 * @returns false in case on unconsistenied in the ontology
-	 * 
-	 * @todo what about the UNKNOWN value?
+	 * \brief final action of the working cycle
 	 * 
 	 ***********************************************/
-	bool classify_hypotheses( );
+	bool action_end( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg );
+	
 };
 
 }
