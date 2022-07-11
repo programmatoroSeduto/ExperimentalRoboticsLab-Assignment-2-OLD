@@ -38,12 +38,6 @@ RP_init_planning_system::RP_init_planning_system( ) :
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
 	*/
-	
-	// action feedback setup
-	this->fb_init_planning_system.action_name = "init-planning-system";
-	this->fb_end.action_name = "who-killed-doctor-black-huh";
-	
-	// TWARN( "action init-planning-sys = " << this->fb_init_planning_system.action_name << " || action end = " << this->fb_end.action_name );
 }
 
 // the class constructor
@@ -63,12 +57,6 @@ RP_init_planning_system::RP_init_planning_system( ros::NodeHandle& nh, bool debu
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
 	*/
-	
-	// action feedback setup
-	this->fb_init_planning_system.action_name = "init-planning-system";
-	this->fb_end.action_name = "who-killed-doctor-black-huh";
-	
-	// TWARN( "action init-planning-sys = " << this->fb_init_planning_system.action_name << " || action end = " << this->fb_end.action_name );
 }
 
 
@@ -87,15 +75,20 @@ RP_init_planning_system::~RP_init_planning_system( )
 bool RP_init_planning_system::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg )
 {
 	if( msg->name == "init-planning-system" )
+	{
+		this->fb.action_name = "init-planning-system";
 		return this->action_init_planning_system( msg );
+	}
 	else if( msg->name == "who-killed-doctor-black-huh-q1" )
 	{
 		TLOG( "(who-killed-doctor-black-huh-q1 id=" << msg->parameters[0].value << ") CALLED" );
+		this->fb.action_name = "who-killed-doctor-black-huh-q1";
 		return this->action_end( msg );
 	}
 	else
 	{
 		TLOG( "(who-killed-doctor-black-huh-q2 id=" << msg->parameters[0].value << ") CALLED" );
+		this->fb.action_name = "who-killed-doctor-black-huh-q2";	
 		return this->action_end( msg );
 	}	
 }
@@ -141,7 +134,7 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	{
 		// send a feedback to the mission control, not consistent
 		TWARN( "(init_planning_system ) PLAN FAILED : inconsistent problem state" );
-		fb_init_planning_system.fb_unconsistent( msg->parameters, false, 
+		fb.fb_unconsistent( msg->parameters, false, 
 			"(init_planning_system ) PLAN FAILED : inconsistent problem state" );
 		
 		// plan failed
@@ -158,7 +151,7 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	{
 		// send a feedback to the mission control, unsolvable
 		TWARN( "(init_planning_system ) PLAN FAILED : not solvable" );
-		fb_init_planning_system.fb_unsolvable( msg->parameters, 
+		fb.fb_unsolvable( msg->parameters, 
 			"(init_planning_system ) PLAN FAILED : not solvable" );
 		
 		// unsolvable
@@ -170,7 +163,7 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	{
 		// send a feedback to the mission control, solve by exclusion
 		TLOG( "(init_planning_system ) PLAN SOLVABLE : by exclusion" );
-		fb_init_planning_system.fb_solvable( msg->parameters, true, 
+		fb.fb_solvable( msg->parameters, true, 
 			"(init_planning_system ) PLAN SOLVABLE : by exclusion" );
 		
 		TLOG( "remaining-moves reset to 0 (solution by exclusion)" );
@@ -246,7 +239,7 @@ bool RP_init_planning_system::action_end( const rosplan_dispatch_msgs::ActionDis
 	this->set_fluent( "remaining-moves", m, 3 );
 	
 	// send a replanning feedback
-	fb_end.fb_replan( msg->parameters );
+	fb.fb_replan( msg->parameters );
 	
 	TLOG( "REPLAN" );
 	return false;

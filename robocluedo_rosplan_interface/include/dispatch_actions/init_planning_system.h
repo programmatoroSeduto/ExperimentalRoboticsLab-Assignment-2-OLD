@@ -124,11 +124,8 @@ private:
 	/// oracle service client
 	ros::ServiceClient cl_oracle;
 	
-	/// feedback manager for the action (init-planning-system )
-	action_feedback_manager fb_init_planning_system;
-	
-	/// feedback manager for the action (who-killed-doctor-black-huh )
-	action_feedback_manager fb_end;
+	/// feedback manager
+	action_feedback_manager fb;
 	
 	/********************************************//**
 	 *  
