@@ -118,6 +118,8 @@ bool RP_move_to::action_move_to( const rosplan_dispatch_msgs::ActionDispatch::Co
 	/// @todo send the command to the navigation system and wait
 	TWARN( "(TODO) sending position to the navigation system" );
 	
+	/// @todo what about a failure in the navigation system?
+	
 	return true;
 }
 
@@ -133,6 +135,8 @@ bool RP_move_to::action_move_to_center( const rosplan_dispatch_msgs::ActionDispa
 		
 	/// @todo send the command to the navigation system and wait
 	TWARN( "(TODO) sending position to the navigation system" );
+	
+	/// @todo what about a failure in the navigation system?
 	
 	return true;
 }

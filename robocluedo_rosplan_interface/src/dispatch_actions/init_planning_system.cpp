@@ -196,7 +196,7 @@ bool RP_init_planning_system::action_end( const rosplan_dispatch_msgs::ActionDis
 		TLOG( "from Oracle : " << sm.response.ID << " || from the robot : " << prop_id );
 		if( sm.response.ID == prop_id )
 		{
-			TLOG( "SOLUTION FOUND!" );
+			TLOG( "SOLUTION FOUND! id=" << prop_id );
 			
 			/// @todo feedback to the mission manager, solved
 			
