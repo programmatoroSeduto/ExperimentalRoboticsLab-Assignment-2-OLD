@@ -250,3 +250,313 @@ float64 x
 float64 y
 float64 z
 ```
+
+## MoveBase action calls in C++
+
+here are some templates if you wnat (like me) to put the hands on without bothering too much with technical details (geeky geeky).
+
+### C++ -- headers
+
+```C++
+#include "ros/ros.h"
+#include "actionlib/server/simple_action_client.h"
+#include "tf/tf.h"
+
+#include <string>
+
+#include "geometry_msgs/PoseStamped.h"
+/*
+std_msgs/Header header
+geometry_msgs/Pose pose
+*/
+
+#include "geometry_msgs/Pose.h"
+/*
+Point position
+Quaternion orientation
+*/
+
+#include "geometry_msgs/Quaternion.h"
+/*
+float64 x, y, z, w
+*/
+
+#include "geometry_msgs/Point.h"
+/*
+float x, y, z
+*/
+
+#include "move_base_msgs/MoveBaseAction.h"
+// move_base_msgs::MoveBaseGoal
+/*
+geometry_msgs/PoseStamped target_pose
+*/
+// move_base_msgs::MoveBaseFeedback
+/*
+geometry_msgs/PoseStamped base_position
+*/
+// move_base_msgs::MoveBaseResult
+	// empty
+*/
+```
+
+### C++ -- main with async spinner
+
+**use async-spinner** for your node, in this way:
+
+```
+int main( int argc, char* argv[] )
+{
+	// ...
+	
+	ros::AsyncSpinner spinner( 2 );
+	spinner.start( );
+	
+	// ...
+	
+	ros::waitForShutdown( ); // same as ros::spin( );
+	
+	return 0;
+}
+```
+
+### C++ -- open the action client
+
+**declaration of the macros and pointers**: declare globally
+
+```C++
+actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> *actcl_move_base( );
+#define ACTION_MOVE_BASE "move_base"
+#define RATE_MOVE_BASE 5
+#define TIMEOUT_MOVE_BASE 5
+```
+
+**open the interface** in the main function, assuming the client global for the node, 
+
+```C++
+TLOG( "opening action client " << LOGSQUARE( ACTION_MOVE_BASE ) << " ... " );
+actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> tactcl_move_base( ACTION_MOVE_BASE, true );
+if( !tactcl_act.waitForServer( ros::Duration( TIMEOUT_MOVE_BASE ) ) )
+{
+	TERR( "unable to connect to the action server (timeout " << TIMEOUT_MOVE_BASE << "s) " 
+		<< "-- action " << LOGSQUARE( ACTION_MovE_BASE ) << "\n"
+		<< "\t " << (tactcl_move_base.isServerConnected( ) ? " it seems not online " : " service online ")  ) << "\n"
+		<< "\t" << "STATUS: " << tactcl_move_base.getState( ).toString( ) );
+	return 0;
+}
+actcl_move_base = &tactcl_move_base;
+TLOG( "opening action client " << LOGSQUARE( ACTION_MOVE_BASE ) << " ... OK!" );
+```
+
+now the simple action client should be online. 
+
+### C++ -- use the client -- callback based approach
+
+see [waitForResult](https://docs.ros.org/en/diamondback/api/actionlib/html/classactionlib_1_1SimpleActionClient.html#a94b5a38fae6917f83331560b81eea341)
+
+see also [sendGoal](https://docs.ros.org/en/diamondback/api/actionlib/html/classactionlib_1_1SimpleActionClient.html#ae6a2e6904495e7c20c59e96af0d86801)
+
+very useful [this wiki page](http://wiki.ros.org/actionlib_tutorials/Tutorials/Writing%20a%20Callback%20Based%20Simple%20Action%20Client)
+
+**sequential style pattern** if you just want to try something simple. 
+
+```
+// Called once when the goal becomes active
+void cbk_active_move_base( )
+{
+	// ...
+}
+
+// feedback subscription
+void cbk_feedback_move_base(
+	const move_base_msgs::MoveBaseFeedback::ConstPtr& feedback )
+{
+	// ... access the feedback using -> operator
+	
+	// ...
+}
+
+// Called once when the goal completes
+void cbk_done_move_base(
+	const actionlib::SimpleClientGoalState& state,
+	const move_base_msgs::MoveBaseResult& res )
+{
+	/*
+	ROS_INFO( "Finished in state [%s]", state.toString( ).c_str( ) ) ;
+	*/
+	
+	// ...
+}
+
+int send_goal_pos( float x, float y, float z )
+{
+	// ...
+	
+	move_base_msgs::MoveBaseGoal goal;
+	
+	// goal.target_pose.pose.{position.{x,y,z}, orientation.{x,y,z,w}}
+	
+	actcl_move_base->sendGoal( goal, 
+		&cbk_done_move_base, 
+		&cbk_active_move_base, 
+		&cbk_feedback_move_base );
+	
+	// ...
+}
+```
+
+**...but I don't want to use 3 callback, I use only 2/1 of them**. well, ActionLib defined three "placeholders":
+
+see [the code](https://docs.ros.org/en/diamondback/api/actionlib/html/simple__action__client_8h_source.html#l00076)
+
+```c++
+// for the "done" callback
+Client::SimpleDoneCallback( )
+
+// for the "active" callback
+Client::SimpleActiveCallback( )
+
+// for the callback subscribing to the feedback topic
+//    (if you don't need feedbacks)
+Client::SimpleFeedbackCallback( )
+
+
+// EXAMPLE: I don't need the done and the active
+ac.sendGoal( goal, 
+	Client::SimpleDoneCallback( ),
+	Client::SimpleActiveCallback( ),
+	&my_beautiful_feedback_callback
+	);
+```
+
+**methods inside a class?** no problem: *use boost* as follows:
+
+```c++
+// the function
+boost::bind( &MyClass::cbk_quello_che_vuoi, &MyClass, _1, _2 )
+```
+
+**class implementation**
+
+```c++
+class move_base_interface
+{
+public:
+	
+	move_base_interface( ) : 
+		actcl_move_base( "move_base", true ),
+		running( false ), idle( true );
+	{
+		actcl_move_base.waitForServer( );
+	}
+	
+	// call the service
+	bool send_goal( 
+		move_base_msgs::MoveBaseGoal goal, 
+		bool wait = false, 
+		ros::Duration d = ros::Duration( TIMEOUT_MOVE_BASE ) )
+	{
+		
+		// ...
+		
+		this->last_goal = goal;
+		actcl_move_base.sendGoal( this->last_goal, 
+			boost::bind(&move_base_interface::cbk_done_move_base, this, _1, _2),
+			boost::bind(&move_base_interface::cbk_active_move_base, this, _1, _2),
+			boost::bind(&move_base_interface::cbk_feedback_move_base, this, _1, _2)
+			);
+		
+		// ...
+		
+		if( wait )
+		{
+			if( !actcl_move_base.wait_for_results( d ) )
+			{
+				TERR( "action client for " << LOGSQUARE( ACTION_MOVE_BASE ) << "TIMEOUT EXPIRED " );
+				actcl_move_base.cancelAllGoals( );
+				
+				// ...
+				
+				return false;
+			}
+		}
+		
+		// ...
+		
+		return true;
+	}
+	
+	// Called once when the goal becomes active
+	void cbk_active_move_base( )
+	{
+		this->idle = false;
+		this->running = true;
+		
+		// ...
+	}
+
+	// feedback subscription
+	void cbk_feedback_move_base(
+		const move_base_msgs::MoveBaseFeedback::ConstPtr& feedback )
+	{	
+		// ... access the feedback using -> operator
+		
+		// ...
+	}
+
+	// Called once when the goal completes
+	void cbk_done_move_base(
+		const actionlib::SimpleClientGoalState& state,
+		const move_base_msgs::MoveBaseResult& res )
+	{
+		this->idle = true;
+		this->running = false;
+		
+		/*
+		ROS_INFO( "Finished in state [%s]", state.toString( ).c_str( ) );
+		*/
+		
+		// ...
+	}
+	
+	// cancel the last request
+	bool cancel( )
+	{
+		if( this->running )
+		{
+			actcl_move_base.cancelAllGoals( );
+			
+			this->idle = true;
+			this->running = false;
+			
+			return true;
+		}
+		
+		// idle! nothing to cancel
+		return false;
+	}
+	
+	/// check activity flag
+	bool is_running( ) { return this->running; }
+	
+	/// check activity flag
+	bool is_idle( ) { return this->idle; }
+	
+	/// action client status from the handle
+	std::string get_state( ) { return actcl_move_base.getState.toString( ); }
+	
+private:
+	
+	/// the action client
+	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> actcl_move_base;
+	
+	/// the current goal
+	move_base_msgs::MoveBaseGoal last_goal;
+	
+	/// activity flag
+	bool running;
+	
+	/// idle flag
+	bool idle;
+};
+```
