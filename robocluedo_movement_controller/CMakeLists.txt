@@ -13,6 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   rospy
+  move_base_msgs
+  actionlib
+  actionlib_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,9 +108,16 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES robocluedo_movement_controller
-#  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp std_msgs
+ INCLUDE_DIRS include
+ LIBRARIES 
+	robocluedo_movement_controller
+	move_base_interface
+ CATKIN_DEPENDS 
+	geometry_msgs 
+	nav_msgs 
+	roscpp 
+	std_msgs 
+	move_base_msgs
 #  DEPENDS system_lib
 )
 
@@ -118,7 +128,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -151,6 +161,17 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+## === move_base_interface === ##
+
+add_library( move_base_interface src/move_base_interface/move_base_interface.cpp )
+target_link_libraries( move_base_interface ${catkin_LIBRARIES} )
+
+## === test modules === ##
+
+add_executable( test_move_base src/testing/test_move_base.cpp )
+add_dependencies( test_move_base ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( test_move_base ${catkin_LIBRARIES} move_base_interface )
 
 #############
 ## Install ##

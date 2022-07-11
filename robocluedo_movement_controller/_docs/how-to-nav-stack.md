@@ -258,8 +258,8 @@ here are some templates if you wnat (like me) to put the hands on without bother
 ### C++ -- headers
 
 ```C++
-#include "ros/ros.h"
-#include "actionlib/server/simple_action_client.h"
+#include "actionlib/client/simple_action_client.h"
+#include "actionlib/client/terminal_state.h"
 #include "tf/tf.h"
 
 #include <string>
@@ -324,9 +324,10 @@ int main( int argc, char* argv[] )
 **declaration of the macros and pointers**: declare globally
 
 ```C++
-actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> *actcl_move_base( );
+// move_base action client
 #define ACTION_MOVE_BASE "move_base"
 #define TIMEOUT_MOVE_BASE 5
+actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> *actcl_move_base( );
 ```
 
 **open the interface** in the main function, assuming the client global for the node, 
@@ -434,6 +435,8 @@ ac.sendGoal( goal,
 boost::bind( &MyClass::cbk_quello_che_vuoi, &MyClass, _1, _2 )
 ```
 
+note that sometimes this call could return a very strange and unintelligible error: an example is contained [in this post](https://answers.ros.org/question/195723/actionlib-callback-based-simpleactionclient-bind-error/), which was a simple type. *but in my case* (my usual luck, nothing special) the error was due to the use of `const move_base_msgs::MoveBaseResult::ConstPtr& res` instead of the correct form `const move_base_msgs::MoveBaseResultConstPtr& res`.
+
 **class implementation**
 
 ```c++
@@ -445,7 +448,20 @@ public:
 		actcl_move_base( "move_base", true ),
 		running( false ), idle( true );
 	{
+		TLOG( "opening action client " << LOGSQUARE( ACTION_MOVE_BASE ) << " ... " );
+		
 		actcl_move_base.waitForServer( );
+		if( !this->actcl_act.waitForServer( ros::Duration( TIMEOUT_MOVE_BASE ) ) )
+		{
+			TERR( "unable to connect to the action server (timeout " << TIMEOUT_MOVE_BASE << "s) " 
+				<< "-- action " << LOGSQUARE( ACTION_MOVE_BASE ) << "\n"
+				<< "\t " << (this->actcl_move_base.isServerConnected( ) ? " it seems not online " : " service online ")  ) << "\n"
+				<< "\t" << "STATUS: " << this->actcl_move_base.getState( ).toString( ) );
+			
+			return;
+		}
+		
+		TLOG( "opening action client " << LOGSQUARE( ACTION_MOVE_BASE ) << " ... OK!" );
 	}
 	
 	// call the service
