@@ -28,7 +28,7 @@ RP_sherlock_is_thinking::RP_sherlock_is_thinking( ros::NodeHandle& nh, bool debu
 	robocluedo_kb_tools( debug_mode ),
 	nh( nh )
 {
-	// ...
+	fb.action_name = "sherlock-is-thinking";
 }
 
 
@@ -74,7 +74,8 @@ bool RP_sherlock_is_thinking::concreteCallback( const rosplan_dispatch_msgs::Act
 	{
 		TWARN( "NOT SOLVABLE, give up" );
 		
-		/// @todo feedback to the mission control manager, give up
+		// feedback to the mission control manager, give up
+		fb.fb_unsolvable( msg->parameters, "problem not solvable" );
 		
 		return false;
 	}
@@ -83,7 +84,8 @@ bool RP_sherlock_is_thinking::concreteCallback( const rosplan_dispatch_msgs::Act
 		TLOG( "(num_complete + num_open)=" << (n_comp + n_open) << " && " <<
 			"(num_discard=" << n_disc << ") == " << (n_ids - 1) << " SOLVABLE BY EXCLUSION" );
 			
-		/// @todo feedback to the mission control manager
+		// feedback to the mission control manager
+		fb.fb_solvable( msg->parameters, true, "SOLVABLE by exclusion, replan" );
 		
 		return false;
 	}
