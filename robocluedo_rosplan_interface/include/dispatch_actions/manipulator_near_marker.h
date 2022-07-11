@@ -27,6 +27,9 @@
 #define TWARN( msg )      ROS_WARN_STREAM( OUTLABEL << "WARNING: " << msg )
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
+#include "robocluedo_rosplan_interface_msgs/ActionFeedback.h"
+#include "dispatch_actions/feedback_manager.h"
+
 #include "diagnostic_msgs/KeyValue.h"
 /*
 string key
@@ -169,6 +172,9 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/// feedback manager
+	action_feedback_manager fb;
 	
 	/// subscriber to the marker topic
 	ros::Subscriber sub_marker;

@@ -125,7 +125,7 @@ bool action_feedback_manager::fb_replan( std::vector<diagnostic_msgs::KeyValue> 
 }
 
 // hardware failure
-bool action_feedback_manager::fm_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, bool navigation, std::string details )
+bool action_feedback_manager::fb_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, bool navigation, std::string details )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 

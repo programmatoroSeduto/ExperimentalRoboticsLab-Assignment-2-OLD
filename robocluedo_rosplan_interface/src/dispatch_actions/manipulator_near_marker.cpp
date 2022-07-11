@@ -56,11 +56,28 @@ bool RP_manipulator_near_marker::concreteCallback( const rosplan_dispatch_msgs::
 	if( debug_mode )
 		TLOG( "(" << msg->name << " wp=" << wp << ") CALLED" );
 	
+	// feedback action name
+	fb.action_name = msg->name;
+	
 	/// @todo send the point to reach to the manipulation servce
+	bool outcome = true;
 	if( msg->name == "manipulator-near-marker" )
+	{
 		TWARN( "(TODO) put the manipulator near to the marker wp=" << wp );
+		// update outcome
+	}
 	else
+	{
 		TWARN( "(TODO) put the manipulator far from the marker wp=" << wp );
+		// update outcome
+	}
+	
+	/// @todo feedback in case of hardware failure
+	if( !outcome )
+	{
+		fb.fb_hw_failure( msg->parameters, false, "manipulation failure" );
+		return false;
+	}
 	
 	return true;
 }

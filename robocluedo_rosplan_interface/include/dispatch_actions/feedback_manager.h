@@ -135,7 +135,7 @@ public:
 	bool fb_replan( std::vector<diagnostic_msgs::KeyValue> parameters, std::string details = "" );
 	
 	/// hardware failure (if not navigation, then manipulation)
-	bool fm_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, 
+	bool fb_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, 
 		bool navigation, std::string details = "" );
 
 	

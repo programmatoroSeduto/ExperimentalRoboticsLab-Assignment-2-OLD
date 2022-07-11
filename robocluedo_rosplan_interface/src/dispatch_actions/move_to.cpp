@@ -127,7 +127,7 @@ bool RP_move_to::action_move_to( const rosplan_dispatch_msgs::ActionDispatch::Co
 	/// @todo what about a failure in the navigation system?
 	if( false ) // in case of hw failure ...
 	{
-		fb.fm_hw_failure( msg->parameters, "navigation system failure" );
+		fb.fb_hw_failure( msg->parameters, true, "navigation system failure" );
 		return false;
 	}
 	
@@ -150,7 +150,7 @@ bool RP_move_to::action_move_to_center( const rosplan_dispatch_msgs::ActionDispa
 	/// @todo what about a failure in the navigation system?
 	if( false ) // in case of hw failure ...
 	{
-		fb.fm_hw_failure( msg->parameters, "navigation system failure" );
+		fb.fb_hw_failure( msg->parameters, true, "navigation system failure" );
 		return false;
 	}
 	
