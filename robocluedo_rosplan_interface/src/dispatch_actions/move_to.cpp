@@ -60,9 +60,15 @@ bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::
 	std::string action_name = msg->name;
 	
 	if( action_name == "move-to" )
+	{
+		fb.action_name = "move-to";
 		return this->action_move_to( msg );
+	}
 	else
+	{
+		fb.action_name = "move-to-center";
 		return this->action_move_to_center( msg );
+	}
 }
 
 
@@ -119,6 +125,11 @@ bool RP_move_to::action_move_to( const rosplan_dispatch_msgs::ActionDispatch::Co
 	TWARN( "(TODO) sending position to the navigation system" );
 	
 	/// @todo what about a failure in the navigation system?
+	if( false ) // in case of hw failure ...
+	{
+		fb.fm_hw_failure( msg->parameters, "navigation system failure" );
+		return false;
+	}
 	
 	return true;
 }
@@ -137,6 +148,11 @@ bool RP_move_to::action_move_to_center( const rosplan_dispatch_msgs::ActionDispa
 	TWARN( "(TODO) sending position to the navigation system" );
 	
 	/// @todo what about a failure in the navigation system?
+	if( false ) // in case of hw failure ...
+	{
+		fb.fm_hw_failure( msg->parameters, "navigation system failure" );
+		return false;
+	}
 	
 	return true;
 }

@@ -20,6 +20,9 @@
 #include "robocluedo_rosplan_action_interface/RPActionInterface.h"
 #include <tf/tf.h>
 
+#include "robocluedo_rosplan_interface_msgs/ActionFeedback.h"
+#include "dispatch_actions/feedback_manager.h"
+
 #define NODE_NAME "move_to"
 
 #define LOGSQUARE( str )  "[" << str << "] "
@@ -175,6 +178,9 @@ private:
 	
 	/// reference to the node handle
 	ros::NodeHandle& nh;
+	
+	/// feedback manager
+	action_feedback_manager fb;
 	
 	/// subscriber to the marker topic
 	ros::Subscriber sub_marker;
