@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>robocluedo_rosplan_interface</name>
+  <name>robocluedo_rosplan_interface_msgs</name>
   <version>0.0.0</version>
-  <description>The robocluedo_rosplan_interface package</description>
+  <description>The robocluedo_rosplan_interface_msgs package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/robocluedo_rosplan_interface</url> -->
+  <!-- <url type="website">http://wiki.ros.org/robocluedo_rosplan_interface_msgs</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -49,41 +49,24 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_export_depend>std_msgs</build_export_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <build_depend>std_srvs</build_depend>
-  <build_export_depend>std_srvs</build_export_depend>
-  <exec_depend>std_srvs</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <build_depend>rosplan_knowledge_msgs</build_depend>
-  <build_export_depend>rosplan_knowledge_msgs</build_export_depend>
   <build_depend>diagnostic_msgs</build_depend>
-  <build_export_depend>diagnostic_msgs</build_export_depend>
-  <build_depend>actionlib</build_depend>
-  <exec_depend>actionlib</exec_depend>
-  <build_depend>flex</build_depend>
-  <exec_depend>flex</exec_depend>
-  <build_depend>glut</build_depend>
-  <exec_depend>glut</exec_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
   <build_depend>rosplan_dispatch_msgs</build_depend>
+  <build_depend>rosplan_knowledge_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_export_depend>diagnostic_msgs</build_export_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>rosplan_dispatch_msgs</build_export_depend>
+  <build_export_depend>rosplan_knowledge_msgs</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>diagnostic_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rosplan_dispatch_msgs</exec_depend>
-  <build_depend>roslib</build_depend>
-  <exec_depend>roslib</exec_depend>
-  <build_depend>rostest</build_depend>
-  <exec_depend>rostest</exec_depend>
-  <build_depend>robocluedo_rosplan_interface_msgs</build_depend>
-  <exec_depend>robocluedo_rosplan_interface_msgs</exec_depend>
-  
-  <!-- <build_depend>rosplan_dependencies</build_depend> -->
-  
-
-  
-
-  
-  
+  <exec_depend>rosplan_knowledge_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

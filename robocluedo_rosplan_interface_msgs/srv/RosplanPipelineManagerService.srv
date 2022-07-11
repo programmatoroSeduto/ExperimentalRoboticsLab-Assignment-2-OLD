@@ -1,0 +1,40 @@
+# service 'RosplanPipelineManagerService'
+
+## Request
+
+## === operations
+
+# run the problem instance, then plan and parse
+bool load_and_plan
+# run the dispatcher
+bool execute_plan
+
+# number of max loops given by the mission manager
+bool use_max_moves
+int32 max_moves
+
+---
+
+## Response
+
+## === load_and_plan request
+# each one is true when the service call succeeds
+bool plan_loaded
+bool solution_found
+bool plan_parsed
+
+## === plan execution request
+
+# reserved for any technical problem
+bool exec_success
+# goal status
+bool goal_achieved
+
+## === plan execution statistics
+
+# inconsistency
+bool kb_not_consistent
+# problem solvable (false: not solvable)
+bool problem_solvable
+# problem solvable by exclusion
+bool by_exclusion

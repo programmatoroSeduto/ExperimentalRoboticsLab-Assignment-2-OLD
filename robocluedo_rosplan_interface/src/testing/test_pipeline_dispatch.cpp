@@ -2,7 +2,7 @@
 #include <ros/ros.h>
 #include <signal.h>
 
-#include "std_srvs/Empty.h" 
+
 #include "rosplan_knowledge_msgs/KnowledgeUpdateService.h"
 #include "rosplan_knowledge_msgs/GetAttributeService.h"
 #include "diagnostic_msgs/KeyValue.h"

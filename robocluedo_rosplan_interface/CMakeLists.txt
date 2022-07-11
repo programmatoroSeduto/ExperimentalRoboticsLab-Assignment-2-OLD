@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   rosplan_dependencies
   roslib
   rostest
+  robocluedo_rosplan_interface_msgs
 )
 
 ## System dependencies are found with CMake's conventions
