@@ -25,6 +25,8 @@
 #include <map>
 #include <vector>
 
+#include "diagnostic_msgs/KeyValue.h"
+
 #include "rosplan_dispatch_msgs/DispatchService.h"
 /*
 ---
@@ -80,7 +82,7 @@ public:
 	 * @note no need for replan
 	 * 
 	 ***********************************************/
-	bool fb_unconsistent( std::vector<diagnostc_msgs::KeyValue> parameters, bool goal = false, std::string details = "" );
+	bool fb_unconsistent( std::vector<diagnostic_msgs::KeyValue> parameters, bool goal = false, std::string details = "" );
 	
 	/********************************************//**
 	 *  
@@ -96,7 +98,7 @@ public:
 	 * @note need for replan only if 'by_execution'
 	 * 
 	 ***********************************************/
-	bool fb_solvable( std::vector<diagnostc_msgs::KeyValue> parameters, bool excl, std::string details = "" );
+	bool fb_solvable( std::vector<diagnostic_msgs::KeyValue> parameters, bool excl, std::string details = "" );
 	
 	/********************************************//**
 	 *  
@@ -111,7 +113,7 @@ public:
 	 * something wrong with the oracle implementation if this case happens. 
 	 * 
 	 ***********************************************/
-	bool fb_unsolvable( std::vector<diagnostc_msgs::KeyValue> parameters, std::string details = "" );
+	bool fb_unsolvable( std::vector<diagnostic_msgs::KeyValue> parameters, std::string details = "" );
 	
 	/********************************************//**
 	 *  
@@ -125,10 +127,10 @@ public:
 	 * @note this is a very general signal: better to specify what it means. 
 	 * 
 	 ***********************************************/
-	bool fb_replan( std::vector<diagnostc_msgs::KeyValue> parameters, std::string details = "" );
+	bool fb_replan( std::vector<diagnostic_msgs::KeyValue> parameters, std::string details = "" );
 	
 	/// hardware failure (if not navigation, then manipulation)
-	bool fm_hw_failure( std::vector<diagnostc_msgs::KeyValue> parameters, 
+	bool fm_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, 
 		bool navigation, std::string details = "" );
 
 
@@ -154,7 +156,7 @@ private:
 	 * 
 	 ***********************************************/
 	robocluedo_rosplan_interface_msgs::ActionFeedback build_msg( 
-		std::vector<diagnostc_msgs::KeyValue> parameters,
+		std::vector<diagnostic_msgs::KeyValue> parameters,
 		bool problem_solvable = true,
 		bool by_exclusion = false,
 		bool kb_not_consistent = false,
@@ -172,4 +174,4 @@ private:
 	 * 
 	 ***********************************************/
 	bool pub( robocluedo_rosplan_interface_msgs::ActionFeedback& msg );
-}
+};

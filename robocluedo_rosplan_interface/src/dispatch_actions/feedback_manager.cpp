@@ -41,7 +41,7 @@ action_feedback_manager::~action_feedback_manager( )
 // === FEEDBACK SYSTEM === //
 
 // knowledge base not in a consistent status
-bool action_feedback_manager::fb_unconsistent( std::vector<diagnostc_msgs/KeyValue> parameters, bool goal, std::string details )
+bool action_feedback_manager::fb_unconsistent( std::vector<diagnostic_msgs::KeyValue> parameters, bool goal, std::string details )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 
@@ -62,7 +62,7 @@ bool action_feedback_manager::fb_unconsistent( std::vector<diagnostc_msgs/KeyVal
 
 
 // problem solvable
-bool action_feedback_manager::fb_solvable( std::vector<diagnostc_msgs/KeyValue> parameters, bool excl std::string details  )
+bool action_feedback_manager::fb_solvable( std::vector<diagnostic_msgs::KeyValue> parameters, bool excl, std::string details  )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 
@@ -83,7 +83,7 @@ bool action_feedback_manager::fb_solvable( std::vector<diagnostc_msgs/KeyValue> 
 
 
 // problem unsolvable
-bool action_feedback_manager::fb_unsolvable( std::vector<diagnostc_msgs/KeyValue> parameters, std::string details  )
+bool action_feedback_manager::fb_unsolvable( std::vector<diagnostic_msgs::KeyValue> parameters, std::string details  )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 
@@ -104,7 +104,7 @@ bool action_feedback_manager::fb_unsolvable( std::vector<diagnostc_msgs/KeyValue
 
 
 // need for replan (other reasons)
-bool action_feedback_manager::fb_replan( std::vector<diagnostc_msgs/KeyValue> parameters, std::string details  )
+bool action_feedback_manager::fb_replan( std::vector<diagnostic_msgs::KeyValue> parameters, std::string details  )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 
@@ -124,7 +124,7 @@ bool action_feedback_manager::fb_replan( std::vector<diagnostc_msgs/KeyValue> pa
 }
 
 // hardware failure
-bool action_feedback_manager::fm_hw_failure( std::vector<diagnostc_msgs/KeyValue> parameters, bool navigation, std::string details )
+bool action_feedback_manager::fm_hw_failure( std::vector<diagnostic_msgs::KeyValue> parameters, bool navigation, std::string details )
 {
 	// the message
 	robocluedo_rosplan_interface_msgs::ActionFeedback msg = build_msg( 
@@ -150,7 +150,7 @@ bool action_feedback_manager::fm_hw_failure( std::vector<diagnostc_msgs/KeyValue
 
 // build a message
 robocluedo_rosplan_interface_msgs::ActionFeedback action_feedback_manager::build_msg( 
-		std::vector<diagnostc_msgs/KeyValue> parameters,
+		std::vector<diagnostic_msgs::KeyValue> parameters,
 		bool problem_solvable,
 		bool by_exclusion,
 		bool kb_not_consistent,
@@ -175,7 +175,7 @@ robocluedo_rosplan_interface_msgs::ActionFeedback action_feedback_manager::build
 	m.kb_not_consistent = kb_not_consistent;
 	m.goal_achieved = goal_achieved;
 	m.need_replan = need_replan;
-	m.failure_nav_sys = failure_nav_sys;
+	m.failure_nav_system = failure_nav_sys;
 	m.failure_manipulation = failure_manipulation;
 	
 	return m;

@@ -185,22 +185,27 @@ target_link_libraries( kb_tools ${catkin_LIBRARIES} )
 add_library( robocluedo_kb_tools src/knowledge_base_tools/robocluedo_kb_tools.cpp )
 target_link_libraries( robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools )
 
+# action feedback manager
+
+add_library( action_feedback_manager src/dispatch_actions/feedback_manager.cpp )
+target_link_libraries( action_feedback_manager ${catkin_LIBRARIES} )
+
 # dispatch actions
 
 add_library( init_planning_system src/dispatch_actions/init_planning_system.cpp )
-target_link_libraries( init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+target_link_libraries( init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools action_feedback_manager )
 
 add_library( move_to src/dispatch_actions/move_to.cpp )
-target_link_libraries( move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+target_link_libraries( move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools action_feedback_manager )
 
 add_library( manipulator_near_marker src/dispatch_actions/manipulator_near_marker.cpp )
-target_link_libraries( manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+target_link_libraries( manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools action_feedback_manager )
 
 add_library( acquire_hint src/dispatch_actions/acquire_hint.cpp )
-target_link_libraries( acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+target_link_libraries( acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools action_feedback_manager )
 
 add_library( sherlock_is_thinking src/dispatch_actions/sherlock_is_thinking.cpp )
-target_link_libraries( sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools )
+target_link_libraries( sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools action_feedback_manager )
 
 # rosplan action interface
 
@@ -235,23 +240,23 @@ target_link_libraries( test_robocluedo_kb_tools ${catkin_LIBRARIES} kb_tools rob
 
 add_executable( node_init_planning_system src/node_init_planning_system.cpp )
 add_dependencies( node_init_planning_system ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( node_init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface init_planning_system )
+target_link_libraries( node_init_planning_system ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager init_planning_system )
 
 add_executable( node_move_to src/node_move_to.cpp )
 add_dependencies( node_move_to ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( node_move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface move_to )
+target_link_libraries( node_move_to ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager move_to )
 
 add_executable( node_manipulator_near_marker src/node_manipulator_near_marker.cpp )
 add_dependencies( node_manipulator_near_marker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( node_manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface manipulator_near_marker )
+target_link_libraries( node_manipulator_near_marker ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager manipulator_near_marker )
 
 add_executable( node_acquire_hint src/node_acquire_hint.cpp )
 add_dependencies( node_acquire_hint ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( node_acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface acquire_hint )
+target_link_libraries( node_acquire_hint ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager acquire_hint )
 
 add_executable( node_sherlock_is_thinking src/node_sherlock_is_thinking.cpp )
 add_dependencies( node_sherlock_is_thinking ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( node_sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface sherlock_is_thinking )
+target_link_libraries( node_sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager sherlock_is_thinking )
 
 
 #############

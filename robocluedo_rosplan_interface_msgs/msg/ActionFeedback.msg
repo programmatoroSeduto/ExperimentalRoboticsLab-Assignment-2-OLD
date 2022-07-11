@@ -5,7 +5,7 @@
 # feedback from action
 string action_name
 # with parameters
-diagnostc_msgs/KeyValue[ ] parameters
+diagnostic_msgs/KeyValue[] parameters
 
 ## === plan statistics
 
