@@ -6,11 +6,13 @@
 
 # run the problem instance, then plan and parse
 bool load_and_plan
+
 # run the dispatcher
 bool execute_plan
 
 # number of max loops given by the mission manager
 bool use_max_moves
+
 int32 max_moves
 
 ---
@@ -19,14 +21,18 @@ int32 max_moves
 
 ## === load_and_plan request
 # each one is true when the service call succeeds
+
 bool plan_loaded
+
 bool solution_found
+
 bool plan_parsed
 
 ## === plan execution request
 
 # reserved for any technical problem
 bool exec_success
+
 # goal status
 bool goal_achieved
 
@@ -34,7 +40,22 @@ bool goal_achieved
 
 # inconsistency
 bool kb_not_consistent
+
 # problem solvable (false: not solvable)
 bool problem_solvable
+
 # problem solvable by exclusion
 bool by_exclusion
+
+# need for replanning
+bool need_replan
+
+# failure of the navigation system
+bool failure_nav_system
+
+# failure of the manipulator
+bool failure_manipulation
+
+# details about the response as string
+string details
+

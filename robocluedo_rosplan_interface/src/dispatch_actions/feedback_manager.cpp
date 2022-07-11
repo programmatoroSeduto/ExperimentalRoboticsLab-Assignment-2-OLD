@@ -19,13 +19,14 @@
 // === BASE METHODS === //
 
 // class constructor
-action_feedback_manager::action_feedback_manager( std::string act_name ) : 
-	action_name( act_name )
+action_feedback_manager::action_feedback_manager( std::string act_name )
 {
 	// open the action feedback topic
 	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_ACTION_FEEDBACK ) << "..." );
 	this->pub_action_feedback = nh.advertise<robocluedo_rosplan_interface_msgs::ActionFeedback>( TOPIC_ACTION_FEEDBACK, Q_SZ );
 	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_ACTION_FEEDBACK ) << "... OK" );
+	
+	this->action_name = act_name;
 }
 
 

@@ -19,6 +19,9 @@
 #include "knowledge_base_tools/robocluedo_kb_tools.h"
 #include "robocluedo_rosplan_action_interface/RPActionInterface.h"
 
+#include "robocluedo_rosplan_interface_msgs/ActionFeedback.h"
+#include "dispatch_actions/feedback_manager.h"
+
 #define NODE_NAME "init_planning_system"
 
 #define LOGSQUARE( str )  "[" << str << "] "
@@ -120,6 +123,12 @@ private:
 	
 	/// oracle service client
 	ros::ServiceClient cl_oracle;
+	
+	/// feedback manager for the action (init-planning-system )
+	action_feedback_manager fb_init_planning_system;
+	
+	/// feedback manager for the action (who-killed-doctor-black-huh )
+	action_feedback_manager fb_end;
 	
 	/********************************************//**
 	 *  

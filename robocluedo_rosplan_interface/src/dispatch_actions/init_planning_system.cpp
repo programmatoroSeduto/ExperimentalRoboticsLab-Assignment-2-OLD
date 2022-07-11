@@ -27,6 +27,8 @@ RP_init_planning_system::RP_init_planning_system( ) :
 	RPActionInterface( ),
 	robocluedo_kb_tools( false )
 {
+	/// @todo open the service with the Oracle
+	/*
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "..." );
 	this->cl_oracle = nh.serviceClient<erl2::Oracle>( SERVICE_ORACLE );
 	if( !this->cl_oracle.waitForExistence( ros::Duration( TIMEOUT_ORACLE ) ) )
@@ -35,6 +37,13 @@ RP_init_planning_system::RP_init_planning_system( ) :
 		return;
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
+	*/
+	
+	// action feedback setup
+	this->fb_init_planning_system.action_name = "init-planning-system";
+	this->fb_end.action_name = "who-killed-doctor-black-huh";
+	
+	// TWARN( "action init-planning-sys = " << this->fb_init_planning_system.action_name << " || action end = " << this->fb_end.action_name );
 }
 
 // the class constructor
@@ -43,7 +52,23 @@ RP_init_planning_system::RP_init_planning_system( ros::NodeHandle& nh, bool debu
 	robocluedo_kb_tools( debug_mode ),
 	nh( nh )
 {
-	// ...
+	/// @todo open the service with the Oracle
+	/*
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "..." );
+	this->cl_oracle = nh.serviceClient<erl2::Oracle>( SERVICE_ORACLE );
+	if( !this->cl_oracle.waitForExistence( ros::Duration( TIMEOUT_ORACLE ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_ORACLE << "s) " );
+		return;
+	}
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
+	*/
+	
+	// action feedback setup
+	this->fb_init_planning_system.action_name = "init-planning-system";
+	this->fb_end.action_name = "who-killed-doctor-black-huh";
+	
+	// TWARN( "action init-planning-sys = " << this->fb_init_planning_system.action_name << " || action end = " << this->fb_end.action_name );
 }
 
 
@@ -114,8 +139,10 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	res = this->classify_hypotheses( );
 	if( !res ) 
 	{
-		/// @todo send a feedback to the mission control, not consistent
+		// send a feedback to the mission control, not consistent
 		TWARN( "(init_planning_system ) PLAN FAILED : inconsistent problem state" );
+		fb_init_planning_system.fb_unconsistent( msg->parameters, false, 
+			"(init_planning_system ) PLAN FAILED : inconsistent problem state" );
 		
 		// plan failed
 		return false;
@@ -129,8 +156,10 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	// check if the problem is still solvable
 	if( num_discard >= num_ids )
 	{
-		/// @todo send a feedback to the mission control, unsolvable
+		// send a feedback to the mission control, unsolvable
 		TWARN( "(init_planning_system ) PLAN FAILED : not solvable" );
+		fb_init_planning_system.fb_unsolvable( msg->parameters, 
+			"(init_planning_system ) PLAN FAILED : not solvable" );
 		
 		// unsolvable
 		return false;
@@ -139,8 +168,10 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 	// in particular, check if the problem is solvable by exclusion
 	if( ((num_complete + num_open) == 1) && (num_discard == (num_ids - 1)) )
 	{
-		/// @todo send a feedback to the mission control, solve by exclusion
+		// send a feedback to the mission control, solve by exclusion
 		TLOG( "(init_planning_system ) PLAN SOLVABLE : by exclusion" );
+		fb_init_planning_system.fb_solvable( msg->parameters, true, 
+			"(init_planning_system ) PLAN SOLVABLE : by exclusion" );
 		
 		TLOG( "remaining-moves reset to 0 (solution by exclusion)" );
 		std::map<std::string, std::string> m;
@@ -150,9 +181,7 @@ bool RP_init_planning_system::action_init_planning_system( const rosplan_dispatc
 		return false;
 	}
 	
-	/// @todo sed a feedback to the mission contro, plan solvable in a common way
 	TLOG( "(init_planning_system ) PLAN SOLVABLE : common way" );
-	
 	return true;
 
 }
@@ -197,9 +226,6 @@ bool RP_init_planning_system::action_end( const rosplan_dispatch_msgs::ActionDis
 		if( sm.response.ID == prop_id )
 		{
 			TLOG( "SOLUTION FOUND! id=" << prop_id );
-			
-			/// @todo feedback to the mission manager, solved
-			
 			return true;
 		}
 		else
@@ -219,10 +245,11 @@ bool RP_init_planning_system::action_end( const rosplan_dispatch_msgs::ActionDis
 	std::map<std::string, std::string> m;
 	this->set_fluent( "remaining-moves", m, 3 );
 	
-	/// @todo send a replanning feedback
+	// send a replanning feedback
+	fb_end.fb_replan( msg->parameters );
 	
 	TLOG( "REPLAN" );
-	return true;
+	return false;
 }
 
 }
