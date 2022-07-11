@@ -258,6 +258,12 @@ add_executable( node_sherlock_is_thinking src/node_sherlock_is_thinking.cpp )
 add_dependencies( node_sherlock_is_thinking ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( node_sherlock_is_thinking ${catkin_LIBRARIES} kb_tools robocluedo_kb_tools robocluedo_rosplan_action_interface action_feedback_manager sherlock_is_thinking )
 
+# pipeline manager
+
+add_executable( robocluedo_pipeline_manager src/robocluedo_pipeline_manager.cpp )
+add_dependencies( robocluedo_pipeline_manager ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( robocluedo_pipeline_manager ${catkin_LIBRARIES} )
+
 
 #############
 ## Install ##

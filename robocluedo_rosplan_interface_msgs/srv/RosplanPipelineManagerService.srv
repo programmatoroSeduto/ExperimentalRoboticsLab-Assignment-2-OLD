@@ -56,6 +56,9 @@ bool failure_nav_system
 # failure of the manipulator
 bool failure_manipulation
 
+# a very particular case of error
+bool not_goal_achievend_and_not_feedback_received
+
 # details about the response as string
 string details
 

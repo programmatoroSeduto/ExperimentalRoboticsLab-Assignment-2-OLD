@@ -39,70 +39,7 @@ bool goal_achieved
 */
 
 #include "robocluedo_rosplan_interface_msgs/RosplanPipelineManagerService.h"
-/*
-# service 'RosplanPipelineManagerService'
-
-## Request
-
-## === operations
-
-# run the problem instance, then plan and parse
-bool load_and_plan
-# run the dispatcher
-bool execute_plan
-
-# number of max loops given by the mission manager
-bool use_max_moves
-int32 max_moves
-
----
-
-## Response
-
-## === load_and_plan request
-# each one is true when the service call succeeds
-bool plan_loaded
-bool solution_found
-bool plan_parsed
-
-## === plan execution request
-
-# reserved for any technical problem
-bool exec_success
-# goal status
-bool goal_achieved
-
-## === plan execution statistics
-
-# inconsistency
-bool kb_not_consistent
-# problem solvable (false: not solvable)
-bool problem_solvable
-# problem solvable by exclusion
-bool by_exclusion
-
-*/
-
 #include "robocluedo_rosplan_interface_msgs/ActionFeedback.h"
-/*
-# message 'ActionFeedback'
-
-## === about the action sending the feedback message
-
-# feedback from action
-string action_name
-# with parameters
-diagnostc_msgs/KeyValue[ ] parameters
-
-## === plan statistics
-
-# inconsistency
-bool kb_not_consistent
-# problem solvable (false: not solvable)
-bool problem_solvable
-# problem solvable by exclusion
-bool by_exclusion
-*/
 
 #define Q_SZ 1000
 
@@ -135,8 +72,11 @@ ros::Subscriber *sub_action_feedback;
 ros::ServiceServer *srv_rosplan_handle;
 
 // KB update (fluents and predicates)
+#define KB_ADD_KNOWLEDGE 0
+#define KB_KTYPE_FLUENT 2
 #define SERVICE_KB_UPDATE "/rosplan_knowledge_base/update"
 #define TIMEOUT_KB_UPDATE 5
+
 
 
 
@@ -163,7 +103,8 @@ public:
 	 * 
 	 ***********************************************/
 	robocluedo_pipeline_manager(  ):
-		pipeline_working( false )
+		pipeline_working( false ),
+		new_feedback_received( false )
 	{
 		// ...
 	}
@@ -177,25 +118,13 @@ public:
 	 ***********************************************/
 	void spin( )
 	{	
-		ros::spin( )
+		// ros::spin( );
 	}
-
-
-
-private:
 	
-	/// ROS node handle
-    ros::NodeHandle nh;
-    
-    /// is the pipeline working?
-    bool pipeline_working;
-    
-    /// last action feedback from the topic
-    robocluedo_rosplan_interface_msgs::ActionFeedback last_feedback;
-    
 	/********************************************//**
 	 *  
 	 * \brief service to handle the workflow
+	 * 
 	 * 
 	 * @param request ...description
 	 * @param response ...description
@@ -205,14 +134,31 @@ private:
 	 * @note important assumption to made upon the execution phase: the
 	 * feedback message is received before the service has been released.
 	 * 
+	 * @note the operation order is always: <br>
+	 * first phase -- load, solve, parse * second phase -- dispatch
+	 * 
 	 ***********************************************/
 	bool cbk_rosplan_handle( 
 		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Request& req, 
-		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Request& res )
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Response& res )
 	{	
+		// init the response
+		this->set_init_response( res );
+		
+		
+		
+		// === first phase
+		
+		bool first_phase_ok = false;
+		
 		// load - solve - parse
 		if( req.load_and_plan )
 		{
+			// init the flags
+			// res.plan_loaded = false;
+			// res.solution_found = false;
+			// res.plan_parsed = false;
+			
 			this->pipeline_working = true;
 			
 			// set the number of loops if required by the service
@@ -222,23 +168,45 @@ private:
 			// problem instance
 			TLOG( "creating problem instance ... " );
 			res.plan_loaded = this->pddl_load( );
-			TLOG( "creating problem instance ... OK" );
-			
-			// solution of the problem
-			TLOG( "calling the planner and solving ... " );
-			res.solution_found = this->pddl_solve( ); /// @todo is it really solved?
-			TLOG( "calling the planner and solving ... OK" );
-			
-			// plan parsing
-			TLOG( "parsing the plan ... " );
-			res.plan_parsed = this->pddl_parse_plan( );
-			TLOG( "parsing the plan ... OK" );
+			if( res.plan_loaded )
+			{
+				TLOG( "creating problem instance ... OK" );
+				
+				// solution of the problem
+				TLOG( "calling the planner and solving ... " );
+				res.solution_found = this->pddl_solve( ); /// @todo is it really solved?
+				if( res.solution_found )
+				{
+					TLOG( "calling the planner and solving ... OK" );
+					
+					// plan parsing
+					TLOG( "parsing the plan ... " );
+					res.plan_parsed = this->pddl_parse_plan( );
+					if( res.plan_parsed )
+					{
+						first_phase_ok = true;
+						TLOG( "parsing the plan ... OK" );
+					}
+					else
+						TLOG( "parsing the plan ... FAILED" );
+				}
+				else
+					TLOG( "calling the planner and solving ... FAILED" );
+			}
+			else
+				TLOG( "creating problem instance ... FAILED" );
 			
 			this->pipeline_working = false;
 		}
+		else
+			first_phase_ok = true;
+		
+		
+		
+		// === second phase
 		
 		// plan execution
-		if( req.execute_plan )
+		if( req.execute_plan && first_phase_ok )
 		{
 			this->pipeline_working = true;
 			
@@ -249,20 +217,32 @@ private:
 			TLOG( "executing plan ... OK" );
 			
 			// wait, to be sure that the message has been received
-			TLOG( "waiting ... " )
+			TLOG( "waiting ... " );
 			(ros::Duration(1)).sleep( );
-			ros::spin_once( ); /// @todo is it blocking forever? what about not received feedbacks?
-			TLOG( "waiting ... OK" )
+			// ros::spinOnce( ); /// @todo is it blocking forever? what about not received feedbacks?
+			TLOG( "waiting ... OK" );
 			
 			res.exec_success = from_dispatcher.response.success;
 			res.goal_achieved = from_dispatcher.response.goal_achieved;
 			
-			/// @todo feeddback
-			
 			this->pipeline_working = false;
+			
+			if( res.goal_achieved )
+			{
+				// mystery solved
+				this->set_success_response( res );
+			}
+			else if( this->new_feedback_received )
+			{
+				// copy the feedback inside the response
+				this->copy_msg_into_srv( this->last_feedback, res );
+			}
+			else
+			{
+				/// @todo ... else ... ?
+				res.not_goal_achievend_and_not_feedback_received = true;
+			}
 		}
-		
-		// ...
 		
 		return true;
 	}
@@ -282,11 +262,36 @@ private:
 			// copy the message inside the last message
 			this->last_feedback.action_name = msg->action_name;
 			this->last_feedback.parameters = msg->parameters;
+			
 			this->last_feedback.kb_not_consistent = msg->kb_not_consistent;
 			this->last_feedback.problem_solvable = msg->problem_solvable;
 			this->last_feedback.by_exclusion = msg->by_exclusion;
+			this->last_feedback.goal_achieved = msg->goal_achieved;
+			this->last_feedback.need_replan = msg->need_replan;
+			this->last_feedback.failure_nav_system = msg->failure_nav_system;
+			this->last_feedback.failure_manipulation = msg->failure_manipulation;
+			this->last_feedback.details = msg->details;
+			
+			// new message!
+			this->new_feedback_received = true;
 		}
 	}
+
+
+
+private:
+	
+	/// ROS node handle
+    ros::NodeHandle nh;
+    
+    /// is the pipeline working?
+    bool pipeline_working;
+    
+    /// last action feedback from the topic
+    robocluedo_rosplan_interface_msgs::ActionFeedback last_feedback;
+    
+    /// flag: new feedback to consume?
+    bool new_feedback_received;
 	
 	/********************************************//**
 	 *  
@@ -338,7 +343,7 @@ private:
 	 * @returns true if the service call succeeded
 	 * 
 	 ***********************************************/
-	void pddl_parse_plan( )
+	bool pddl_parse_plan( )
 	{
 		std_srvs::Empty sm;
 		if( !cl_parse_plan->call( sm ) ) 
@@ -346,10 +351,12 @@ private:
 			TERR( "unable to make a service request -- failed calling service " 
 				<< LOGSQUARE( SERVICE_PARSE_PLAN ) 
 				<< (!cl_parse_plan->exists( ) ? " -- it seems not opened" : "") );
-			return;
+			return false;
 		}
 		
 		(ros::Duration(2)).sleep( );
+		
+		return true;
 	}
 	
 	/********************************************//**
@@ -404,7 +411,7 @@ private:
 		}
 		
 		// check if the service exists
-		if( !ros::service::exists( SERVICE_KB_UPDATE ) )
+		if( !ros::service::exists( SERVICE_KB_UPDATE, true ) )
 		{
 			TWARN( "(set_max_moves) unable to call the knowledge base - service '" << SERVICE_KB_UPDATE << "' doesn't exist" );
 			return false;
@@ -418,15 +425,89 @@ private:
 		kbm.request.knowledge.function_value = max_moves;
 		
 		// service call
-		if( !ros::service::call( SERVICE_KB_UPDATE, sm ) ) 
+		if( !ros::service::call( SERVICE_KB_UPDATE, kbm ) ) 
 		{ 
 			TERR( "unable to make a service request -- failed calling service " 
 				<< LOGSQUARE( SERVICE_KB_UPDATE ) 
-				<< (!ros::service::exists( SERVICE_KB_UPDATE )) ? " -- it seems not opened" : "") );
-			return 0;
+				<< (!ros::service::exists( SERVICE_KB_UPDATE, false ) ? " -- it seems not opened" : "") );
+			return false;
 		}
 		
 		return kbm.response.success;
+	}
+	
+	/********************************************//**
+	 *  
+	 * \brief fill in the response with the infos from the action feedback
+	 * 
+	 * @param in
+	 * 	a reference to the action feedback message
+	 * @param out
+	 * 	a reference to the service response to fill in
+	 * 
+	 ***********************************************/
+	void copy_msg_into_srv( 
+		const robocluedo_rosplan_interface_msgs::ActionFeedback& in,
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Response& out )
+	{
+		out.goal_achieved = in.goal_achieved;
+		out.kb_not_consistent = in.kb_not_consistent;
+		out.problem_solvable = in.problem_solvable;
+		out.by_exclusion = in.by_exclusion;
+		out.need_replan = in.need_replan;
+		out.failure_nav_system = in.failure_nav_system;
+		out.failure_manipulation = in.failure_manipulation;
+		out.details = in.details;
+	}
+	
+	/********************************************//**
+	 *  
+	 * \brief initialize correctly the response
+	 *	
+	 * @param out
+	 * 	a reference to the service response to fill in
+	 * 
+	 ***********************************************/
+	void set_init_response( 
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Response& out )
+	{
+		out.plan_loaded = false;
+		out.solution_found = false;
+		out.plan_parsed = false;
+		
+		out.exec_success = false;
+		out.goal_achieved = false;
+		
+		out.kb_not_consistent = false;
+		out.problem_solvable = true;
+		out.by_exclusion = false;
+		out.need_replan = false;
+		out.failure_nav_system = false;
+		out.failure_manipulation = false;
+		out.details = "";
+		
+		out.not_goal_achievend_and_not_feedback_received = false;
+	}
+	
+	/********************************************//**
+	 *  
+	 * \brief formulate the response in case of success
+	 *	
+	 * @param out
+	 * 	a reference to the service response to fill in
+	 * 
+	 ***********************************************/
+	void set_success_response( 
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService::Response& out )
+	{
+		out.goal_achieved = true;
+		out.kb_not_consistent = false;
+		out.problem_solvable = true;
+		out.by_exclusion = false;
+		out.need_replan = false;
+		out.failure_nav_system = false;
+		out.failure_manipulation = false;
+		out.details = "success";
 	}
 };
 
@@ -504,13 +585,14 @@ int main( int argc, char* argv[] )
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_ACTION_FEEDBACK ) << "... OK" );
 	
 	// service: rosplan handle
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_ROSPLAN_HANDLE  ) << "..." );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_ROSPLAN_HANDLE  ) << "..." );
 	ros::ServiceServer tsrv_rosplan_handle = nh.advertiseService( SERVICE_ROSPLAN_HANDLE, &robocluedo_pipeline_manager::cbk_rosplan_handle, &this_node );
 	srv_rosplan_handle = &tsrv_rosplan_handle;
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_ROSPLAN_HANDLE ) << "... OK" );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_ROSPLAN_HANDLE ) << "... OK" );
 	
 	TLOG( "ready" );
-	this_node.spin( );
+	// this_node.spin( );
+	ros::waitForShutdown( );
 	
 	return 0;
 }
