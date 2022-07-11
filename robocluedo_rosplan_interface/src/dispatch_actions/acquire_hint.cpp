@@ -32,6 +32,8 @@ RP_acquire_hint::RP_acquire_hint( ros::NodeHandle& nh, bool debug_mode ) :
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_HINT ) << "..." );
 	this->sub_hint = nh.subscribe( TOPIC_HINT, Q_SZ, &RP_acquire_hint::cbk_hint, this );
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_HINT ) << "... OK" );
+	
+	fb.action_name = "acquire-hint";
 }
 
 
@@ -75,6 +77,7 @@ bool RP_acquire_hint::concreteCallback( const rosplan_dispatch_msgs::ActionDispa
 	if( !this->add_hint( last_hint.ID, last_hint.key, last_hint.value ) )
 	{
 		TWARN( "KB SET FAILED! unable to store correctly the hint, PLAN ABORTED" );
+		fb.fb_unconsistent( msg->parameters, false, "KB SET FAILED! unable to store correctly the received hint, PLAN ABORTED" );
 		return false;
 	}
 	else if( !this->update_hypothesis( last_hint.ID, cls ) )
