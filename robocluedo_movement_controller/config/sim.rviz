@@ -62,12 +62,42 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        hokuyo_link:
+        arm_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_chassis:
+        arm_link_01:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm_link_02:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm_link_03:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        cluedo_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_grip_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -78,6 +108,11 @@ Visualization Manager:
           Show Trail: false
           Value: true
         link_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_grip_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -240,7 +275,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 28.991945266723633
+      Distance: 18.110462188720703
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

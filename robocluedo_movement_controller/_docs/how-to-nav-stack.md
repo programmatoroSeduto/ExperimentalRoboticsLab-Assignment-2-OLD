@@ -574,3 +574,120 @@ private:
 	bool idle;
 };
 ```
+
+## SLAM and GMapping -- navigation stack structure
+
+infos about [GMapping](http://wiki.ros.org/gmapping)
+
+see [sma_gmapping on GitHub](https://github.com/ros-perception/slam_gmapping)
+
+see also the [tf package on ROS Wiki](http://wiki.ros.org/tf)
+
+see also the [nav stack official page](http://wiki.ros.org/navigation)
+
+[openSLAM official page](https://openslam-org.github.io/gmapping.html)
+
+[Gazebo Plugins](https://classic.gazebosim.org/tutorials?tut=ros_gzplugins)
+
+*laser-based simultaneous localization and mapping*
+
+### Hokuyo laser range finder
+
+ROS documentation about [hoyuko laser range finder](https://wiki.ros.org/hokuyo_node)
+
+**publishers**:
+
+- `/scan` : sensor_msgs/LaserScan
+
+**Gazebo** simulation of this range sensor finder: RIMPIAZZA `hokuyo_link` nel codice col link che rappresenta il sensore nel file URDF. 
+
+```xml
+<!-- NON-GPU VERSION -->
+
+<gazebo reference="hokuyo_link">
+	<sensor type="ray" name="head_hokuyo_sensor">
+		<pose>0 0 0 0 0 0</pose>
+		<visualize>false</visualize>
+		<update_rate>40</update_rate>
+		
+		<ray>
+		<scan>
+			<horizontal>
+				<samples>720</samples>
+				<resolution>1</resolution>
+				<min_angle>-1.570796</min_angle>
+				<max_angle>1.570796</max_angle>
+			</horizontal>
+		</scan>
+		
+		<range>
+			<min>0.10</min>
+			<max>30.0</max>
+			<resolution>0.01</resolution>
+		</range>
+		
+		<noise>
+		<type>gaussian</type>
+			<!-- Noise parameters based on published spec for Hokuyo laser
+			achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+			stddev of 0.01m will put 99.7% of samples within 0.03m of the 
+			true reading. -->
+			<mean>0.0</mean>
+			<stddev>0.01</stddev>
+			</noise>
+		</ray>
+		
+		<plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+			<topicName>/scan</topicName>
+			<frameName>hokuyo_link</frameName>
+		</plugin>
+	</sensor>
+</gazebo>
+
+<!-- GPU VERSION -->
+<gazebo reference="hokuyo_link">
+	<sensor type="gpu_ray" name="head_hokuyo_sensor">
+		<pose>0 0 0 0 0 0</pose>
+		<visualize>false</visualize>
+		<update_rate>40</update_rate>
+		
+		<ray>
+		<scan>
+			<horizontal>
+				<samples>720</samples>
+				<resolution>1</resolution>
+				<min_angle>-1.570796</min_angle>
+				<max_angle>1.570796</max_angle>
+			</horizontal>
+		</scan>
+		
+		<range>
+			<min>0.10</min>
+			<max>30.0</max>
+			<resolution>0.01</resolution>
+		</range>
+		
+		<noise>
+		<type>gaussian</type>
+			<!-- Noise parameters based on published spec for Hokuyo laser
+			achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+			stddev of 0.01m will put 99.7% of samples within 0.03m of the 
+			true reading. -->
+			<mean>0.0</mean>
+			<stddev>0.01</stddev>
+			</noise>
+		</ray>
+		
+		<plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+			<topicName>/scan</topicName>
+			<frameName>hokuyo_link</frameName>
+		</plugin>
+	</sensor>
+</gazebo>
+```
+
+NOta bene: dev'esserci un link di riferimento nel robot, quello dov'è piazzato il sensore. 
+
+- il plugin pubblicherà la scansione sul topic `<topicName>/scan</topicName>`
+- il link usato come origine del sensore è `<frameName>hokuyo_link</frameName>`, da cambiare a piacimento
+- occhio anche al campo `<gazebo reference="hokuyo_link">`

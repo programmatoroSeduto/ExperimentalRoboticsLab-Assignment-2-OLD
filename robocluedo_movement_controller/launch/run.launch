@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<launch>
+	
+<include file="$(find robocluedo_movement_controller)/launch/run_arm_urdf.launch"/>
+<include file="$(find robocluedo_movement_controller)/launch/run_navigation_stack.launch"/>
+<include file="$(find robocluedo_movement_controller)/launch/run_controllers.launch"/>
+	
+</launch>
+

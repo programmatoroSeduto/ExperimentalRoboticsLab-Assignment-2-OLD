@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <launch>
 	
-	  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+<!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="extra_gazebo_args" default=""/>
@@ -29,35 +29,70 @@
   <arg     if="$(arg verbose)" name="command_arg3" value="--verbose"/>
   <arg unless="$(arg debug)" name="script_type" value="gzserver"/>
   <arg     if="$(arg debug)" name="script_type" value="debug"/>
-
-  <!-- start gazebo server-->
+	
+	<arg name="robot_name" default="arm_robot" />
+	<arg name="model" default="$(find arm_urdf)/urdf/main.xacro" />
+	<arg name="x" default="0.0" />
+	<arg name="y" default="0.0" />
+	<arg name="z" default="0.05" />
+	<arg name="R" default="0.0" />
+	<arg name="P" default="0.0" />
+	<arg name="Y" default="0.0" />
+	<arg name="start_paused" default="true" />
+	<arg name="out" default="screen" />
+	<!-- if not present, the RViz visual will glitch! -->
+	<param name="use_gui" value="True"/>
+	
+	<!--
+	<include file="$(find gazebo_ros)/launch/empty_world.launch"> 
+		<arg name="paused" value="$(arg start_paused)"/>
+	</include>
+	-->
+	
+	  <!-- start gazebo server-->
   <group if="$(arg use_clock_frequency)">
     <param name="gazebo/pub_clock_frequency" value="$(arg pub_clock_frequency)" />
   </group>
-  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="$(arg respawn_gazebo)" output="log"
+  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="$(arg respawn_gazebo)" output="screen"
 	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)" />
 	
-  <!-- start gazebo client -->
+	  <!-- start gazebo client -->
   <group if="$(arg gui)">
-    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="log"/>
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
   </group>
 	
-  <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description" textfile="$(find robocluedo_movement_controller)/urdf/robot.urdf" />
-	 
-  <!-- Start Rviz -->  
-  <param name="use_gui" value="False"/>
-   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
-   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
-   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robocluedo_movement_controller)/config/sim.rviz" />
-
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model robot1 -param robot_description -x -5.0 -y 8.0 -z 0.05"/> 
+	<param 
+		name="robot_description" 
+		command="$(find xacro)/xacro --inorder $(arg model)" />
+	<!--
+	<node 
+		name="joint_state_publisher" pkg="joint_state_publisher" 
+		type="joint_state_publisher" output="$(arg out)"/>
+	-->
+	
+	<node 
+		name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" 
+		type="joint_state_publisher_gui" output="$(arg out)"/>
+	
+	<node 
+		name="robot_state_publisher" pkg="robot_state_publisher" 
+		type="robot_state_publisher" output="$(arg out)"/>
+	
+	<node 
+		name="rviz" pkg="rviz" type="rviz" required="true"
+		args="-d $(find robocluedo_movement_controller)/config/sim.rviz" 
+		output="$(arg out)"/>
+	
+	<node 
+		pkg="gazebo_ros" name="urdf_spawner" type="spawn_model"
+		respawn="false" output="$(arg out)"
+		args="-urdf -model $(arg robot_name) -param robot_description
+			-x $(arg x) -y $(arg y) -z $(arg z)
+			-R $(arg R) -P $(arg P) -Y $(arg Y)" />
 	
    <param name="use_sim_time" value="true"/>
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
-	  <param name="base_frame" value="link_chassis"/>
+	  <param name="base_frame" value="base_link"/>
       <param name="map_update_interval" value="5.0"/>
       <param name="maxUrange" value="16.0"/>
       <param name="sigma" value="0.05"/>
@@ -98,7 +133,6 @@
     <rosparam file="$(find robocluedo_movement_controller)/param/base_local_planner_params.yaml" command="load"/>
     <rosparam file="$(find robocluedo_movement_controller)/param/move_base_params.yaml" command="load"/>
   </node>
-
-
-
+	
 </launch>
+
