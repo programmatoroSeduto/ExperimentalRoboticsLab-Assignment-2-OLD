@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: robocluedo_movement_controller
+    relative_path: urdf/robocluedo.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/m2wr.srdf
+  CONFIG:
+    author_name: gg
+    author_email: uu@uu.uk
+    generated_timestamp: 1657697427
