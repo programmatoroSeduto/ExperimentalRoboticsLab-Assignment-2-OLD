@@ -451,13 +451,13 @@ oscillation_distance: 0.05
 
 ```bash
 # SHELL 1 -- launch Gazebo
-roslaunch robocluedo_robot gazebo.launch
+roslaunch robocluedo_robot gazebo.launch world_file_path:=square_room.world
 
 ```
 
 ```bash
 # SHELL 2 -- launch RViz
-roslaunch robocluedo_robot demo.launch
+roslaunch robocluedo_robot demo.launch rviz_config_file:=sim_nav_stack.rviz
 
 ```
 
@@ -887,10 +887,133 @@ roslaunch robocluedo_robot demo.launch rviz_config_file:=sim_nav_stack.rviz
 
 ```
 
+## about tuning
 
-### ISSUE -- robot stuck in a global minima
+now, the system must be tuned with respect to the problem here, otherwise the robot will perform very poorly, and seldom it will remain stuck in a position. In my case, the robot, once an objective is provided, *keeps going forward and backward* remaining approximately at the same point. Another signal is that the robot seldom uses a command which is opposite to the one sent by the local planner: the planner says to turn right for instance, and the robot turns left. 
 
-*TODO : is it due to the fact that there's no laser reflection?*
+- [a good guide](https://wiki.ros.org/navigation/Tutorials/Navigation%20Tuning%20Guide) about the tuning
+- see also [here](https://wiki.ros.org/navigation/Tutorials/RobotSetup)
+- see [this post](https://answers.ros.org/question/192109/costmap_2d-observation_sources-expected_update_rate/) about the source parameter
+- very useful is [teleop_twist_key](http://wiki.ros.org/teleop_twist_joy), and here the [gitHub page](https://github.com/ros-teleop/teleop_twist_joy)
+
+### run teleop_twist_key
+
+**install**:
+
+```bash
+sudo apt-get install ros-noetic-teleop-twist-keyboard
+```
+
+**run the node**:
+
+```bash
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+```
+
+here's the help of this utility:
+
+```
+# rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+Reading from the keyboard  and Publishing to Twist!
+---------------------------
+Moving around:
+   u    i    o
+   j    k    l
+   m    ,    .
+
+For Holonomic mode (strafing), hold down the shift key:
+---------------------------
+   U    I    O
+   J    K    L
+   M    <    >
+
+t : up (+z)
+b : down (-z)
+
+anything else : stop
+
+q/z : increase/decrease max speeds by 10%
+w/x : increase/decrease only linear speed by 10%
+e/c : increase/decrease only angular speed by 10%
+
+CTRL-C to quit
+
+currently:	speed 0.5	turn 1.0 
+```
+
+## A VERY UNFORGETTABLE ISSUE with differential_drive_plugin
+
+my problem was this:
+
+- the local planner says to turn in one direction ...
+- ...but the robot *turns in another direction*
+- after some tryings, the robot start moving randomly, and in particular going forward and backward in the same position
+
+maybe the problem was in the differential drive ... I checked, but there's no bug. here is the code:
+
+```xml
+    <gazebo>
+        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+            <legacyMode>true</legacyMode>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20</updateRate>
+            <leftJoint>joint_left_wheel</leftJoint>
+            <rightJoint>joint_right_wheel</rightJoint>
+            <wheelSeparation>0.3</wheelSeparation>
+            <wheelDiameter>0.2</wheelDiameter>
+            <torque>0.1</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <rosDebugLevel>na</rosDebugLevel>
+            <publishWheelTF>true</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <wheelAcceleration>0</wheelAcceleration>
+            <wheelTorque>5</wheelTorque>
+            <odometrySource>1</odometrySource>
+            <publishTf>1</publishTf>
+        </plugin>
+    </gazebo>
+```
+
+... idea: what about to swap left and right?
+
+```xml
+    <gazebo>
+        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+            <legacyMode>true</legacyMode>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20</updateRate>
+            
+            <leftJoint>joint_right_wheel</leftJoint>
+            <rightJoint>joint_left_wheel</rightJoint>
+            
+            <wheelSeparation>0.3</wheelSeparation>
+            <wheelDiameter>0.2</wheelDiameter>
+            <torque>0.1</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <rosDebugLevel>na</rosDebugLevel>
+            <publishWheelTF>true</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <wheelAcceleration>0</wheelAcceleration>
+            <wheelTorque>5</wheelTorque>
+            <odometrySource>1</odometrySource>
+            <publishTf>1</publishTf>
+        </plugin>
+    </gazebo>
+```
+
+and ... TADA! it works!
+
+![**MAGIC.**](https://thumbs.gfycat.com/ActiveAntiqueLemming-size_restricted.gif)
+
+![**MIND BLOWING**](https://c.tenor.com/Yjx_r38x1aYAAAAd/mind-blown-explosion.gif)
 
 ## A copy of my URDF file
 

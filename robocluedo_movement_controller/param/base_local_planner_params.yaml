@@ -2,7 +2,7 @@ TrajectoryPlannerROS:
 
 # Robot Configuration Parameters
   max_vel_x: 0.8
-  min_vel_x: 0.4
+  min_vel_x: 0.0
 
   max_vel_theta:  1.5
   min_vel_theta:  -1.5
@@ -26,7 +26,7 @@ TrajectoryPlannerROS:
   gdist_scale: 0.0
   occdist_scale: 5.0
   heading_lookahead: 5.0
-  dwa: false
+  dwa: true
   global_frame_id: map
 
 # Oscillation Prevention Parameters
