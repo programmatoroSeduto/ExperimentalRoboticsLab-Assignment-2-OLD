@@ -1011,9 +1011,9 @@ maybe the problem was in the differential drive ... I checked, but there's no bu
 
 and ... TADA! it works!
 
-![**MAGIC.**](https://thumbs.gfycat.com/ActiveAntiqueLemming-size_restricted.gif)
+![**MAGIC.**](./magic.gif)
 
-![**MIND BLOWING**](https://c.tenor.com/Yjx_r38x1aYAAAAd/mind-blown-explosion.gif)
+![**MIND BLOWING**](./mindblowing.gif)
 
 ## A copy of my URDF file
 
