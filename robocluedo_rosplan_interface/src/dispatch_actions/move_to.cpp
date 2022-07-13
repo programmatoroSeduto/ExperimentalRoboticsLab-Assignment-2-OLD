@@ -30,15 +30,27 @@ RP_move_to::RP_move_to( ros::NodeHandle& nh, bool debug_mode ) :
 {
 	// setup manually the waypoints (https://quaternions.online)
 	this->waypoints["center"] = this->make_pose( 0, 0, 0, 0, 0, 0, 1 );
+	/*
 	this->waypoints["wp1"] = this->make_pose( -2.75, 0, 0, 0, 0, 1, 0 );
 	this->waypoints["wp2"] = this->make_pose( 2.75, 0, 0, 0, 0, 0, 1 );
 	this->waypoints["wp3"] = this->make_pose( 0, -2.75, 0, 0, 0, -0.707, 0.707 );
 	this->waypoints["wp4"] = this->make_pose( 0, 2.75, 0, 0, 0, 0.707, 0.707 );
+	*/
 	
 	// topic for markers
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "..." );
 	this->sub_marker = nh.subscribe( TOPIC_MARKER, Q_SZ, &RP_move_to::cbk_marker, this );
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_MARKER ) << "... OK" );
+
+	// navigation client
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_NAV ) << "..." );
+	this->cl_nav = nh.serviceClient<robocluedo_rosplan_interface_msgs::NavigationCommand>( SERVICE_NAV );
+	if( !this->cl_nav.waitForExistence( ros::Duration( TIMEOUT_NAV ) ) )
+	{
+		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_NAV << "s) " );
+		return;
+	}
+	TLOG( "Opening client " << LOGSQUARE( SERVICE_NAV ) << "... OK" );
 }
 
 
@@ -79,11 +91,11 @@ bool RP_move_to::concreteCallback( const rosplan_dispatch_msgs::ActionDispatch::
 // update the markers (one shot)
 void RP_move_to::cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm )
 {
-	// update the z component for each pose
-	this->waypoints["wp1"].position.z = pm->markers[0].pose.position.z;
-	this->waypoints["wp2"].position.z = pm->markers[1].pose.position.z;
-	this->waypoints["wp3"].position.z = pm->markers[2].pose.position.z;
-	this->waypoints["wp4"].position.z = pm->markers[3].pose.position.z;
+	// update the markers positions
+	this->waypoints["wp1"] = pm->markers[0].pose;
+	this->waypoints["wp2"] = pm->markers[1].pose;
+	this->waypoints["wp3"] = pm->markers[2].pose;
+	this->waypoints["wp4"] = pm->markers[3].pose;
 	
 	// shut down the subscriber 
 	this->sub_marker.shutdown( );
@@ -121,11 +133,28 @@ bool RP_move_to::action_move_to( const rosplan_dispatch_msgs::ActionDispatch::Co
 	
 	TLOG( "(move-to from=" << params["from"] << " to=" << params["to"] << ") CALLED" );
 		
-	/// @todo send the command to the navigation system and wait
-	TWARN( "(TODO) sending position to the navigation system" );
+	//send the command to the navigation system and wait
+	robocluedo_rosplan_interface_msgs::NavigationCommand cmd;
+	cmd.request.target = this->waypoints[ to ].position;
+	cmd.request.target.x = 0.9 * cmd.request.target.x;
+	cmd.request.target.y = 0.9 * cmd.request.target.y;
+	cmd.request.look_to_marker = true;
+	cmd.request.marker = this->waypoints[ to ].position;
 	
-	/// @todo what about a failure in the navigation system?
-	if( false ) // in case of hw failure ...
+	bool call_res = true;
+	
+	if( !this->cl_nav.call( cmd ) ) 
+	{ 
+		TERR( "unable to make a service request -- failed calling service " 
+			<< LOGSQUARE( SERVICE_NAV ) 
+			<< (!this->cl_nav.exists( ) ? " -- it seems not opened" : "") );
+		
+		call_res = false;
+	}
+	
+	call_res = call_res && cmd.response.success;
+	
+	if( !call_res ) // in case of hw failure ...
 	{
 		fb.fb_hw_failure( msg->parameters, true, "navigation system failure" );
 		return false;
@@ -140,15 +169,29 @@ bool RP_move_to::action_move_to_center( const rosplan_dispatch_msgs::ActionDispa
 {
 	auto params = this->keyvalue2map( msg->parameters );
 	std::string from = params["from"];
-	std::string to = params["to"];
+	// std::string to = params["to"];
 	
 	TLOG( "(move-to-center from=" << params["from"] << ") CALLED" );
 		
-	/// @todo send the command to the navigation system and wait
-	TWARN( "(TODO) sending position to the navigation system" );
+	//send the command to the navigation system and wait
+	robocluedo_rosplan_interface_msgs::NavigationCommand cmd;
+	cmd.request.target = this->waypoints["center"].position;
+	cmd.request.look_to_marker = false;
 	
-	/// @todo what about a failure in the navigation system?
-	if( false ) // in case of hw failure ...
+	bool call_res = true;
+	
+	if( !this->cl_nav.call( cmd ) ) 
+	{ 
+		TERR( "unable to make a service request -- failed calling service " 
+			<< LOGSQUARE( SERVICE_NAV ) 
+			<< (!this->cl_nav.exists( ) ? " -- it seems not opened" : "") );
+		
+		call_res = false;
+	}
+	
+	call_res = call_res && cmd.response.success;
+	
+	if( !call_res ) // in case of hw failure ...
 	{
 		fb.fb_hw_failure( msg->parameters, true, "navigation system failure" );
 		return false;

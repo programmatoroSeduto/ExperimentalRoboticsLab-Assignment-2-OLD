@@ -1,0 +1,21 @@
+## file 'NavigationCommand.srv'
+# the ROSPlan expects that a external node implements this service
+
+## REQUEST
+
+# only x and y, planar navigation
+geometry_msgs/Point target
+
+# compute or not the orientation? 
+#    (compute the orientation with the marker if true)
+bool look_to_marker
+
+# the marker to reach (if look_to_marker)
+geometry_msgs/Point marker
+
+---
+
+## RESPONSE
+
+# success 
+bool success

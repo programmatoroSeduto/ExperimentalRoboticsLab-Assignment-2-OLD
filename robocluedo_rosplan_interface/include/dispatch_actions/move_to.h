@@ -99,14 +99,43 @@ Quaternion orientation {x, y, z, w}
 #include "geometry_msgs/Vector3.h"
 // x, y, z
 
+#include "robocluedo_rosplan_interface_msgs/NavigationCommand.h"
+/*
+## file 'NavigationCommand.srv'
+# the ROSPlan expects that a external node implements this service
+
+## REQUEST
+
+# only x and y, planar navigation
+geometry_msgs/Point target_2d
+
+# compute or not the orientation? 
+#    (compute the orientation with the marker if true)
+bool look_to_marker
+
+# the marker to reach (if look_to_marker)
+geometry_msgs/Point marker
+
+---
+
+## RESPONSE
+
+# success 
+bool success
+*/
+
 #include <vector>
 #include <unistd.h>
 #include <cmath>
 
-// markers update
-#define TOPIC_MARKER "/visualization_marker"
 #define Q_SZ 1
 
+// markers update
+#define TOPIC_MARKER "/visualization_marker"
+
+// navigation command service
+#define SERVICE_NAV "/robocluedo/navigation_command"
+#define TIMEOUT_NAV 5
 
 
 namespace KCL_rosplan
@@ -184,6 +213,9 @@ private:
 	
 	/// subscriber to the marker topic
 	ros::Subscriber sub_marker;
+	
+	/// Navigation Client
+	ros::ServiceClient cl_nav;
 	
 	/// last markers received
 	visualization_msgs::MarkerArray last_msg_marker;
