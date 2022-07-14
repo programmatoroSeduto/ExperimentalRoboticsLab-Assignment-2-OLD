@@ -1,0 +1,38 @@
+## service 'GoToPoint'
+#    reach a given position and orientation (2D navigation)
+
+## REQUEST
+
+# asking to reach a position
+bool ask_position
+
+# the position
+geometry_msgs/Point target_position
+
+# the threshold over the distance
+float32 threshold_position
+
+# asking to reach a orientation
+bool ask_orientation
+
+# the orientation, as just one angle
+int32 target_orientation
+
+# the threshold over the angle target
+float32 threshold_orientation
+
+---
+
+## RESPONSE
+
+# success target position
+bool position_success
+
+# error beteen the position and the target
+float32 position_error
+
+# success target orientation
+bool orientation_success
+
+# error between the target angle and the current one
+float32 orientation_error

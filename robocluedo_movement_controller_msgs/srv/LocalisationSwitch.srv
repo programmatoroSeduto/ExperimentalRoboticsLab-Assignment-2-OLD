@@ -1,0 +1,22 @@
+## file 'LocalisationSwtich'
+
+## REQUEST
+
+# the status (set false to turn off)
+bool new_status
+
+# if compute the distance with respect to one given point
+bool compute_distance
+
+# point with respect to compute the distance
+geometry_msgs/Point pdist
+
+---
+
+## RESPONSE
+
+# request success
+bool success
+
+# updated activity status (send the command -> check that active==new_status)
+bool active
