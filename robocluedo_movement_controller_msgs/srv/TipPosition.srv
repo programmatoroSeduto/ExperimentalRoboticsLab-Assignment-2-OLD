@@ -1,0 +1,13 @@
+## service 'TipPosition', proided by the manipulaton controller
+
+# REQUEST
+
+# final desired position of the tip
+geometry_msgs/Point target
+
+---
+
+# RESPONSE
+
+# does the operation succeeded?
+bool success
