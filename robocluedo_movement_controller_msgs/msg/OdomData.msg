@@ -17,10 +17,7 @@ geometry_msgs/Point target
 float32 distance
 
 # the message contains a distance vector
-bool sent_distance_vector
+# bool sent_distance_vector
 
 # the distance vector between the target and the current position
-geometry_msgs/Vector3 distance_vector
-
-# is this the last message?
-bool is_last
+# geometry_msgs/Vector3 distance_vector
