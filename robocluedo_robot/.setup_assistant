@@ -6,6 +6,6 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/m2wr.srdf
   CONFIG:
-    author_name: gg
-    author_email: uu@uu.uk
+    author_name: programmatoroSeduto
+    author_email: francesc.ganci@gmail.com
     generated_timestamp: 1657697427

@@ -16,6 +16,11 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   actionlib
   actionlib_msgs
+  moveit_msgs
+  moveit_core
+  moveit_ros_perception
+  moveit_ros_planning
+  moveit_ros_planning_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -167,11 +172,30 @@ include_directories(
 add_library( move_base_interface src/move_base_interface/move_base_interface.cpp )
 target_link_libraries( move_base_interface ${catkin_LIBRARIES} )
 
+## === moveit interface === ##
+
+add_library( moveit_interface src/move_base_interface/moveit_interface.cpp )
+target_link_libraries( moveit_interface ${catkin_LIBRARIES} )
+
 ## === test modules === ##
 
 add_executable( test_move_base src/testing/test_move_base.cpp )
 add_dependencies( test_move_base ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( test_move_base ${catkin_LIBRARIES} move_base_interface )
+
+## === controllers === ##
+
+add_executable( localisation_unit src/localisation_unit.cpp )
+add_dependencies( localisation_unit ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( localisation_unit ${catkin_LIBRARIES} )
+
+add_executable( manipulation_controller src/manipulation_controller.cpp )
+add_dependencies( manipulation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( manipulation_controller ${catkin_LIBRARIES} )
+
+add_executable( navigation_controller src/navigation_controller.cpp )
+add_dependencies( navigation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( navigation_controller ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

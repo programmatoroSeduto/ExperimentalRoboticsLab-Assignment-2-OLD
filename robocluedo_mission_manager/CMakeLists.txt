@@ -11,9 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   move_base_msgs
   nav_msgs
-  robocluedo_movement_controller
+  # robocluedo_movement_controller
   robocluedo_movement_controller_msgs
-  robocluedo_rosplan_interface
+  #robocluedo_rosplan_interface
   robocluedo_rosplan_interface_msg
   roscpp
   rospy
@@ -156,6 +156,18 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable( manipulation_unit src/manipulation_unit.cpp )
+add_dependencies( manipulation_unit ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( manipulation_unit ${catkin_LIBRARIES} )
+
+add_executable( navigation_unit src/navigation_unit.cpp )
+add_dependencies( navigation_unit ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( navigation_unit ${catkin_LIBRARIES} )
+
+add_executable( planning_unit src/planning_unit.cpp )
+add_dependencies( planning_unit ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( planning_unit ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
