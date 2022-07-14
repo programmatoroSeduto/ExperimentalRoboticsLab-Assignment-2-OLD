@@ -26,7 +26,7 @@
 #include <signal.h>
 
 // rosplan navigation command service
-#include "robocluedo_rosplan_interface/NavigationCommand.h"
+#include "robocluedo_rosplan_interface_msgs/NavigationCommand.h"
 #define SERVICE_NAV "/robocluedo/navigation_command"
 ros::ServiceServer *srv_nav;
 
@@ -70,7 +70,7 @@ public:
 	void spin( )
 	{
 		// simple spin
-		ros::waitForShutdowm( );
+		ros::waitForShutdown( );
 	}
 	
 	/********************************************//**
@@ -89,8 +89,8 @@ public:
 	 * 
 	 ***********************************************/
 	 bool cbk_nav( 
-		robocluedo_rosplan_interface::NavigationCommand::Request& req, 
-		robocluedo_rosplan_interface::NavigationCommand::Response& res )
+		robocluedo_rosplan_interface_msgs::NavigationCommand::Request& req, 
+		robocluedo_rosplan_interface_msgs::NavigationCommand::Response& res )
 	{
 		/// @todo implement me!
 		
@@ -124,10 +124,10 @@ int main( int argc, char* argv[] )
 	node_navigation_unit node;
 	
 	// rosplan navigation
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV ) << "..." );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV ) << "..." );
 	ros::ServiceServer tsrv_nav = nh.advertiseService( SERVICE_NAV, &node_navigation_unit::cbk_nav, &node );
 	srv_nav = &tsrv_nav;
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV ) << "... OK" );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV ) << "... OK" );
 	
 	// navigation controller
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_NAV_CONTROLLER ) << "..." );

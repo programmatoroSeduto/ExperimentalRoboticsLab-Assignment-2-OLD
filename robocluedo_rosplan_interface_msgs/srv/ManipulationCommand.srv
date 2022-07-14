@@ -1,0 +1,19 @@
+## service 'ManipulationCommand.srv'
+
+## REQUEST
+
+# tip in that position
+geometry_msgs/Point target_position
+
+# max distance from the target
+float32 max_error
+
+---
+
+## RESPONSE
+
+# operation success or not
+bool success
+
+# distance between the target and the tip
+float32 error

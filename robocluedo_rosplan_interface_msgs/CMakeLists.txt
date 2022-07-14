@@ -72,6 +72,7 @@ add_service_files(
   FILES
   RosplanPipelineManagerService.srv
   NavigationCommand.srv
+  ManipulationCommand.srv
 )
 
 ## Generate actions in the 'action' folder

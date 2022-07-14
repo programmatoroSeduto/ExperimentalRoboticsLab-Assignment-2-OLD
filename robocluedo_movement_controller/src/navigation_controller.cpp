@@ -11,7 +11,7 @@
 ***********************************************/
 
 
-#define NODE_NAME ???
+#define NODE_NAME "navigation_controller"
 
 #ifndef __DEBUG_MACROS__
 	#define __DEBUG_MACROS__
@@ -165,7 +165,7 @@ int main( int argc, char* argv[] )
 	
 	// localisation unit status
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_LOC_STATUS ) << "..." );
-	ros::ServiceClient tcl_loc_status = nh.serviceClient<robocluedo_movement_controller_msgs::localisationSwitch( SERVICE_LOC_STATUS );
+	ros::ServiceClient tcl_loc_status = nh.serviceClient<robocluedo_movement_controller_msgs::LocalisationSwitch>( SERVICE_LOC_STATUS );
 	if( !tcl_loc_status.waitForExistence( ros::Duration( TIMEOUT_LOC_STATUS ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_LOC_STATUS << "s) " );
@@ -175,10 +175,10 @@ int main( int argc, char* argv[] )
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_LOC_STATUS ) << "... OK" );
 	
 	// navigation system service
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV  ) << "..." );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV  ) << "..." );
 	ros::ServiceServer tsrv_nav = nh.advertiseService( SERVICE_NAV, &node_navigation_controller::cbk_nav, &node );
 	srv_nav = &tsrv_nav;
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV  ) << "... OK" );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_NAV  ) << "... OK" );
 	
 	TLOG( "ready" );
 	

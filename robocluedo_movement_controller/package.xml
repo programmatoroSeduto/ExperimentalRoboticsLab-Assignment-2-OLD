@@ -70,6 +70,7 @@
   <depend>moveit_ros_perception</depend>
   <depend>moveit_ros_planning</depend>
   <depend>moveit_ros_planning_interface</depend>
+  <depend>robocluedo_movement_controller_msgs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

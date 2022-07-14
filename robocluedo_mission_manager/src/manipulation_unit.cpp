@@ -69,7 +69,7 @@ public:
 	void spin( )
 	{
 		// simple spin
-		ros::waitForShutdowm( );
+		ros::waitForShutdown( );
 	}
 	
 	/********************************************//**
@@ -121,14 +121,14 @@ int main( int argc, char* argv[] )
 	node_manipulation_unit node;
 	
 	// rosplan manipulation service
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_ROBOPLAN_MANIP  ) << "..." );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_ROBOPLAN_MANIP  ) << "..." );
 	ros::ServiceServer tsrv_roboplan_manip = nh.advertiseService( SERVICE_ROBOPLAN_MANIP, &node_manipulation_unit::cbk_roboplan_manip, &node );
 	srv_roboplan_manip = &tsrv_roboplan_manip;
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_ROBOPLAN_MANIP  ) << "... ok" );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_ROBOPLAN_MANIP  ) << "... ok" );
 	
 	// manipulation controller
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_MANIP ) << "..." );
-	ros::ServiceClient tcl_manip = nh.serviceClient<robocluedo_movement_interface_msgs::TipPosition>( SERVICE_MANIP );
+	ros::ServiceClient tcl_manip = nh.serviceClient<robocluedo_movement_controller_msgs::TipPosition>( SERVICE_MANIP );
 	if( !tcl_manip.waitForExistence( ros::Duration( TIMEOUT_MANIP ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_MANIP << "s) " );

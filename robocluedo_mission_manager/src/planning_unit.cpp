@@ -11,7 +11,7 @@
 ***********************************************/
 
 
-#define NODE_NAME ???
+#define NODE_NAME "planning_unit"
 
 #ifndef __DEBUG_MACROS__
 	#define __DEBUG_MACROS__
@@ -123,7 +123,7 @@ int main( int argc, char* argv[] )
 	TLOG( "starting ... " );
 	
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ROBOPLAN ) << "..." );
-	ros::ServiceClient tcl_roboplan = nh.serviceClient<roobocluedo_rosplan_interface_msgs/RosplanPipelineManagerService>( SERVICE_ROBOPLAN );
+	ros::ServiceClient tcl_roboplan = nh.serviceClient<robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService>( SERVICE_ROBOPLAN );
 	if( !tcl_roboplan.waitForExistence( ros::Duration( TIMEOUT_ROBOPLAN ) ) )
 	{
 		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_ROBOPLAN << "s) " );

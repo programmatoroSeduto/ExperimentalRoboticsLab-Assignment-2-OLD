@@ -33,9 +33,9 @@ geometry_msgs/PoseWithCovariance pose
 geometry_msgs/TwistWithCovariance twist
 */
 
-#include "robocluedo_movement_controller_msgs/LocalisationSwtich.h"
-
+#include "robocluedo_movement_controller_msgs/LocalisationSwitch.h"
 #include "robocluedo_movement_controller_msgs/OdomData.h"
+#include "nav_msgs/Odometry.h"
 
 // activity switch
 #define SERVICE_SWITCH "/loc/switch"
@@ -131,8 +131,8 @@ public:
 	 * 
 	 ***********************************************/
 	bool cbk_switch( 
-		robocluedo_movement_controller::LocalisationSwitch::Request& req, 
-		robocluedo_movement_controller::LocalisationSwitch::Response& res )
+		robocluedo_movement_controller_msgs::LocalisationSwitch::Request& req, 
+		robocluedo_movement_controller_msgs::LocalisationSwitch::Response& res )
 	{
 		/// @todo implementation
 		
@@ -148,7 +148,7 @@ public:
 	 * @returns ...description
 	 * 
 	 ***********************************************/
-	void cbk_odom( const geometry_msgs::Odometry::ConstPtr& od )
+	void cbk_odom( const nav_msgs::Odometry::ConstPtr& od )
 	{
 		/// @todo listener to topic /odom
 	}
@@ -195,14 +195,14 @@ int main( int argc, char* argv[] )
 	node_localisation_unit node;
 	
 	// switch service
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_SWITCH  ) << "..." );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_SWITCH  ) << "..." );
 	ros::ServiceServer tsrv_switch = nh.advertiseService( SERVICE_SWITCH, &node_localisation_unit::cbk_switch, &node );
 	srv_switch = &tsrv_switch;
-	OUTLOG( "Advertising service " << LOGSQUARE( SERVICE_SWITCH  ) << "... OK" );
+	TLOG( "Advertising service " << LOGSQUARE( SERVICE_SWITCH  ) << "... OK" );
 	
 	// odometry publisher
 	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_ODOR ) << "..." );
-	ros::Publisher tpub_odor = nh.advertise<robocluedo_movement_controller::OdomData>( TOPIC_ODOR, Q_SZ_ODOR );
+	ros::Publisher tpub_odor = nh.advertise<robocluedo_movement_controller_msgs::OdomData>( TOPIC_ODOR, Q_SZ_ODOR );
 	pub_odor = &tpub_odor;
 	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_ODOR ) << "..." );
 	

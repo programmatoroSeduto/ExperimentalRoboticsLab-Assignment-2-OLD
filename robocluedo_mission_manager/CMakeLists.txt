@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   # robocluedo_movement_controller
   robocluedo_movement_controller_msgs
   #robocluedo_rosplan_interface
-  robocluedo_rosplan_interface_msg
+  robocluedo_rosplan_interface_msgs
   roscpp
   rospy
   std_msgs
