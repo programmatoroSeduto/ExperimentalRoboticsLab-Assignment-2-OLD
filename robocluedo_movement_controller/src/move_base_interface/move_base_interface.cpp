@@ -87,12 +87,13 @@ bool move_base_interface::send_goal(
 	float x, 
 	float y, 
 	float z,
+	std::string frame_id = "map",
 	bool wait, 
 	ros::Duration d )
 {
 	// prepare the goal
 	move_base_msgs::MoveBaseGoal goal;
-	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.frame_id = frame_id;
 	goal.target_pose.pose.position.x = x;
 	goal.target_pose.pose.position.y = y;
 	goal.target_pose.pose.position.z = z;
