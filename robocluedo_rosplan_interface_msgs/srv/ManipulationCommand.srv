@@ -2,6 +2,9 @@
 
 ## REQUEST
 
+# home position (override the target_position command)
+bool home_position
+
 # tip in that position
 geometry_msgs/Point target_position
 
@@ -14,6 +17,3 @@ float32 max_error
 
 # operation success or not
 bool success
-
-# distance between the target and the tip
-float32 error

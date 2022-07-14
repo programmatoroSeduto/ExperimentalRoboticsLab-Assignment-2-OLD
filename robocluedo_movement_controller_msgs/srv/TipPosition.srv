@@ -2,6 +2,9 @@
 
 # REQUEST
 
+# home position (override the target_position command)
+bool set_home
+
 # final desired position of the tip
 geometry_msgs/Point target
 

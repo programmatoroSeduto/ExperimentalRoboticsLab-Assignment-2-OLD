@@ -27,7 +27,7 @@
 
 // rosplan manipulation command
 #include "robocluedo_rosplan_interface_msgs/ManipulationCommand.h"
-#define SERVICE_ROBOPLAN_MANIP "/robocluedo_manipulator_command"
+#define SERVICE_ROBOPLAN_MANIP "/robocluedo/manipulator_command"
 ros::ServiceServer *srv_roboplan_manip;
 
 // manipulation controller

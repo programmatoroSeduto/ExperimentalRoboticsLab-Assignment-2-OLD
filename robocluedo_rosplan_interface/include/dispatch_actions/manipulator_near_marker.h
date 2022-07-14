@@ -98,6 +98,8 @@ Quaternion orientation {x, y, z, w}
 #include "geometry_msgs/Vector3.h"
 // x, y, z
 
+#include "robocluedo_rosplan_interface_msgs/ManipulationCommand.h"
+
 #include <vector>
 #include <unistd.h>
 #include <cmath>
@@ -105,6 +107,10 @@ Quaternion orientation {x, y, z, w}
 // markers update
 #define TOPIC_MARKER "/visualization_marker"
 #define Q_SZ 1
+
+// manipulation unit
+#define SERVICE_MANIP_UNIT "robocluedo/manipulation_command"
+#define TIMEOUT_MANIP_UNIT 5
 
 namespace KCL_rosplan
 {
@@ -176,6 +182,9 @@ private:
 	/// feedback manager
 	action_feedback_manager fb;
 	
+	/// client to the manipulator unit
+	ros::ServiceClient cl_manip_unit;
+	
 	/// subscriber to the marker topic
 	ros::Subscriber sub_marker;
 	
@@ -194,6 +203,28 @@ private:
 	 * 
 	 ***********************************************/
 	void cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm );
+	
+	/********************************************//**
+	 *  
+	 * \brief move the manipulator to a given target
+	 * 
+	 * @param target the point to reach with the manipulator
+	 * 
+	 * @returns true if the call succeeded and the manipulator moved 
+	 * 	correctly
+	 * 
+	 ***********************************************/
+	bool manipulator_at_pos( geometry_msgs::Point target );
+	
+	/********************************************//**
+	 *  
+	 * \brief move the manipulator to the home position
+	 * 
+	 * @returns true if the call succeeded and the manipulator moved 
+	 * 	correctly
+	 * 
+	 ***********************************************/
+	bool manipulator_home_position( );
 };
 
 }
