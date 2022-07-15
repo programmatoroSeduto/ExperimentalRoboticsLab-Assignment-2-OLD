@@ -63,8 +63,8 @@ geometry_msgs/PoseStamped base_position
 
 
 // action client move base
-#define ACTION_MOVE_BASE "move_base"
-#define TIMEOUT_MOVE_BASE 100
+#define ACTION_MOVE_BASE "/move_base"
+#define TIMEOUT_MOVE_BASE 5
 
 
 
@@ -103,8 +103,9 @@ public:
 	 * 
 	 ***********************************************/
 	bool send_goal( 
-		float x, float y, float z,
-		bool wait = false, 
+		bool wait,
+		float x, float y, float z, 
+		std::string frame_id = "map",
 		ros::Duration d = ros::Duration( TIMEOUT_MOVE_BASE ) );
 	
 	
@@ -138,8 +139,19 @@ public:
 	bool is_idle( );
 	
 	
-	/// action client status from the handle
-	std::string get_state( );
+	/// 
+	/********************************************//**
+	 *  
+	 * \brief action client status from the handle
+	 * 
+	 * @returns the status of the service as string
+	 * 
+	 * @note possible statuses are:
+	 * 	PENDING, ACTIVE, RECALLED, REJECTED, PREEMPTED, ABORTED, 
+	 * 	SUCCEEDED, LOST
+	 * 
+	 ***********************************************/
+	std::string get_state_str( );
 	
 private:
 	

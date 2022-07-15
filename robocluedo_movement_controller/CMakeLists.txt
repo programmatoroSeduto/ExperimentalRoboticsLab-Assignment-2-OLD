@@ -196,7 +196,7 @@ target_link_libraries( localisation_unit ${catkin_LIBRARIES} )
 
 add_executable( navigation_controller src/navigation_controller.cpp )
 add_dependencies( navigation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-target_link_libraries( navigation_controller ${catkin_LIBRARIES} )
+target_link_libraries( navigation_controller ${catkin_LIBRARIES} move_base_interface )
 
 #############
 ## Install ##

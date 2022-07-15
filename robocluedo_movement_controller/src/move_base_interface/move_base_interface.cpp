@@ -17,19 +17,19 @@
 
 // class constructor
 move_base_interface::move_base_interface( ) : 
-	actcl_move_base( "move_base", true ),
+	actcl_move_base( ACTION_MOVE_BASE, true ),
 	running( false ), 
 	idle( true )
 {
 	TLOG( "opening action client " << LOGSQUARE( ACTION_MOVE_BASE ) << " ... " );
 	
-	actcl_move_base.waitForServer( );
+	// actcl_move_base.waitForServer( );
 	if( !this->actcl_move_base.waitForServer( ros::Duration( TIMEOUT_MOVE_BASE ) ) )
 	{
 		TERR( "unable to connect to the action server (timeout " << TIMEOUT_MOVE_BASE << "s) " 
 			<< "-- action " << LOGSQUARE( ACTION_MOVE_BASE ) << "\n"
 			<< "\t " << (this->actcl_move_base.isServerConnected( ) ? " it seems not online " : " service online ") << "\n"
-			<< "\t" << "STATUS: " << this->actcl_move_base.getState( ).toString( ) );
+			<< "\t " << "STATUS: " << this->actcl_move_base.getState( ).toString( ) );
 		
 		return;
 	}
@@ -69,9 +69,8 @@ bool move_base_interface::send_goal(
 		if( !actcl_move_base.waitForResult( d ) )
 		{
 			TERR( "action client for " << LOGSQUARE( ACTION_MOVE_BASE ) << "TIMEOUT EXPIRED " );
-			actcl_move_base.cancelAllGoals( );
-			
-			// ...
+			// actcl_move_base.cancelAllGoals( );
+			this->cancel( );
 			
 			return false;
 		}
@@ -84,16 +83,18 @@ bool move_base_interface::send_goal(
 
 // simplification for the position only
 bool move_base_interface::send_goal( 
+	bool wait, 
 	float x, 
 	float y, 
 	float z,
-	std::string frame_id = "map",
-	bool wait, 
+	std::string frame_id,
 	ros::Duration d )
 {
 	// prepare the goal
 	move_base_msgs::MoveBaseGoal goal;
+	// goal.header.frame_id = frame_id;
 	goal.target_pose.header.frame_id = frame_id;
+	// goal.target_pose.header.stamp = ros::Time::now( );
 	goal.target_pose.pose.position.x = x;
 	goal.target_pose.pose.position.y = y;
 	goal.target_pose.pose.position.z = z;
@@ -150,6 +151,8 @@ void move_base_interface::cbk_feedback_move_base(
 	
 	TLOG( "move_base FEEDBACK : (" << x << ", " << y << ", " << z << ")" );
 	*/
+	
+	// TLOG( "STATUS: " << this->get_state( ) );
 }
 
 
@@ -181,5 +184,5 @@ bool move_base_interface::is_idle( )
 
 
 // action client status from the handle
-std::string move_base_interface::get_state( ) 
+std::string move_base_interface::get_state_str( ) 
 	{ return actcl_move_base.getState( ).toString( ); }

@@ -263,8 +263,8 @@ private:
 	{
 		double x  = P.x;
 		double x1 = O.x;
-		double y  = P.x;
-		double y1 = O.x;
+		double y  = P.y;
+		double y1 = O.y;
 		
 		return sqrt( (x-x1)*(x-x1) + (y-y1)*(y-y1) );
 	}

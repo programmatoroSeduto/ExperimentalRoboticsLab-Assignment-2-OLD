@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<include file="$(find robocluedo_robot)/launch/gazebo.launch" >
+	<arg name="world_file_path" default="square_room.world" />
+</include>
+
+<include file="$(find robocluedo_robot)/launch/nav_stack.launch"/>
+
+<node pkg="robocluedo_movement_controller" type="localisation_unit" name="localisation_unit" output="screen" required="true"/>
+<node pkg="robocluedo_movement_controller" type="navigation_controller" name="navigation_controller" output="screen" required="true"/>
+
+</launch>
