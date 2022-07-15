@@ -20,6 +20,7 @@
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
 #include "ros/ros.h"
+#include <tf/tf.h>
 
 #include <string>
 #include <map>
@@ -37,6 +38,7 @@ geometry_msgs/TwistWithCovariance twist
 #include "robocluedo_movement_controller_msgs/LocalisationSwitch.h"
 #include "robocluedo_movement_controller_msgs/OdomData.h"
 #include "nav_msgs/Odometry.h"
+#include "geometry_msgs/Quaternion.h"
 
 #define LOCALISATION_UNIT_FREQ 2
 
@@ -113,10 +115,15 @@ public:
 				this->last_odom_data.position = this->current_pos;
 				this->last_odom_data.frame_name = this->frame_name;
 				this->last_odom_data.sent_distance = this->compute_distance;
+				this->last_odom_data.sent_orientation = this->compute_orientation;
 				if( this->compute_distance )
 				{
 					this->last_odom_data.target = this->target;
 					this->last_odom_data.distance = this->distance;
+				}
+				if( this->compute_orientation )
+				{
+					this->last_odom_data.orientation = this->yaw;
 				}
 				
 				// publish the message
@@ -152,6 +159,7 @@ public:
 			if( req.new_status ) // active -> active (already on, change settings)
 			{
 				this->compute_distance = req.compute_distance;
+				this->compute_orientation = req.compute_orientation;
 				this->target = req.pdist;
 				res.success = true;
 				res.active = true;
@@ -162,6 +170,7 @@ public:
 			{
 				this->active = false;
 				this->compute_distance = false;
+				this->compute_orientation = false;
 				this->target = geometry_msgs::Point( );
 				
 				res.success = true;
@@ -175,6 +184,7 @@ public:
 			if( req.new_status ) // off -> on (enable)
 			{
 				this->compute_distance = req.compute_distance;
+				this->compute_orientation = req.compute_orientation;
 				this->target = req.pdist;
 				
 				res.success = true;
@@ -208,6 +218,7 @@ public:
 	void cbk_odom( const nav_msgs::Odometry::ConstPtr& od )
 	{
 		this->current_pos = od->pose.pose.position;
+		this->current_orient = od->pose.pose.orientation;
 		this->frame_name = od->header.frame_id;
 		
 		// compute the distance if required
@@ -217,6 +228,21 @@ public:
 				this->target );
 		else
 			this->distance = 0.f;
+		
+		// compute the yaw if required
+		if( active && compute_orientation )
+		{
+			tf::Quaternion q( 
+				this->current_orient.x, 
+				this->current_orient.y, 
+				this->current_orient.z, 
+				this->current_orient.w
+			);
+			tf::Matrix3x3 m( q );
+			double r, p, y;
+			m.getRPY( r, p, y );
+			this->yaw = y;
+		}
 		
 		// and compute the distance vector if required
 		/*
@@ -244,7 +270,10 @@ private:
 	/// distance required
 	bool compute_distance = false;
 	
-	/// distance vector required
+	/// angle required
+	bool compute_orientation = false;
+	
+	// distance vector required
 	// bool compute_distance_vector = false;
 	
 	/// the target, if set
@@ -252,6 +281,12 @@ private:
 	
 	/// the last position from the odometry
 	geometry_msgs::Point current_pos;
+	
+	/// the last orientation from the odometry
+	geometry_msgs::Quaternion current_orient;
+	
+	/// the last computed yaw
+	float yaw;
 	
 	/// the distance between target and current position
 	float distance = 0.f;

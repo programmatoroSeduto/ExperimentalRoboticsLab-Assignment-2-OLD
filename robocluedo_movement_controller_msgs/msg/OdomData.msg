@@ -16,6 +16,12 @@ geometry_msgs/Point target
 # the distance between the target and the current position
 float32 distance
 
+# the message also contains the orientation
+bool sent_orientation
+
+# orientation wrt 'z'
+float32 orientation
+
 # the message contains a distance vector
 # bool sent_distance_vector
 

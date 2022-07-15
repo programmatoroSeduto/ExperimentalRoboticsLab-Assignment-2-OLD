@@ -8,6 +8,9 @@ bool new_status
 # if compute the distance with respect to one given point
 bool compute_distance
 
+# if to compute the yaw or not
+bool compute_orientation
+
 # point with respect to compute the distance
 geometry_msgs/Point pdist
 

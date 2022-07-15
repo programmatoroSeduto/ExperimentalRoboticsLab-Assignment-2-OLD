@@ -16,7 +16,7 @@ float32 threshold_position
 bool ask_orientation
 
 # the orientation, as just one angle
-int32 target_orientation
+float32 target_orientation
 
 # the threshold over the angle target
 float32 threshold_orientation

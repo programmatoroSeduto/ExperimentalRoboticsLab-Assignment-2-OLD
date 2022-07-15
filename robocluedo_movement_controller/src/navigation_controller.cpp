@@ -28,15 +28,24 @@
 #include "robocluedo_movement_controller_msgs/OdomData.h"
 #include "robocluedo_movement_controller_msgs/LocalisationSwitch.h"
 #include "robocluedo_movement_controller_msgs/GoToPoint.h"
+#include "geometry_msgs/Twist.h"
 
-#define DEFAULT_POSITION_THRESHOLD 0.1
+#define DEFAULT_POSITION_THRESHOLD 0.35
 #define DEFAULT_ORIENTATION_THRESHOLD 0.01
-#define DEFAULT_LIMIT_COUNTER 30
+#define DEFAULT_LIMIT_COUNTER 60
+
+#define PI 3.14159265359
+#define PI_DIV_8 0.39269908169
 
 /// infos from the localisation system
 #define TOPIC_ODOM "/loc/odom"
 #define Q_SZ_ODOM 1
 ros::Subscriber *sub_odom;
+
+/// velocity direct control
+#define TOPIC_CMD_VEL "/cmd_vel"
+#define Q_SZ_CMD_VEL 1
+ros::Publisher *pub_cmd_vel;
 
 /// localisation service status
 #define SERVICE_LOC_STATUS "/loc/switch"
@@ -54,6 +63,8 @@ ros::ServiceServer *srv_nav;
  * job of the navigation controller is to interact with the navigation
  * stack in a more convenient way. it mainly implements a service
  * which accepts a target to reach less than a threshold. 
+ * 
+ * @todo expose the counter!
  * 
  ***********************************************/
 class node_navigation_controller : move_base_interface
@@ -86,6 +97,8 @@ public:
 	 * 
 	 * @see file.srv
 	 * 
+	 * @todo expose the counter!
+	 * 
 	 ***********************************************/
 	bool cbk_nav( 
 		robocluedo_movement_controller_msgs::GoToPoint::Request& req, 
@@ -93,12 +106,19 @@ public:
 	{
 		// reach a position
 		if( req.ask_position )
-			res.position_success = this->move_to_point( req.target_position, req.threshold_position );
+		{
+			TLOG( "phase -- positioning" );
+			res.position_success = this->move_to_point( req.target_position, res.position_error, req.threshold_position );
+			
+			// just to be sure...
+			this->cancel( );
+		}
 		
-		/*
 		if( res.position_success && req.ask_orientation )
-			res.orientation.success = this
-		*/
+		{
+			TLOG( "phase -- orientation" );
+			res.orientation_success = this->rotate_to_angle( req.target_orientation, res.orientation_error );
+		}
 		
 		return true;
 	}
@@ -115,8 +135,18 @@ public:
 	{
 		if( this->read_from_odom_data )
 		{
-			this->dist = pm->distance;
-			TLOG( "received distance=" << pm->distance );
+			this->pos = pm->position;
+			if( pm->sent_distance )
+			{
+				this->dist = pm->distance;
+				TLOG( "received distance=" << pm->distance );
+			}
+			if( pm->sent_orientation )
+			{
+				// this->pos = pm->position;
+				this->current_yaw = pm->orientation;
+				TLOG( "received yaw=" << pm->orientation );
+			}
 		}
 		else
 		{
@@ -132,6 +162,12 @@ private:
 	
 	/// read or not from odometry
 	bool read_from_odom_data = false;
+	
+	/// current position
+	geometry_msgs::Point pos;
+	
+	/// current yaw angle
+	float current_yaw;
 	
 	/// distance from the target
 	float dist = 66666666.f;
@@ -150,17 +186,21 @@ private:
 	 * 
 	 ***********************************************/
 	bool move_to_point( geometry_msgs::Point tg, 
+		float& error_distance,
 		float threshold = DEFAULT_POSITION_THRESHOLD,
 		int limit_counter = DEFAULT_LIMIT_COUNTER )
 	{
 		// check for a not valid threshold
-		if( threshold < 0 )
+		if( threshold <= 0 )
 			threshold = DEFAULT_POSITION_THRESHOLD;
+		
+		TLOG( "using positioning threshold : " << threshold );
 		
 		// activate the localisation system
 		robocluedo_movement_controller_msgs::LocalisationSwitch sw;
 		sw.request.new_status = true;
 		sw.request.compute_distance = true;
+		sw.request.compute_orientation = false;
 		sw.request.pdist = tg;
 		
 		if( !cl_loc_status->call( sw ) ) 
@@ -197,6 +237,8 @@ private:
 				if( status == "SUCCEEDED" )
 				{
 					reached = true;
+					last_dist = this->dist;
+					
 					TLOG( "target REACHED -- from move_base SUCCESS" );
 					
 					break;
@@ -210,6 +252,7 @@ private:
 				{
 					// failure
 					reached = false;
+					last_dist = this->dist;
 					
 					TLOG( "target NOT REACHED -- from move_base " << status );
 					
@@ -248,6 +291,7 @@ private:
 			r.sleep( );
 			ros::spinOnce( );
 		}
+		error_distance = last_dist;
 		
 		// turn off the localisation system
 		sw.request.new_status = false;
@@ -273,15 +317,74 @@ private:
 	 * @returns true if the movement succeeded, false otherwise
 	 * 
 	 ***********************************************/
-	/*
-	bool rotate_to_angle( float angle, 
+	bool rotate_to_angle( float angle, float& angle_error,
 		float threshold = DEFAULT_ORIENTATION_THRESHOLD )
 	{
-		// ...
+		// check for a not valid threshold
+		if( threshold <= 0 )
+			threshold = DEFAULT_ORIENTATION_THRESHOLD;
+		TLOG( "using orientation threshold : " << threshold );
+		
+		// enable the localisation system
+		robocluedo_movement_controller_msgs::LocalisationSwitch sw;
+		sw.request.new_status = true;
+		sw.request.compute_distance = false;
+		sw.request.compute_orientation = true;
+		
+		if( !cl_loc_status->call( sw ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_LOC_STATUS ) 
+				<< (!cl_loc_status->exists( ) ? " -- it seems not opened" : "") );
+			
+			this->read_from_odom_data = false;
+			return false;
+		}
+		
+		if( !sw.response.success || !sw.response.active )
+			return false;
+		
+		this->read_from_odom_data = true;
+		
+		// send the twist to cmd-vel
+		geometry_msgs::Twist tw;
+		tw.angular.z = PI_DIV_8;
+		pub_cmd_vel->publish( tw );
+		
+		// wait until the robot has finished to orient itself
+		ros::Rate r( 1 );
+		bool reached = false;
+		while( true )
+		{
+			TLOG( "error=" << abs( this->current_yaw - angle ) );
+			if( abs( this->current_yaw - angle ) <= threshold )
+			{
+				angle_error = this->current_yaw - angle;
+				
+				TLOG( "angle REACHED" );
+				break;
+			}
+			
+			r.sleep( );
+			ros::spinOnce( );
+		}
+		
+		// stop the motion of the robot
+		tw.angular.z = 0.0;
+		pub_cmd_vel->publish( tw );
+		
+		// turn off the localisation system
+		sw.request.new_status = false;
+		if( !cl_loc_status->call( sw ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_LOC_STATUS ) 
+				<< (!cl_loc_status->exists( ) ? " -- it seems not opened" : "") );
+		}
+		this->read_from_odom_data = false;
 		
 		return true;
 	}
-	*/
 	
 };
 
@@ -310,6 +413,12 @@ int main( int argc, char* argv[] )
 	ros::Subscriber tsub_odom = nh.subscribe( TOPIC_ODOM, Q_SZ_ODOM, &node_navigation_controller::cbk_odom, &node );
 	sub_odom = &tsub_odom;
 	TLOG( "subscribing to the topic " << LOGSQUARE( TOPIC_ODOM ) << "... OK" );
+	
+	// direct velocity control
+	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_CMD_VEL ) << "..." );
+	ros::Publisher tpub_cmd_vel = nh.advertise<geometry_msgs::Twist>( TOPIC_CMD_VEL, Q_SZ_CMD_VEL );
+	pub_cmd_vel = &tpub_cmd_vel;
+	TLOG( "Creating publisher " << LOGSQUARE( TOPIC_CMD_VEL ) << "... OK" );
 	
 	// localisation unit status
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_LOC_STATUS ) << "..." );
