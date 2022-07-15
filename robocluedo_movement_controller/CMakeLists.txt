@@ -175,8 +175,8 @@ target_link_libraries( move_base_interface ${catkin_LIBRARIES} )
 
 ## === moveit interface === ##
 
-add_library( moveit_interface src/moveit_interface/moveit_interface.cpp )
-target_link_libraries( moveit_interface ${catkin_LIBRARIES} )
+# add_library( moveit_interface src/moveit_interface/moveit_interface.cpp )
+# target_link_libraries( moveit_interface ${catkin_LIBRARIES} )
 
 ## === test modules === ##
 
@@ -190,9 +190,9 @@ add_executable( localisation_unit src/localisation_unit.cpp )
 add_dependencies( localisation_unit ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 target_link_libraries( localisation_unit ${catkin_LIBRARIES} )
 
-# add_executable( manipulation_controller src/manipulation_controller.cpp )
-# add_dependencies( manipulation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
-# target_link_libraries( manipulation_controller ${catkin_LIBRARIES} )
+add_executable( manipulation_controller src/manipulation_controller.cpp )
+add_dependencies( manipulation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+target_link_libraries( manipulation_controller ${catkin_LIBRARIES} )
 
 add_executable( navigation_controller src/navigation_controller.cpp )
 add_dependencies( navigation_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )

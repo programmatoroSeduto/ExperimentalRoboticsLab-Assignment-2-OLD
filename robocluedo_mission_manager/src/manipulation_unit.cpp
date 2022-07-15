@@ -89,7 +89,7 @@ public:
 		robocluedo_rosplan_interface_msgs::ManipulationCommand::Request& req, 
 		robocluedo_rosplan_interface_msgs::ManipulationCommand::Response& res )
 	{
-		/// @todo implementation
+		/// @todo
 		
 		return true;
 	}
