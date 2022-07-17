@@ -37,7 +37,6 @@ public:
 		// init MoveIt groups
 		// static const std::string PLANNING_GROUP = ARM_PLANNING_GROUP;
 		
-		
 		// MoveIt settings
 		mgi.setPlanningTime(10.0);
 	}
