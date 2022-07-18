@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- run Gazebo+RViz+MoveIt -->
+<include file="$(find robocluedo_robot_2)/launch/demo_gazebo.launch" />
+
+<!-- run the nav stack -->
+<include file="$(find robocluedo_robot_2)/launch/nav_stack.launch" />
+
+</launch>
