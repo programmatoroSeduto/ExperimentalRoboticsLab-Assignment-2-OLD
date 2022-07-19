@@ -19,6 +19,8 @@
 #define TWARN( msg )      ROS_WARN_STREAM( OUTLABEL << "WARNING: " << msg )
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
+#define PI 3.14159265359
+
 #include "ros/ros.h"
 
 #include <string>
@@ -92,7 +94,40 @@ public:
 		robocluedo_rosplan_interface_msgs::NavigationCommand::Request& req, 
 		robocluedo_rosplan_interface_msgs::NavigationCommand::Response& res )
 	{
-		/// @todo implement me!
+		TLOG( "Navigation unit RECEIVED A REQUEST" );
+		
+		// prepare the service call
+		robocluedo_movement_controller_msgs::GoToPoint sm;
+		
+		sm.request.ask_position = true;
+		sm.request.target_position = req.target;
+		sm.request.threshold_position = 0.1;
+		
+		if( req.look_to_marker )
+		{
+			sm.request.ask_orientation = true;
+			sm.request.threshold_orientation = 0.05;
+			
+			/// @todo we're assuming here that the markers are placed in a particular disposition
+			if( is_zero( req.marker.x, 1e-4 ) )
+				sm.request.target_orientation = ( req.marker.y > 0.0 ? -PI/2.0 : PI/2.0 );
+			else
+				sm.request.target_orientation = ( req.marker.x > 0.0 ? 0.0 : PI );
+		}
+		else
+			sm.request.ask_orientation = false;
+		
+		// call the service
+		if( !cl_nav_controller->call( sm ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_NAV ) 
+				<< (!cl_nav_controller->exists( ) ? " -- it seems not opened" : "") );
+			
+			res.success = false;
+		}
+		else
+			res.success = ( sm.response.position_success ) && ( sm.response.orientation_success );
 		
 		return true;
 	}
@@ -101,6 +136,11 @@ private:
 	
 	/// ROS node handle
     ros::NodeHandle nh;
+    
+    bool is_zero( float num, float e )
+    {
+		return ( ( num > -e ) && ( num < e ) );
+	}
 };
 
 

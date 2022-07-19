@@ -89,7 +89,23 @@ public:
 		robocluedo_rosplan_interface_msgs::ManipulationCommand::Request& req, 
 		robocluedo_rosplan_interface_msgs::ManipulationCommand::Response& res )
 	{
-		/// @todo
+		TLOG( "called service " << SERVICE_ROBOPLAN_MANIP );
+		
+		// prepare the request
+		robocluedo_movement_controller_msgs::TipPosition cmd;
+		cmd.request.set_home = req.home_position;
+		
+		// call the service
+		if( !cl_manip->call( cmd ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_MANIP ) 
+				<< (!cl_manip->exists( ) ? " -- it seems not opened" : "") );
+			
+			res.success = false;
+		}
+		else
+			res.success = true;
 		
 		return true;
 	}

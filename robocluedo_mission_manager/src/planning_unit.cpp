@@ -86,9 +86,9 @@ public:
 	 * returns, it checks the flags of the message in order to understand
 	 * what the outcome of the plan was; if the goal has been reached, 
 	 * the planning unit has nothing to do, and can be closed; otherwise,
-	 * it tries to understand what'shappened and issues a replan command.
+	 * it tries to understand what's happened and issues a replan command.
 	 * 
-	 * it works int his way until either the goal has been reached, or
+	 * it works in this way until either the goal has been reached, or
 	 * the mystery is unsolvable. 
 	 * 
 	 * 
