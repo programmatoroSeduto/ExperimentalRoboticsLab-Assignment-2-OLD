@@ -39,6 +39,12 @@ public:
 		
 		// MoveIt settings
 		mgi.setPlanningTime(10.0);
+		
+		(ros::Duration(1.0)).sleep( );
+		
+		// set the initial position of the arm
+		mgi.setNamedTarget( "init" );
+		mgi.move( );
 	}
 	
 	void spin( int n_loops_per_sec = 1 )
@@ -58,12 +64,15 @@ public:
 		else
 		{
 			// move the tip to a certain point
+			/*
 			geometry_msgs::Pose target_pose;
 			target_pose.orientation.w = 1.0;
 			target_pose.position.x = req.target.x;
 			target_pose.position.y = req.target.y;
 			target_pose.position.z = req.target.z;
 			mgi.setPoseTarget( target_pose );
+			*/
+			mgi.setNamedTarget( "collect_hint" );
 		}
 		
 		mgi.move( );

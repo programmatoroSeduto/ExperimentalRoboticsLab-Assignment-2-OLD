@@ -21,7 +21,7 @@
   /config/rviz/sim_nav_stack.rviz
   /config/rviz/moveit.rviz
   -->
-  <arg name="rviz_config_file_name" default="moveit.rviz" />
+  <arg name="rviz_config_file_name" default="sim_nav_stack.rviz" />
   <arg name="rviz_config_file" default="$(find robocluedo_robot_2)/config/rviz/$(arg rviz_config_file_name)"/>
 
   <!--

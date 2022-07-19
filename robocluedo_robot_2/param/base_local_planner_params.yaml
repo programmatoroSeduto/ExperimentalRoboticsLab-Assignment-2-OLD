@@ -12,7 +12,7 @@ TrajectoryPlannerROS:
   acc_lim_theta: 1.0
 
 # Goal Tolerance Parameters
-  yaw_goal_tolerance: 3.14
+  yaw_goal_tolerance: 0.3
   xy_goal_tolerance: 0.3
 
 # Forward Simulation Parameters
@@ -24,8 +24,8 @@ TrajectoryPlannerROS:
   meter_scoring: true
   pdist_scale: 5.0
   gdist_scale: 0.0
-  occdist_scale: 5.0
-  heading_lookahead: 5.0
+  occdist_scale: 1.0
+  heading_lookahead: 1.0
   dwa: false
   global_frame_id: map
 

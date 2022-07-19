@@ -19,7 +19,7 @@
         <joint name="arm_joint_03" value="-0.3282"/>
         <joint name="arm_joint_04" value="0.2685"/>
     </group_state>
-    <group_state name="colllect_hint" group="arm_group">
+    <group_state name="collect_hint" group="arm_group">
         <joint name="arm_joint_01" value="-1.544"/>
         <joint name="arm_joint_02" value="-0.6663"/>
         <joint name="arm_joint_03" value="-0.5669"/>

@@ -13,6 +13,10 @@
 #include "ros/ros.h"
 #include "move_base_interface/move_base_interface.h"
 
+#include <string>
+#include <map>
+#include <signal.h>
+
 #define NODE_NAME "navigation_controller"
 
 #define LOGSQUARE( str )  "[" << str << "] "
@@ -21,9 +25,8 @@
 #define TWARN( msg )      ROS_WARN_STREAM( OUTLABEL << "WARNING: " << msg )
 #define TERR( msg )       ROS_WARN_STREAM( OUTLABEL << "ERROR: " << msg )
 
-#include <string>
-#include <map>
-#include <signal.h>
+#define S( ss ) std::string( ss )
+#define SS( ss ) std::to_string( ss ) 
 
 #include "robocluedo_movement_controller_msgs/OdomData.h"
 #include "robocluedo_movement_controller_msgs/LocalisationSwitch.h"
@@ -104,6 +107,15 @@ public:
 		robocluedo_movement_controller_msgs::GoToPoint::Request& req, 
 		robocluedo_movement_controller_msgs::GoToPoint::Response& res )
 	{
+		TLOG( "received a REQUEST : " );
+		TLOG( "position : " << ( req.ask_position ? 
+			S("true (") + SS(req.target_position.x) + S(", ") + SS(req.target_position.y) + S(")") 
+			: "--" ) );
+			
+		TLOG( "orientation : " << ( req.ask_position ? 
+			S("true (angle=") + SS(req.target_orientation) + S(", threshold=") + SS(req.threshold_orientation) + S(")") 
+			: "--" ) );
+		
 		// reach a position
 		if( req.ask_position )
 		{
@@ -113,12 +125,16 @@ public:
 			// just to be sure...
 			this->cancel( );
 		}
+		else
+			res.position_success = true;
 		
 		if( res.position_success && req.ask_orientation )
 		{
 			TLOG( "phase -- orientation" );
-			res.orientation_success = this->rotate_to_angle( req.target_orientation, res.orientation_error );
+			res.orientation_success = this->rotate_to_angle( req.target_orientation, res.orientation_error, req.threshold_orientation );
 		}
+		else
+			res.orientation_success = true;
 		
 		return true;
 	}
@@ -318,7 +334,9 @@ private:
 	 * 
 	 ***********************************************/
 	bool rotate_to_angle( float angle, float& angle_error,
-		float threshold = DEFAULT_ORIENTATION_THRESHOLD )
+		float threshold = DEFAULT_ORIENTATION_THRESHOLD,
+		float gain = 0.5,
+		float max_angular_vel = PI_DIV_8 )
 	{
 		// check for a not valid threshold
 		if( threshold <= 0 )
@@ -348,14 +366,15 @@ private:
 		
 		// send the twist to cmd-vel
 		geometry_msgs::Twist tw;
-		tw.angular.z = PI_DIV_8;
-		pub_cmd_vel->publish( tw );
+		// tw.angular.z = PI_DIV_8;
+		// pub_cmd_vel->publish( tw );
 		
 		// wait until the robot has finished to orient itself
 		ros::Rate r( 1 );
 		bool reached = false;
 		while( true )
 		{
+			/*
 			TLOG( "error=" << abs( this->current_yaw - angle ) );
 			if( abs( this->current_yaw - angle ) <= threshold )
 			{
@@ -363,6 +382,33 @@ private:
 				
 				TLOG( "angle REACHED" );
 				break;
+			}
+			*/
+			
+			float err = normalize_angle( angle - this->current_yaw );
+			
+			TLOG( "a_err=" << err << " threshold=" << threshold );
+			
+			if( abs( err ) <= threshold )
+			{
+				// success!
+				angle_error = err;
+				
+				TLOG( "angle REACHED wit err=" << err );
+				break;
+			}
+			else
+			{
+				// rotate to reach the orientation
+				tw.angular.z = gain * err;
+				if( tw.angular.z > max_angular_vel )
+					tw.angular.z = max_angular_vel;
+				else if( tw.angular.z < 0.01 && tw.angular.z > 0.0 )
+					tw.angular.z = 0.2;
+				
+				TLOG( "tw_angular.z=" << tw.angular.z; );
+				
+				pub_cmd_vel->publish( tw );
 			}
 			
 			r.sleep( );
@@ -386,6 +432,35 @@ private:
 		return true;
 	}
 	
+	/*
+	float normalize_angle( float a )
+	{
+		if( a < 0.0 )
+			return -normalize_angle( -a );
+		
+		if(a > PI)
+		{
+			int k = ( a / PI );
+			float new_a = a - (k+1)*PI;
+			if( new_a >= 1e-6 )
+				return new_a;
+			else
+				return 0.0;
+		}
+		else
+			return a;
+	}
+	*/
+	
+	float normalize_angle( float a )
+	{
+		if( a > PI )
+			a = a - 2*PI*a/fabs(a);
+		else if( a < -PI )
+			a = a + 2*PI*a/fabs(a);
+		
+		return a;
+	}
 };
 
 
