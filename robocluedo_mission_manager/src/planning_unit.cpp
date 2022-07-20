@@ -93,15 +93,164 @@ public:
 	 * 
 	 * 
 	 ***********************************************/
-	void spin(  )
+	void spin( )
 	{
-		/// @todo 
+		// load the plan for the first time
+		if( !load_plan( ) ) return;
+		
+		// continue replanning until a solution hasn't been found
+		while( true )
+		{
+			// try to solve
+			if( !run_investigation( ) )
+			{
+				TWARN( "unable to call robocluedo rosplan interface. closing..." );
+				return;
+			}
+			
+			// first checkings
+			if( !this->last_cmd.response.exec_success )
+			{
+				TWARN( "(error in plan dispatch) unable to  trigger the dispatch. closing..." );
+				return;
+			}
+			else if( this->last_cmd.response.goal_achieved )
+			{
+				TLOG( "goal achieved! MYSTERY SOLVED." );
+				return;
+			}
+			else if( this->last_cmd.response.kb_not_consistent )
+			{
+				TWARN( "KB inconsistent! closing..." );
+				return;
+			}
+			
+			// the mystery is solvable
+			if( !this->last_cmd.response.problem_solvable )
+			{
+				TWARN( "mysery NOT SOLVABLE! closing..." );
+				return;
+			}
+			
+			TLOG( "details: " << last_cmd.response.details );
+			
+			// check for replan
+			if( last_cmd.response.need_replan )
+			{
+				if( last_cmd.response.by_exclusion )
+					if( !load_plan( 1 ) ) return;
+				else
+					if( !load_plan( 3 ) ) return;
+			}
+			else
+			{
+				TERR( "unexpected" );
+				return;
+			}
+		}
 	}
 	
 private:
 	
 	/// ROS node handle
     ros::NodeHandle nh;
+    
+    /// last request and response
+    robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService last_cmd;
+		
+	/********************************************//**
+	 *  
+	 * \brief load the problem and solve it
+	 * 
+	 * @returns (bool) true if the request succeeds.
+	 * 
+	 ***********************************************/
+    bool load_plan( int max_moves = 3 )
+    {
+		// service request
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService cmd;
+		cmd.request.load_and_plan = true;
+		cmd.request.execute_plan = false;
+		cmd.request.use_max_moves = true;
+		cmd.request.max_moves = max_moves;
+		
+		// track the request
+		last_cmd = cmd;
+		
+		// request
+		if( !cl_roboplan->call( cmd ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_ROBOPLAN ) 
+				<< (!cl_roboplan->exists( ) ? " -- it seems not opened" : "") );
+			
+			return false;
+		}
+		
+		// track the request and the response
+		last_cmd = cmd;
+		
+		// check the response
+		if( !cmd.response.plan_loaded )
+		{
+			TWARN( "(error in problem_interface) unable to create the plan " );
+			return false;
+		}
+		else if( !cmd.response.solution_found )
+		{
+			TWARN( "(error from the planner) unable to solve the problem" );
+			
+			return false;
+		}
+		else if( !cmd.response.plan_parsed )
+		{
+			TWARN( "(error in plan parser) unable to parse the plan" );
+			return false;
+		}
+		
+		// ready to dispatch
+		return true;
+	}
+	
+	
+	/********************************************//**
+	 *  
+	 * \brief run the plan
+	 * 
+	 * @returns the service has been successully called.
+	 * 
+	 * @note remember to check the last command after this function
+	 * 
+	 * @note blocking function!
+	 * 
+	 ***********************************************/
+	bool run_investigation( )
+	{
+		// request
+		robocluedo_rosplan_interface_msgs::RosplanPipelineManagerService cmd;
+		cmd.request.load_and_plan = false;
+		cmd.request.execute_plan = true;
+		cmd.request.use_max_moves = false;
+		cmd.request.max_moves = -1;
+		
+		// track the request
+		last_cmd = cmd;
+		
+		// call the service
+		if( !cl_roboplan->call( cmd ) ) 
+		{ 
+			TERR( "unable to make a service request -- failed calling service " 
+				<< LOGSQUARE( SERVICE_ROBOPLAN ) 
+				<< (!cl_roboplan->exists( ) ? " -- it seems not opened" : "") );
+			
+			return false;
+		}
+		
+		// track the request and the response
+		last_cmd = cmd;
+		
+		return true;
+	}
 };
 
 
