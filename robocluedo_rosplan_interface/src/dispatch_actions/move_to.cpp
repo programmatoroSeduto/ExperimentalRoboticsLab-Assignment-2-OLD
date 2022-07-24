@@ -47,7 +47,7 @@ RP_move_to::RP_move_to( ros::NodeHandle& nh, bool debug_mode ) :
 	this->cl_nav = nh.serviceClient<robocluedo_rosplan_interface_msgs::NavigationCommand>( SERVICE_NAV );
 	if( !this->cl_nav.waitForExistence( ros::Duration( TIMEOUT_NAV ) ) )
 	{
-		TERR( "unable to contact the server - timeout expired (" << TIMEOUT_NAV << "s) " );
+		TERR( "unable to contact the server " << SERVICE_NAV << " - timeout expired (" << TIMEOUT_NAV << "s) " );
 		return;
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_NAV ) << "... OK" );
@@ -101,6 +101,9 @@ void RP_move_to::cbk_marker( const visualization_msgs::MarkerArray::ConstPtr& pm
 	this->sub_marker.shutdown( );
 	
 	TLOG( "(move-to ) RECEIVED MARKERS" );
+	
+	for( int i=0; i < 4; ++i )
+		TLOG( "\tMARKER no." << i << "(" << pm->markers[i].pose.position.x << ", " << pm->markers[i].pose.position.y << ")" );
 }
 
 

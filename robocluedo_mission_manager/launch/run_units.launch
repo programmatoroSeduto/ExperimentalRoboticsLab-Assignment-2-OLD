@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<node pkg="robocluedo_mission_manager" type="manipulation_unit" name="manipulation_unit" required="true" />
+<node pkg="robocluedo_mission_manager" type="navigation_unit" name="navigation_unit" required="true" />
+
+<!-- <node pkg="robocluedo_mission_manager" type="planning_unit" name="planning_unit" /> -->
+
+</launch>

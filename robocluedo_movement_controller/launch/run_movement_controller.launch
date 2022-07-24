@@ -4,7 +4,7 @@
 
 <node pkg="robocluedo_movement_controller" type="localisation_unit" name="localisation_unit" />
 
-<node pkg="robocluedo_movement_controller" type="manipulation_unit" name="manipulation_unit" />
-<node pkg="robocluedo_movement_controller" type="navigation_unit" name="navigation_unit" />
+<node pkg="robocluedo_movement_controller" type="manipulation_controller" name="manipulation_controller" />
+<node pkg="robocluedo_movement_controller" type="navigation_controller" name="navigation_controller" />
 
 </launch>

@@ -94,7 +94,7 @@ public:
 		robocluedo_rosplan_interface_msgs::NavigationCommand::Request& req, 
 		robocluedo_rosplan_interface_msgs::NavigationCommand::Response& res )
 	{
-		TLOG( "Navigation unit RECEIVED A REQUEST" );
+		TLOG( "Navigation unit RECEIVED A REQUEST (" << req.target.x << ", " << req.target.y << ")" );
 		
 		// prepare the service call
 		robocluedo_movement_controller_msgs::GoToPoint sm;

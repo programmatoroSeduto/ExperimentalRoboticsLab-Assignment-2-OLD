@@ -110,7 +110,7 @@ Quaternion orientation {x, y, z, w}
 
 // manipulation unit
 #define SERVICE_MANIP_UNIT "robocluedo/manipulation_command"
-#define TIMEOUT_MANIP_UNIT 5
+#define TIMEOUT_MANIP_UNIT 30
 
 namespace KCL_rosplan
 {

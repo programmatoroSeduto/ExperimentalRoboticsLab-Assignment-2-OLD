@@ -8,7 +8,9 @@
 shell 1:
 
 ```
+rosclean purge -y
 roslaunch robocluedo_robot_2 demo_gazebo.launch
+
 ```
 
 shell 2:
@@ -39,7 +41,13 @@ roslaunch robocluedo_movement_controller run_movement_controller.launch
 shell 5:
 
 ```
-roslaunch robocluedo_mission_manager run_mission_manager.launch
+roslaunch robocluedo_mission_manager run_units.launch
+```
+
+shell 6:
+
+```
+rosrun robocluedo_mission_manager planning_unit
 ```
 
 ## launch files
