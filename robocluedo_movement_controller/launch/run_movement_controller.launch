@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<node pkg="robocluedo_movement_controller" type="localisation_unit" name="localisation_unit" />
+
+<node pkg="robocluedo_movement_controller" type="manipulation_unit" name="manipulation_unit" />
+<node pkg="robocluedo_movement_controller" type="navigation_unit" name="navigation_unit" />
+
+</launch>

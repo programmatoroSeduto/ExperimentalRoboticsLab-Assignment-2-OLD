@@ -20,7 +20,10 @@ Packages documentation
 	:titlesonly:
 	:caption: project packages
 	
-	pkg cluedo_armor_interface <./robocluedo_armor_interface/index.rst>
+	./robocluedo_armor_interface/index.rst
+	./robocluedo_movement_controller/index.rst
+	./robocluedo_mission_manager/index.rst
+	./robocluedo_rosplan_interface/index.rst
 	
 
 Indices and tables

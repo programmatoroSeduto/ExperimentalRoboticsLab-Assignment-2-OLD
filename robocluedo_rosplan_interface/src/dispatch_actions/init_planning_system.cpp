@@ -27,8 +27,7 @@ RP_init_planning_system::RP_init_planning_system( ) :
 	RPActionInterface( ),
 	robocluedo_kb_tools( false )
 {
-	/// @todo open the service with the Oracle
-	/*
+	// open the service with the Oracle
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "..." );
 	this->cl_oracle = nh.serviceClient<erl2::Oracle>( SERVICE_ORACLE );
 	if( !this->cl_oracle.waitForExistence( ros::Duration( TIMEOUT_ORACLE ) ) )
@@ -37,7 +36,6 @@ RP_init_planning_system::RP_init_planning_system( ) :
 		return;
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
-	*/
 }
 
 // the class constructor
@@ -46,8 +44,7 @@ RP_init_planning_system::RP_init_planning_system( ros::NodeHandle& nh, bool debu
 	robocluedo_kb_tools( debug_mode ),
 	nh( nh )
 {
-	/// @todo open the service with the Oracle
-	/*
+	// open the service with the Oracle
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "..." );
 	this->cl_oracle = nh.serviceClient<erl2::Oracle>( SERVICE_ORACLE );
 	if( !this->cl_oracle.waitForExistence( ros::Duration( TIMEOUT_ORACLE ) ) )
@@ -56,7 +53,6 @@ RP_init_planning_system::RP_init_planning_system( ros::NodeHandle& nh, bool debu
 		return;
 	}
 	TLOG( "Opening client " << LOGSQUARE( SERVICE_ORACLE ) << "... OK" );
-	*/
 }
 
 
