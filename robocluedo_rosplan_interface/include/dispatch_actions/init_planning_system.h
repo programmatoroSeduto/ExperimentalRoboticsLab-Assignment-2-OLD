@@ -65,7 +65,7 @@ int32 ID
 
 // Oracle service
 #define SERVICE_ORACLE "/oracle_solution"
-#define TIMEOUT_ORACLE 5
+#define TIMEOUT_ORACLE 60
 
 
 

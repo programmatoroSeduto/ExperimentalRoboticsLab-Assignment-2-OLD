@@ -20,6 +20,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+find_package(OpenCV REQUIRED) 
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -114,6 +116,7 @@ catkin_package(
 #  LIBRARIES robocluedo_mission_manager
 #  CATKIN_DEPENDS geometry_msgs move_base_msgs nav_msgs robocluedo_movement_controller robocluedo_movement_controller_msgs robocluedo_rosplan_interface robocluedo_rosplan_interface_msg roscpp rospy std_msgs
 #  DEPENDS system_lib
+  DEPENDS OpenCV
 )
 
 ###########

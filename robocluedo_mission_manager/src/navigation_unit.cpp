@@ -35,7 +35,7 @@ ros::ServiceServer *srv_nav;
 // navigation controller client
 #include "robocluedo_movement_controller_msgs/GoToPoint.h"
 #define SERVICE_NAV_CONTROLLER "/go_to_point"
-#define TIMEOUT_NAV_CONTROLLER 5
+#define TIMEOUT_NAV_CONTROLLER 60
 ros::ServiceClient *cl_nav_controller;
 
 /********************************************//**

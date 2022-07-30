@@ -33,8 +33,13 @@
 #include "robocluedo_movement_controller_msgs/GoToPoint.h"
 #include "geometry_msgs/Twist.h"
 
+/// maximum radius around the target allowed by the system
 #define DEFAULT_POSITION_THRESHOLD 0.35
-#define DEFAULT_ORIENTATION_THRESHOLD 0.01
+
+/// maximum angle error in the orientation mission
+#define DEFAULT_ORIENTATION_THRESHOLD 0.3
+
+/// maximum time to achieve the objective
 #define DEFAULT_LIMIT_COUNTER 60
 
 #define PI 3.14159265359

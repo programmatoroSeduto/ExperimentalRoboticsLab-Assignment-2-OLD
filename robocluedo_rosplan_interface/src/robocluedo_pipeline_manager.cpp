@@ -45,22 +45,22 @@ bool goal_achieved
 
 // service to load the problem in rosplan
 #define SERVICE_PROBLEM_GENERATION_SERVER "/rosplan_problem_interface/problem_generation_server"
-#define TIMEOUT_PROBLEM_GENERATION_SERVER 5
+#define TIMEOUT_PROBLEM_GENERATION_SERVER 60
 ros::ServiceClient *cl_problem_generation_server;
 
 // generate the plan with the planning interface
 #define SERVICE_PLANNING_SERVER "/rosplan_planner_interface/planning_server"
-#define TIMEOUT_PLANNING_SERVER 5
+#define TIMEOUT_PLANNING_SERVER 60
 ros::ServiceClient *cl_planning_server;
 
 // generate the plan with the planning interface
 #define SERVICE_PARSE_PLAN "/rosplan_parsing_interface/parse_plan"
-#define TIMEOUT_PARSE_PLAN 5
+#define TIMEOUT_PARSE_PLAN 60
 ros::ServiceClient *cl_parse_plan;
 
 // dispatcher trigger
 #define SERVICE_DISPATCH "/rosplan_plan_dispatcher/dispatch_plan"
-#define TIMEOUT_DISPATCH 5
+#define TIMEOUT_DISPATCH 60
 ros::ServiceClient *cl_dispatch;
 
 // action feedback topic
@@ -75,7 +75,7 @@ ros::ServiceServer *srv_rosplan_handle;
 #define KB_ADD_KNOWLEDGE 0
 #define KB_KTYPE_FLUENT 2
 #define SERVICE_KB_UPDATE "/rosplan_knowledge_base/update"
-#define TIMEOUT_KB_UPDATE 5
+#define TIMEOUT_KB_UPDATE 60
 
 
 

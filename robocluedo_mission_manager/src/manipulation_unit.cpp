@@ -33,7 +33,7 @@ ros::ServiceServer *srv_roboplan_manip;
 // manipulation controller
 #include "robocluedo_movement_controller_msgs/TipPosition.h"
 #define SERVICE_MANIP "/tip_pos"
-#define TIMEOUT_MANIP 5
+#define TIMEOUT_MANIP 60
 
 // client definition
 ros::ServiceClient *cl_manip;

@@ -64,7 +64,7 @@ geometry_msgs/PoseStamped base_position
 
 // action client move base
 #define ACTION_MOVE_BASE "/move_base"
-#define TIMEOUT_MOVE_BASE 5
+#define TIMEOUT_MOVE_BASE 60
 
 
 

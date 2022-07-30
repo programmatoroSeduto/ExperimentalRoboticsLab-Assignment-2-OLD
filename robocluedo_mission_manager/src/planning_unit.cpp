@@ -33,7 +33,7 @@
 // rosplan pipeline manager
 #include "robocluedo_rosplan_interface_msgs/RosplanPipelineManagerService.h"
 #define SERVICE_ROBOPLAN "/robocluedo/rosplan_handle"
-#define TIMEOUT_ROBOPLAN 5
+#define TIMEOUT_ROBOPLAN 60
 ros::ServiceClient *cl_roboplan;
 
 

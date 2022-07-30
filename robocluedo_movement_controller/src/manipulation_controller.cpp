@@ -31,8 +31,7 @@ class node_manipulation_controller
 {
 public:
 	
-	node_manipulation_controller(  ) :
-		mgi( ARM_PLANNING_GROUP )
+	node_manipulation_controller(  ) : mgi( ARM_PLANNING_GROUP )
 	{
 		// init MoveIt groups
 		// static const std::string PLANNING_GROUP = ARM_PLANNING_GROUP;
@@ -64,14 +63,6 @@ public:
 		else
 		{
 			// move the tip to a certain point
-			/*
-			geometry_msgs::Pose target_pose;
-			target_pose.orientation.w = 1.0;
-			target_pose.position.x = req.target.x;
-			target_pose.position.y = req.target.y;
-			target_pose.position.z = req.target.z;
-			mgi.setPoseTarget( target_pose );
-			*/
 			mgi.setNamedTarget( "collect_hint" );
 		}
 		

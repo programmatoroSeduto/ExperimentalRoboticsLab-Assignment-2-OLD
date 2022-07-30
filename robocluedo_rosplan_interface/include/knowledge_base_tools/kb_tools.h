@@ -126,19 +126,19 @@
 
 // KB query (predicates only)
 #define SERVICE_QUERY "/rosplan_knowledge_base/query_state"
-#define TIMEOUT_QUERY 5
+#define TIMEOUT_QUERY 60
 
 // KB propositions query
 #define SERVICE_QUERY_2 "/rosplan_knowledge_base/state/propositions"
-#define TIMEOUT_QUERY_2 5
+#define TIMEOUT_QUERY_2 60
 
 // KB update (fluents and predicates)
 #define SERVICE_KB_UPDATE "/rosplan_knowledge_base/update"
-#define TIMEOUT_KB_UPDATE 5
+#define TIMEOUT_KB_UPDATE 60
 
 // KB query (fluents only)
 #define SERVICE_KB_GET_FLUENT "/rosplan_knowledge_base/state/functions"
-#define TIMEOUT_KB_GET_FLUENT 5
+#define TIMEOUT_KB_GET_FLUENT 60
 
 
 // === KB macros

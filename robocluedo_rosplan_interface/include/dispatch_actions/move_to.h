@@ -135,7 +135,7 @@ bool success
 
 // navigation command service
 #define SERVICE_NAV "/robocluedo/navigation_command"
-#define TIMEOUT_NAV 30
+#define TIMEOUT_NAV 60
 
 
 namespace KCL_rosplan
