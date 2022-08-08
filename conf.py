@@ -46,7 +46,7 @@ extensions = [
 	'sphinx.ext.mathjax',
 	'sphinx.ext.ifconfig',
 	'sphinx.ext.inheritance_diagram',
-	'sphinx.ext.duration',
+	# 'sphinx.ext.duration',
 	'myst_parser',
 	'breathe', 
 	'sphinx.ext.graphviz', 
